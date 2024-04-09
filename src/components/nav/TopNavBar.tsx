@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { motion } from "framer-motion";
 
 const Nav = styled.nav`
   position: fixed;
@@ -8,8 +9,8 @@ const Nav = styled.nav`
   right: 0;
   height: 80px;
   width: 100%;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
   background-color: rgba(28, 28, 28, 0.91);
   display: flex;
   align-items: center;
@@ -34,18 +35,13 @@ const NavItem = styled.li`
   height: 100%;
 `;
 
-const NavLink = styled.a`
+const NavLink = styled(motion.a)`
   height: 100%;
   padding: 0 30px;
   display: flex;
   text-decoration: none;
   align-items: center;
   color: white;
-  transition: background-color 0.3s;
-
-  &:hover {
-    background-color: #333;
-  }
 `;
 
 export const TopNavBar = () => {
@@ -55,10 +51,20 @@ export const TopNavBar = () => {
         <NavLogo src="/logo.png" alt="logo" />
         <NavList>
           <NavItem>
-            <NavLink href="/">Home</NavLink>
+            <NavLink
+              whileHover={{ backgroundColor: "rgba(255, 255, 255, 0.1)" }}
+              href="/"
+            >
+              Home
+            </NavLink>
           </NavItem>
           <NavItem>
-            <NavLink href="/about">About</NavLink>
+            <NavLink
+              whileHover={{ backgroundColor: "rgba(255, 255, 255, 0.1)" }}
+              href="/about"
+            >
+              About
+            </NavLink>
           </NavItem>
         </NavList>
       </Nav>

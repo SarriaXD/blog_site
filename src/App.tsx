@@ -1,5 +1,5 @@
 import { TopNavBar } from "./components/nav/TopNavBar.tsx";
-import { HomeScreen } from "./components/HomeScreen.tsx";
+import { HomeScreen } from "./screens/HomeScreen.tsx";
 import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
