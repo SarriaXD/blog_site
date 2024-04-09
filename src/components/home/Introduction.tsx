@@ -37,36 +37,34 @@ const animationVariants = {
 };
 export const Introduction = () => {
   const { scrollY } = useScroll();
-  const y0 = useTransform(scrollY, [0, 100], [0, -200]);
-  const y1 = useTransform(scrollY, [0, 100], [0, -120]);
+  const y0 = useTransform(scrollY, [0, 100], [0, -150]);
+  const y1 = useTransform(scrollY, [0, 100], [0, -125]);
   return (
     <>
-      <>
-        <IntroductionTitle
-          variants={animationVariants}
-          custom={0}
-          initial="hidden"
-          animate="visible"
-          style={{
-            y: y0,
-          }}
-        >
-          <ColorfulMyName>{" I'm Qi "}</ColorfulMyName>, a software engineer
-          based in Canada.
-        </IntroductionTitle>
-        <IntroductionSubtitle
-          variants={animationVariants}
-          custom={1}
-          initial="hidden"
-          animate="visible"
-          style={{
-            y: y1,
-            marginTop: "2rem",
-          }}
-        >
-          I specialize in full-stack development.
-        </IntroductionSubtitle>
-      </>
+      <IntroductionTitle
+        variants={animationVariants}
+        custom={0}
+        initial="hidden"
+        animate="visible"
+        style={{
+          y: y0,
+        }}
+      >
+        <ColorfulMyName>{" I'm Qi "}</ColorfulMyName>, a software engineer based
+        in Canada.
+      </IntroductionTitle>
+      <IntroductionSubtitle
+        variants={animationVariants}
+        custom={1}
+        initial="hidden"
+        animate="visible"
+        style={{
+          y: y1,
+          marginTop: "2rem",
+        }}
+      >
+        I specialize in full-stack development.
+      </IntroductionSubtitle>
     </>
   );
 };

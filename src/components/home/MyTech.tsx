@@ -88,6 +88,8 @@ export function MyTech() {
           scale: scale,
           y: y,
           marginBottom: "2rem",
+          marginLeft: "2rem",
+          marginRight: "2rem",
         }}
       >
         My Tech Stack

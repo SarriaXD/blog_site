@@ -12,6 +12,7 @@ export function HomeScreen() {
       <SizeBox />
       <Introduction />
       <MyTech />
+      <SizeBox />
     </>
   );
 }
