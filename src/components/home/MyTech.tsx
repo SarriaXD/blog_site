@@ -1,15 +1,21 @@
 import styled from "styled-components";
-import { motion, useScroll, useTransform } from "framer-motion";
 import { TechCardItem } from "./TechCardItem.tsx";
+import useScrollDir, { Direction } from "../../util/useScrollDir.ts";
 
-const MyTechStackText = styled(motion.h1)`
+const MyTechStackText = styled.h1<{ show: boolean }>`
   color: white;
   font-size: 3rem;
   text-align: center;
   line-height: 1.5;
+  margin: 0 2.5rem;
+  opacity: ${(props) => (props.show ? 1 : 0)};
+  transform: ${(props) => (props.show ? "translateY(-8rem)" : "none")};
+  transition:
+    transform 1s,
+    opacity 1s;
 `;
 
-const TechListContainer = styled(motion.div)`
+const TechListContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
@@ -76,22 +82,12 @@ const techList: {
 ];
 
 export function MyTech() {
-  const { scrollY } = useScroll();
-  const opacity = useTransform(scrollY, [0, 200], [0, 1]);
-  const scale = useTransform(scrollY, [0, 200], [0.8, 1]);
-  const y = useTransform(scrollY, [0, 200], [30, -30]);
+  const scrollDir = useScrollDir({
+    thr: 10,
+  });
   return (
     <>
-      <MyTechStackText
-        style={{
-          opacity: opacity,
-          scale: scale,
-          y: y,
-          marginBottom: "2rem",
-          marginLeft: "2rem",
-          marginRight: "2rem",
-        }}
-      >
+      <MyTechStackText show={scrollDir === Direction.Down}>
         My Tech Stack
       </MyTechStackText>
       <TechListContainer>
