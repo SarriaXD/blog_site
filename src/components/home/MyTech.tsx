@@ -10,7 +10,7 @@ const MyTechStackText = styled.h1<{ show: boolean }>`
   margin: 0 2.5rem;
   opacity: ${(props) => (props.show ? 1 : 0)};
   transform: ${(props) =>
-    props.show ? "translateY(-4rem)" : "translateY(4rem) scale(0.3)"};
+    props.show ? "translateY(-4rem)" : "translateY(1rem) scale(0.3)"};
   transition:
     transform 1s,
     opacity 1s;
