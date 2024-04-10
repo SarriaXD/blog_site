@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { TechCardItem } from "./TechCardItem.tsx";
-import useScrollDir, { Direction } from "../../util/useScrollDir.ts";
+import { useEffect, useState } from "react";
 
 const MyTechStackText = styled.h1<{ show: boolean }>`
   color: white;
@@ -9,7 +9,8 @@ const MyTechStackText = styled.h1<{ show: boolean }>`
   line-height: 1.5;
   margin: 0 2.5rem;
   opacity: ${(props) => (props.show ? 1 : 0)};
-  transform: ${(props) => (props.show ? "translateY(-8rem)" : "none")};
+  transform: ${(props) =>
+    props.show ? "translateY(-4rem)" : "translateY(4rem) scale(0.3)"};
   transition:
     transform 1s,
     opacity 1s;
@@ -82,14 +83,21 @@ const techList: {
 ];
 
 export function MyTech() {
-  const scrollDir = useScrollDir({
-    thr: 10,
-  });
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    const onScroll = () => {
+      if (window.scrollY > 30) {
+        setShow(true);
+      } else {
+        setShow(false);
+      }
+    };
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
   return (
     <>
-      <MyTechStackText show={scrollDir === Direction.Down}>
-        My Tech Stack
-      </MyTechStackText>
+      <MyTechStackText show={show}>My Tech Stack</MyTechStackText>
       <TechListContainer>
         {techList.map((tech, index) => (
           <TechCardItem

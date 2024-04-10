@@ -1,5 +1,5 @@
 import styled, { keyframes } from "styled-components";
-import useScrollDir, { Direction } from "../../util/useScrollDir.ts";
+import { useEffect, useState } from "react";
 
 const titleAnimation = keyframes`
   0% {
@@ -60,10 +60,18 @@ const ColorfulMyName = styled.b`
 `;
 
 export const Introduction = () => {
-  const scrollDir = useScrollDir({
-    thr: 10,
-  });
-  const show = scrollDir === Direction.Still || scrollDir === Direction.Up;
+  const [show, setShow] = useState(true);
+  useEffect(() => {
+    const onScroll = () => {
+      if (window.scrollY < 30) {
+        setShow(true);
+      } else {
+        setShow(false);
+      }
+    };
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
   return (
     <>
       <IntroductionTitle show={show}>
