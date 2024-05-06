@@ -1,19 +1,14 @@
 import styled from "styled-components";
 import { TechCardItem } from "./TechCardItem.tsx";
-import { useEffect, useState } from "react";
+import { motion, useMotionValueEvent, useScroll } from "framer-motion";
+import { useState } from "react";
 
-const MyTechStackText = styled.h1<{ show: boolean }>`
+const MyTechStackText = styled(motion.h1)`
   color: white;
   font-size: 3rem;
   text-align: center;
   line-height: 1.5;
   margin: 0 2.5rem;
-  opacity: ${(props) => (props.show ? 1 : 0)};
-  transform: ${(props) =>
-    props.show ? "translateY(-4rem)" : "translateY(1rem) scale(0.3)"};
-  transition:
-    transform 1s,
-    opacity 1s;
 `;
 
 const TechListContainer = styled.div`
@@ -82,22 +77,59 @@ const techList: {
   },
 ];
 
+const variants = {
+  hidden: {
+    scale: 0.3,
+    opacity: 0,
+    y: 40,
+    transition: {
+      duration: 0.5,
+      ease: "easeInOut",
+    },
+  },
+  visible: {
+    opacity: 1,
+    y: -20,
+    scale: 0.6,
+    transition: {
+      type: "spring",
+      stiffness: 150,
+      damping: 20,
+    },
+  },
+  visible2: {
+    opacity: 1,
+    y: -40,
+    scale: 1,
+    transition: {
+      type: "spring",
+      stiffness: 150,
+      damping: 20,
+    },
+  },
+};
+
 export function MyTech() {
-  const [show, setShow] = useState(false);
-  useEffect(() => {
-    const onScroll = () => {
-      if (window.scrollY > 30) {
-        setShow(true);
-      } else {
-        setShow(false);
-      }
-    };
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  const [animationState, setAnimationState] = useState("hidden");
+  const { scrollY } = useScroll();
+  useMotionValueEvent(scrollY, "change", (latestValue) => {
+    if (latestValue > 120) {
+      setAnimationState("visible2");
+    } else if (latestValue > 30) {
+      setAnimationState("visible");
+    } else {
+      setAnimationState("hidden");
+    }
+  });
   return (
     <>
-      <MyTechStackText show={show}>My Tech Stack</MyTechStackText>
+      <MyTechStackText
+        variants={variants}
+        initial={"hidden"}
+        animate={animationState}
+      >
+        My Tech Stack
+      </MyTechStackText>
       <TechListContainer>
         {techList.map((tech, index) => (
           <TechCardItem

@@ -1,54 +1,17 @@
-import styled, { keyframes } from "styled-components";
-import { useEffect, useState } from "react";
+import styled from "styled-components";
+import { motion, useMotionValueEvent, useScroll } from "framer-motion";
+import { useState } from "react";
 
-const titleAnimation = keyframes`
-  0% {
-      scale: 0.8;
-      opacity: 0;
-  }
-`;
-
-const IntroductionTitle = styled.h1<{ show: boolean }>`
+const IntroductionTitle = styled(motion.h1)`
   font-size: 2.5rem;
   text-align: center;
   line-height: 1.5;
   margin: 0 2.5rem;
-  animation: ${titleAnimation} 2s ease;
-  transform: ${(props) => (props.show ? "none" : "translateY(-20rem)")};
-  opacity: ${(props) => (props.show ? 1 : 0.2)};
-  transition:
-    transform 1s,
-    opacity 1s;
 `;
 
-const subtitleAnimation = keyframes`
-  0% {
-      opacity: 0;
-  }
-  
-  30.1% {
-    opacity: 0;
-    scale: 0.8;
-  }
-    
-  100% {
-    opacity: 1;
-    scale: 1;
-  }
-`;
-
-const IntroductionSubtitle = styled.h1<{ show: boolean }>`
+const IntroductionSubtitle = styled(IntroductionTitle)`
   color: #c2c1c1;
   font-size: 1.8rem;
-  text-align: center;
-  line-height: 1.5;
-  margin: 0 2.5rem;
-  animation: ${subtitleAnimation} 2s ease;
-  transform: ${(props) => (props.show ? "none" : "translateY(-14rem)")};
-  opacity: ${(props) => (props.show ? 1 : 0.2)};
-  transition:
-    transform 1s,
-    opacity 1s;
 `;
 
 const ColorfulMyName = styled.b`
@@ -59,26 +22,80 @@ const ColorfulMyName = styled.b`
   -webkit-text-fill-color: transparent;
 `;
 
+const variants = {
+  hidden: {
+    scale: 0.8,
+    opacity: 0,
+  },
+  visible: (subtitle: boolean) => ({
+    scale: 1,
+    opacity: 1,
+    transition: {
+      delay: subtitle ? 0.5 : 0,
+      duration: 1,
+    },
+  }),
+  back: {
+    y: 0,
+    scale: 1,
+    opacity: 1,
+    transition: {
+      type: "spring",
+      stiffness: 100,
+      damping: 12,
+    },
+  },
+  leave_1: (subtitle: boolean) => ({
+    y: subtitle ? -40 : -80,
+    scale: 0.8,
+    opacity: 0.2,
+    transition: {
+      type: "spring",
+      stiffness: 30,
+      damping: 12,
+    },
+  }),
+  leave_2: (subtitle: boolean) => ({
+    y: subtitle ? -200 : -300,
+    scale: 0.9,
+    opacity: 0.1,
+    transition: {
+      type: "spring",
+      stiffness: 30,
+      damping: 12,
+    },
+  }),
+};
+
 export const Introduction = () => {
-  const [show, setShow] = useState(true);
-  useEffect(() => {
-    const onScroll = () => {
-      if (window.scrollY < 30) {
-        setShow(true);
-      } else {
-        setShow(false);
-      }
-    };
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  const [animationState, setAnimationState] = useState("visible");
+  const { scrollY } = useScroll();
+  useMotionValueEvent(scrollY, "change", (latestValue) => {
+    if (latestValue > 120) {
+      setAnimationState("leave_2");
+    } else if (latestValue > 20) {
+      setAnimationState("leave_1");
+    } else {
+      setAnimationState("back");
+    }
+  });
   return (
     <>
-      <IntroductionTitle show={show}>
+      <IntroductionTitle
+        custom={false}
+        variants={variants}
+        initial={"hidden"}
+        animate={animationState}
+      >
         <ColorfulMyName>{" I'm Qi "}</ColorfulMyName>, a software engineer based
         in Canada.
       </IntroductionTitle>
-      <IntroductionSubtitle show={show}>
+      <IntroductionSubtitle
+        custom={true}
+        variants={variants}
+        initial={"hidden"}
+        animate={animationState}
+      >
         I specialize in full-stack development.
       </IntroductionSubtitle>
     </>
