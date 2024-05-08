@@ -17,7 +17,7 @@ export const Nav = () => {
               z-50
               h-20 w-full
               pl-4
-              bg-[#141E38] bg-opacity-95
+              bg-[#050C0F] bg-opacity-90
               flex justify-start items-center gap-4
               backdrop-blur
               sm:justify-between sm:gap-0
