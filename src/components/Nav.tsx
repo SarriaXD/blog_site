@@ -1,12 +1,32 @@
+import { Button, IconButton } from '@material-tailwind/react'
+
 interface LinkProps {
     href: string
     text: string
 }
 
 const links: LinkProps[] = [
-    { href: '/', text: 'Home' },
-    { href: '/', text: 'My Projects' },
+    { href: '#', text: 'Home' },
+    { href: '#', text: 'Articles' },
+    { href: '#', text: 'Projects' },
 ]
+
+const NavLink = ({ href, text }: LinkProps) => {
+    return (
+        <li>
+            <a href={href}>
+                <Button
+                    variant="text"
+                    size="lg"
+                    color="white"
+                    className="normal-case"
+                >
+                    {text}
+                </Button>
+            </a>
+        </li>
+    )
+}
 
 export const Nav = () => {
     return (
@@ -15,30 +35,30 @@ export const Nav = () => {
                 className="fixed
               top-0 left-0 right-0
               z-50
-              h-20 w-full
-              pl-4
-              bg-[#050C0F] bg-opacity-90
-              flex justify-start items-center gap-4
+              pl-4 pr-8 py-2
+              bg-[#050C0F] bg-opacity-60
+              flex justify-between items-center gap-4
               backdrop-blur
-              sm:justify-between sm:gap-0
-              sm:px-24
+              md:px-12
               "
             >
-                <img className="h-full px-8 py-4" src="/logo.png" alt="logo" />
-                <ul className="flex justify-center items-center h-full">
+                <IconButton size="lg" className="md:hidden">
+                    <i className="fa-solid fa-bars fa-lg" />
+                </IconButton>
+                <i className="fa-solid fa-dog text-gray-200 text-2xl" />
+                <ul className="hidden md:flex md:items-center gap-2">
                     {links.map((link) => (
-                        <li key={link.text} className="h-full">
-                            <a
-                                className="flex items-center
-                            h-full px-4
-                            hover:bg-black hover:bg-opacity-20
-                            sm:px-8"
-                                href={link.href}
-                            >
-                                {link.text}
-                            </a>
-                        </li>
+                        <NavLink
+                            key={link.text}
+                            href={link.href}
+                            text={link.text}
+                        />
                     ))}
+                    <li>
+                        <IconButton>
+                            <i className="fa-brands fa-github text-2xl" />
+                        </IconButton>
+                    </li>
                 </ul>
             </nav>
             <div className="h-20"></div>

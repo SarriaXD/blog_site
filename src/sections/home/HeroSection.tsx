@@ -4,8 +4,8 @@ export const HeroSection = () => {
     return (
         <>
             <section
-                className="flex flex-col justify-center items-center gap-4
-             py-4 px-20 text-center
+                className="flex flex-col items-center gap-4
+             p-8 text-center
              md:py-8 md:gap-8
              xl:py-20 xl:gap-12"
             >
