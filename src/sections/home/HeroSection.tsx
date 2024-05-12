@@ -16,10 +16,7 @@ export const HeroSection = () => {
         <>
             <section
                 ref={ref}
-                className="flex flex-col items-center gap-4
-             p-8 text-center
-             md:py-8 md:gap-8
-             xl:py-20 xl:gap-12"
+                className="container mx-auto p-2 text-center md:p-4 xl:p-8 flex flex-col gap-4 md:gap-8 xl:gap-12"
             >
                 <MotionTypography
                     animate={{
@@ -29,9 +26,7 @@ export const HeroSection = () => {
                     }}
                     style={{ y: titleY }}
                     variant="h1"
-                    className="text-4xl
-                    md:text-6xl md:max-w-screen-sm
-                    xl:text-8xl xl:max-w-screen-lg"
+                    className="text-4xl md:text-6xl xl:text-8xl"
                 >
                     <span className="text-transparent bg-clip-text bg-hero-text-gradient">
                         I'm Qi
@@ -48,9 +43,7 @@ export const HeroSection = () => {
                     variant="h2"
                     color="gray"
                     textGradient={true}
-                    className="text-2xl max-w-[60%]
-                    md:text-3xl
-                    xl:text-4xl"
+                    className="text-2xl md:text-3xl xl:text-5xl"
                 >
                     I specialize in full-stack development.
                 </MotionTypography>
