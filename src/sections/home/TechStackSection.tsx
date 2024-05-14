@@ -89,10 +89,11 @@ export const TechStackSection = () => {
                 ref={target}
                 animate={{
                     opacity: [0, 1],
-                    scale: [0.8, 1],
+                    y: [100, 0],
                     transition: {
                         type: 'tween',
                         duration: 0.6,
+                        delay: 1,
                     },
                 }}
                 style={{
