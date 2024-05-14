@@ -1,5 +1,5 @@
 import { Typography } from '@material-tailwind/react'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion, useScroll, useSpring, useTransform } from 'framer-motion'
 import { useRef } from 'react'
 
 const MotionTypography = motion(Typography)
@@ -10,8 +10,16 @@ export const HeroSection = () => {
         target: ref,
         offset: ['start 80px', 'end start'],
     })
-    const titleY = useTransform(scrollYProgress, [0, 1], [0, -300])
-    const subtitleY = useTransform(scrollYProgress, [0, 1], [0, -200])
+    const smoothScrollYProgress = useSpring(scrollYProgress, {
+        stiffness: 200,
+        damping: 20,
+    })
+    const smoothTitleY = useTransform(smoothScrollYProgress, [0, 1], [0, -300])
+    const smoothSubtitleY = useTransform(
+        smoothScrollYProgress,
+        [0, 1],
+        [0, -200]
+    )
     return (
         <>
             <section
@@ -22,9 +30,14 @@ export const HeroSection = () => {
                     animate={{
                         opacity: [0, 1],
                         scale: [0.8, 1],
-                        transition: { duration: 1.5 },
+                        y: [-50, 0],
+                        transition: {
+                            type: 'tween',
+                            duration: 0.6,
+                            delay: 0.2,
+                        },
                     }}
-                    style={{ y: titleY }}
+                    style={{ y: smoothTitleY }}
                     variant="h1"
                     className="text-4xl md:text-6xl xl:text-8xl"
                 >
@@ -37,9 +50,13 @@ export const HeroSection = () => {
                     animate={{
                         opacity: [0, 1],
                         scale: [0.8, 1],
-                        transition: { duration: 1.5, delay: 0.5 },
+                        y: [-50, 0],
+                        transition: {
+                            type: 'tween',
+                            duration: 0.6,
+                        },
                     }}
-                    style={{ y: subtitleY }}
+                    style={{ y: smoothSubtitleY }}
                     variant="h2"
                     color="gray"
                     textGradient={true}
