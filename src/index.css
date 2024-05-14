@@ -11,5 +11,5 @@ html {
 }
 
 body {
-    @apply w-full h-full bg-site-gradient text-white font-sans;
+    @apply w-full min-h-[100vh] bg-site-gradient text-white font-sans;
 }

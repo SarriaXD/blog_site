@@ -1,11 +1,12 @@
-import { MyTech } from '../components/home/MyTech.tsx'
 import { HeroSection } from '../sections/home/HeroSection.tsx'
+import { TechStackSection } from '../sections/home/TechStackSection.tsx'
 
 export function Homepage() {
     return (
         <>
             <HeroSection />
-            <MyTech />
+            <TechStackSection />
+            <section className="h-[2000px]" />
         </>
     )
 }
