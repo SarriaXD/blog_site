@@ -65,7 +65,7 @@ const useScrollToHide = () => {
     const target = useRef(null)
     const { scrollYProgress } = useScroll({
         target: target,
-        offset: ['start 150px', 'end start'],
+        offset: ['start 80px', 'end start'],
     })
     const scale = useTransform(scrollYProgress, [0, 1], [1, 0.6])
     const opacity = useTransform(scrollYProgress, [0, 1], [1, 0])
