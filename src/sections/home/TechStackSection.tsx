@@ -5,11 +5,12 @@ import {
     useAnimationFrame,
     useMotionValue,
     useScroll,
+    useSpring,
     useTransform,
     useVelocity,
     wrap,
 } from 'framer-motion'
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 
 // Duplicate the data to make looping easier
 const cardData = [...myTechData, ...myTechData]
@@ -60,28 +61,49 @@ const TechCard = ({ img, title, link, onSelected }: TechCardProps) => {
     )
 }
 
-export const TechStackSection = () => {
-    const baseX = useMotionValue(0)
-    const x = useTransform(baseX, (v) => `${wrap(-50, 0, v)}%`)
-    const velocity = useRef(1)
+const useScrollToHide = () => {
     const target = useRef(null)
     const { scrollYProgress } = useScroll({
         target: target,
         offset: ['start 150px', 'end start'],
     })
-    const scrollVelocity = useVelocity(scrollYProgress)
-    const scale = useTransform(scrollYProgress, [0, 1], [1, 0.65])
+    const scale = useTransform(scrollYProgress, [0, 1], [1, 0.6])
+    const opacity = useTransform(scrollYProgress, [0, 1], [1, 0])
+    return { target, scale, opacity }
+}
+
+const useVelocityFactor = () => {
+    const { scrollY } = useScroll()
+    const scrollVelocity = useVelocity(scrollY)
+    const smoothVelocity = useSpring(scrollVelocity, {
+        damping: 50,
+        stiffness: 400,
+    })
+    return useTransform(smoothVelocity, [0, 1000], [0, 30], {
+        clamp: false,
+    })
+}
+
+const baseVelocity = 1
+const selectedVelocity = 0.3
+
+export const TechStackSection = () => {
+    const baseX = useMotionValue(0)
+    const x = useTransform(baseX, (v) => `${wrap(-50, 0, v)}%`)
+    const isSelecting = useRef(false)
+    const { target, scale, opacity } = useScrollToHide()
+    const velocityFactor = useVelocityFactor()
     useAnimationFrame((_, delta) => {
-        let moveBy = -velocity.current * (delta / 1000)
-        if (scrollVelocity.get() !== 0) {
+        let moveBy = -baseVelocity * (delta / 1000)
+        if (velocityFactor.get() > 0) {
+            moveBy += velocityFactor.get() * moveBy
+        } else if (isSelecting.current) {
+            moveBy = -selectedVelocity * (delta / 1000)
+        }
+        if (scale.get() < 0.85) {
             moveBy = 0
         }
         baseX.set(baseX.get() + moveBy)
-    })
-    useEffect(() => {
-        scrollYProgress.on('change', (v) => {
-            console.log(v)
-        })
     })
     return (
         <>
@@ -98,6 +120,7 @@ export const TechStackSection = () => {
                 }}
                 style={{
                     scale,
+                    opacity,
                 }}
                 className="w-11/12 mx-auto py-8 md:py-12 xl:py-16"
             >
@@ -124,8 +147,8 @@ export const TechStackSection = () => {
                             <TechCard
                                 key={index}
                                 {...tech}
-                                onSelected={(isHovering) => {
-                                    velocity.current = isHovering ? 0.2 : 1
+                                onSelected={(isSelected) => {
+                                    isSelecting.current = isSelected
                                 }}
                             />
                         ))}
