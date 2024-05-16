@@ -61,7 +61,6 @@ export const Nav = () => {
                     </li>
                 </ul>
             </nav>
-            <div className="h-20"></div>
         </>
     )
 }
