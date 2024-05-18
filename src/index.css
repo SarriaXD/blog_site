@@ -8,8 +8,24 @@
 
 html {
     @apply bg-[#0F172A];
+    /*background: linear-gradient(180deg,#000000 0%,rgba(0,0,0,0) 100%), radial-gradient(211.50000000000003% 113.1% at -66.4% 35.9%, #0b014a 39.13195153221485%, rgb(0, 73, 184) 51.424349881796694%, rgb(50, 100, 227) 67.59505338573997%, rgb(0, 204, 255) 77.36876020980384%);*/
 }
 
 body {
     @apply w-full min-h-[100vh] text-white font-sans;
+}
+
+.bg-night-shift {
+    background-color: #2b4162;
+    background-image: linear-gradient(315deg, #2b4162 0%, #12100e 74%);
+}
+
+.bg-worker-day {
+    background-color: #1b2845;
+    background-image: linear-gradient(315deg, #1b2845 0%, #274060 74%);
+}
+
+.bg-night-club {
+    background-color: #2d3436;
+    background-image: linear-gradient(315deg, #2d3436 0%, #000000 74%);
 }

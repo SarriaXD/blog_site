@@ -7,7 +7,7 @@ import {
     kotlin,
     react,
     springBoot,
-} from './index.ts'
+} from '../assets/img'
 
 export const myTechData = [
     {
