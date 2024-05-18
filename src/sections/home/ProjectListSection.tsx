@@ -28,9 +28,9 @@ const useVideoAnimation = (
     enterProgress: MotionValue<number>,
     leavingProgress: MotionValue<number>
 ) => {
-    const y = useTransform(enterProgress, [0, 1], ['-50%', '0%'])
+    const y = useTransform(enterProgress, [0, 1], ['-50vh', '0vh'])
     const opacity = useTransform(leavingProgress, [0, 0.45], [1, 0])
-    const scale = useTransform(enterProgress, [0, 1], [1.12, 1])
+    const scale = useTransform(enterProgress, [0, 1], [0.8, 1])
     return { y, opacity, scale }
 }
 
