@@ -8,6 +8,7 @@ import {
 import React, { useEffect, useRef, useState } from 'react'
 import { ipadPro, iphone, macbookPro } from '../../assets/video'
 import { Typography } from '@material-tailwind/react'
+import { useMediaQuery } from 'react-responsive'
 
 const useStayProgress = (stayProgress: MotionValue<number>) => {
     const [progressState, setProgress] = useState(0)
@@ -75,7 +76,6 @@ const Video = ({
 interface IntroductionProps {
     stayProgress: MotionValue<number>
     leavingProgress: MotionValue<number>
-    reverse: boolean
 }
 
 const list = [
@@ -86,28 +86,27 @@ const list = [
     'Material Tailwind',
 ]
 
-const textByProgress = (progress: number) => {
-    const index = Math.floor(progress * list.length)
-    return list[index]
-}
-
 const IntroductionVariants = {
-    hidden: {
+    hidden: (isMobile: boolean) => ({
         opacity: 0,
-        width: '0%',
+        width: isMobile ? '100%' : '0%',
+        height: isMobile ? '0%' : '100%',
         transition: {
+            height: { duration: 0.3, delay: 0.3 },
             width: { duration: 0.3, delay: 0.3 },
             opacity: { duration: 0.1 },
         },
-    },
-    visible: {
+    }),
+    visible: (isMobile: boolean) => ({
         opacity: 1,
-        width: '33%',
+        width: isMobile ? '100%' : '33%',
+        height: isMobile ? '50%' : '100%',
         transition: {
-            width: { duration: 0.5, ease: 'easeInOut' },
-            opacity: { duration: 0.5, delay: 0.5 },
+            height: { duration: 0.6, ease: 'easeInOut' },
+            width: { duration: 0.6, ease: 'easeInOut' },
+            opacity: { duration: 0.6, delay: 0.6 },
         },
-    },
+    }),
 }
 
 const useIntroductionAnimation = (leavingProgress: MotionValue<number>) => {
@@ -115,15 +114,11 @@ const useIntroductionAnimation = (leavingProgress: MotionValue<number>) => {
     return { opacity }
 }
 
-const Introduction = ({
-    stayProgress,
-    leavingProgress,
-    reverse,
-}: IntroductionProps) => {
+const Introduction = ({ stayProgress, leavingProgress }: IntroductionProps) => {
     const { opacity } = useIntroductionAnimation(leavingProgress)
-    const reversedAlign = reverse ? 'justify-start' : 'justify-end'
     const progress = useStayProgress(stayProgress)
     const [isVisible, setVisible] = useState(false)
+    const isMobile = useMediaQuery({ query: '(max-width: 720px)' })
     useMotionValueEvent(stayProgress, 'change', (value) => {
         if (value > 0 && !isVisible) {
             setVisible(true)
@@ -135,7 +130,8 @@ const Introduction = ({
 
     return (
         <motion.div
-            className={`md:w-[33%] flex flex-col ${reversedAlign} items-center md:justify-center`}
+            className={`flex flex-col items-center justify-center`}
+            custom={isMobile}
             variants={IntroductionVariants}
             animate={isVisible ? 'visible' : 'hidden'}
             transition={{
@@ -149,7 +145,11 @@ const Introduction = ({
                 }}
             >
                 <Typography variant="h2">Project Title</Typography>
-                <Typography>{`${textByProgress(progress)}`}</Typography>
+                {list.map((item, index) => (
+                    <motion.div key={item}>
+                        <Typography variant="h4">{item}</Typography>
+                    </motion.div>
+                ))}
             </motion.div>
         </motion.div>
     )
@@ -172,7 +172,7 @@ const Project = ({
     const stayProgress = useTransform(progress, [1 / 3, 1], [0, 1])
     return (
         <>
-            <div className="w-full h-full flex flex-col md:flex-row items-center p-4 md:p-8 xl:p-16">
+            <div className="w-full h-full flex flex-col md:flex-row justify-center  items-center p-4 md:p-8 xl:p-16">
                 {reverse ? (
                     <Video
                         video={video}
@@ -275,21 +275,21 @@ export const ProjectListSection = () => {
                     leavingProgress={firstLeavingProgress}
                     className="bg-night-shift"
                     video={ipadPro}
-                    reverse={false}
+                    reverse={true}
                 />
                 <ProjectItem
                     progress={secondProgress}
                     leavingProgress={secondLeavingProgress}
                     className="bg-night-club"
                     video={iphone}
-                    reverse={true}
+                    reverse={false}
                 />
                 <ProjectItem
                     progress={thirdProgress}
                     leavingProgress={leavingScrollYProgress}
                     className="bg-worker-day"
                     video={macbookPro}
-                    reverse={false}
+                    reverse={true}
                 />
             </motion.div>
         </>
