@@ -5,7 +5,7 @@ import {
     useScroll,
     useTransform,
 } from 'framer-motion'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { ipadPro, iphone, macbookPro } from '../../assets/video'
 import { Typography } from '@material-tailwind/react'
 import { useMediaQuery } from 'react-responsive'
@@ -21,10 +21,9 @@ const useVideoAnimation = (
     enterProgress: MotionValue<number>,
     leavingProgress: MotionValue<number>
 ) => {
-    const y = useTransform(enterProgress, [0, 1], ['-50vh', '0vh'])
+    const scale = useTransform(enterProgress, [0, 1], [0.6, 1])
     const opacity = useTransform(leavingProgress, [0, 0.45], [1, 0])
-    const scale = useTransform(enterProgress, [0, 1], [0.8, 1])
-    return { y, opacity, scale }
+    return { opacity, scale }
 }
 
 const Video = ({
@@ -34,10 +33,7 @@ const Video = ({
     leavingProgress,
 }: VideoProps) => {
     const videoRef: React.LegacyRef<HTMLVideoElement> = useRef(null)
-    const { y, opacity, scale } = useVideoAnimation(
-        enterProgress,
-        leavingProgress
-    )
+    const { opacity, scale } = useVideoAnimation(enterProgress, leavingProgress)
     stayProgress.on('change', (value) => {
         if (videoRef.current) {
             const duration = videoRef.current.duration
@@ -47,19 +43,27 @@ const Video = ({
         }
     })
 
+    useEffect(() => {
+        if (videoRef.current) {
+            videoRef.current.load()
+        }
+    }, [videoRef])
+
     return (
         <div className="flex-1 h-full flex items-center justify-center">
             <motion.video
                 ref={videoRef}
-                src={video}
                 preload="auto"
                 className="max-h-full max-w-full object-contain rounded-3xl border-2 border-gray-600"
                 style={{
-                    y,
                     opacity,
                     scale,
                 }}
-            />
+                muted={true}
+                playsInline={true}
+            >
+                <source src={video} type="video/mp4" />
+            </motion.video>
         </div>
     )
 }
@@ -138,10 +142,10 @@ const Introduction = ({ stayProgress, leavingProgress }: IntroductionProps) => {
     const [isVisible, setVisible] = useState(false)
     const isMobile = useMediaQuery({ query: '(max-width: 720px)' })
     useMotionValueEvent(stayProgress, 'change', (value) => {
-        if (value > 0.15 && !isVisible) {
+        if (value > 0.1 && !isVisible) {
             setVisible(true)
         }
-        if (value <= 0.15 && isVisible) {
+        if (value <= 0.1 && isVisible) {
             setVisible(false)
         }
     })
@@ -191,8 +195,8 @@ const Project = ({
     leavingProgress,
     reverse,
 }: ProjectProps) => {
-    const enterProgress = useTransform(progress, [0, 1 / 5], [0, 1])
-    const stayProgress = useTransform(progress, [1 / 5, 1], [0, 1])
+    const enterProgress = useTransform(progress, [0, 1 / 3], [0, 1])
+    const stayProgress = useTransform(progress, [1 / 3, 1], [0, 1])
     return (
         <>
             <div className="w-full h-full flex flex-col md:flex-row justify-center  items-center p-4 md:p-8 xl:p-16">
