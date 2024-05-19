@@ -10,10 +10,10 @@ import { ipadPro, iphone, macbookPro } from '../../assets/video'
 import { Typography } from '@material-tailwind/react'
 import { useMediaQuery } from 'react-responsive'
 
-const useStayProgress = (stayProgress: MotionValue<number>) => {
+const useProgress = (progress: MotionValue<number>) => {
     const [progressState, setProgress] = useState(0)
-    useMotionValueEvent(stayProgress, 'change', () => {
-        setProgress(stayProgress.get())
+    useMotionValueEvent(progress, 'change', () => {
+        setProgress(progress.get())
     })
     return progressState
 }
@@ -42,7 +42,7 @@ const Video = ({
     leavingProgress,
 }: VideoProps) => {
     const videoRef: React.LegacyRef<HTMLVideoElement> = useRef(null)
-    const progress = useStayProgress(stayProgress)
+    const progress = useProgress(stayProgress)
     const { y, opacity, scale } = useVideoAnimation(
         enterProgress,
         leavingProgress
@@ -114,9 +114,36 @@ const useIntroductionAnimation = (leavingProgress: MotionValue<number>) => {
     return { opacity }
 }
 
+interface IntroductionTextProps {
+    text: string
+    progress: MotionValue<number>
+    index: number
+    totalSize: number
+}
+const IntroductionText = ({
+    text,
+    progress,
+    index,
+    totalSize,
+}: IntroductionTextProps) => {
+    const low = index / totalSize
+    const high = (index + 1) / totalSize
+    const opacity = useTransform(progress, [low, high], [0, 1])
+    return (
+        <motion.div
+            style={{
+                opacity,
+            }}
+        >
+            <Typography variant="h4" color="orange" textGradient={true}>
+                {text}
+            </Typography>
+        </motion.div>
+    )
+}
+
 const Introduction = ({ stayProgress, leavingProgress }: IntroductionProps) => {
     const { opacity } = useIntroductionAnimation(leavingProgress)
-    const progress = useStayProgress(stayProgress)
     const [isVisible, setVisible] = useState(false)
     const isMobile = useMediaQuery({ query: '(max-width: 720px)' })
     useMotionValueEvent(stayProgress, 'change', (value) => {
@@ -144,12 +171,17 @@ const Introduction = ({ stayProgress, leavingProgress }: IntroductionProps) => {
                     opacity,
                 }}
             >
-                <Typography variant="h2">Project Title</Typography>
-                {list.map((item, index) => (
-                    <motion.div key={item}>
-                        <Typography variant="h4">{item}</Typography>
-                    </motion.div>
-                ))}
+                {list.map((item, index) => {
+                    return (
+                        <IntroductionText
+                            key={index}
+                            text={item}
+                            progress={stayProgress}
+                            index={index}
+                            totalSize={list.length}
+                        />
+                    )
+                })}
             </motion.div>
         </motion.div>
     )
@@ -168,8 +200,8 @@ const Project = ({
     leavingProgress,
     reverse,
 }: ProjectProps) => {
-    const enterProgress = useTransform(progress, [0, 1 / 3], [0, 1])
-    const stayProgress = useTransform(progress, [1 / 3, 1], [0, 1])
+    const enterProgress = useTransform(progress, [0, 1 / 10], [0, 1])
+    const stayProgress = useTransform(progress, [1 / 10, 1], [0, 1])
     return (
         <>
             <div className="w-full h-full flex flex-col md:flex-row justify-center  items-center p-4 md:p-8 xl:p-16">
@@ -184,14 +216,12 @@ const Project = ({
                     <Introduction
                         stayProgress={stayProgress}
                         leavingProgress={leavingProgress}
-                        reverse={reverse}
                     />
                 )}
                 {reverse ? (
                     <Introduction
                         stayProgress={stayProgress}
                         leavingProgress={leavingProgress}
-                        reverse={reverse}
                     />
                 ) : (
                     <Video
@@ -231,7 +261,7 @@ const ProjectItem = ({
                     reverse={reverse}
                 />
             </div>
-            <div className="h-[300vh]" />
+            <div className="h-[900vh]" />
         </>
     )
 }
@@ -242,19 +272,23 @@ export const ProjectListSection = () => {
         target,
         offset: ['start end', 'end end'],
     })
-    const scrollRatio = 1 / 3
+    // entering and staying progress
+    const scrollRatio = 1 / 10
     const size = 3
     const ratio = 1 / size
     const basicStep = scrollRatio / size
     const firstProgress = useTransform(scrollYProgress, [0, ratio], [0, 1])
-    const firstLeavingProgress = useTransform(
-        scrollYProgress,
-        [ratio, ratio + basicStep],
-        [0, 1]
-    )
     const secondProgress = useTransform(
         scrollYProgress,
         [ratio, ratio * 2],
+        [0, 1]
+    )
+    const thirdProgress = useTransform(scrollYProgress, [ratio * 2, 1], [0, 1])
+
+    // Leaving progress
+    const firstLeavingProgress = useTransform(
+        scrollYProgress,
+        [ratio, ratio + basicStep],
         [0, 1]
     )
     const secondLeavingProgress = useTransform(
@@ -262,7 +296,6 @@ export const ProjectListSection = () => {
         [ratio * 2, ratio * 2 + basicStep],
         [0, 1]
     )
-    const thirdProgress = useTransform(scrollYProgress, [ratio * 2, 1], [0, 1])
     const { scrollYProgress: leavingScrollYProgress } = useScroll({
         target,
         offset: ['end end', 'end start'],
