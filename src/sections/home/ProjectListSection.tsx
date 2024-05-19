@@ -5,18 +5,10 @@ import {
     useScroll,
     useTransform,
 } from 'framer-motion'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { ipadPro, iphone, macbookPro } from '../../assets/video'
 import { Typography } from '@material-tailwind/react'
 import { useMediaQuery } from 'react-responsive'
-
-const useProgress = (progress: MotionValue<number>) => {
-    const [progressState, setProgress] = useState(0)
-    useMotionValueEvent(progress, 'change', () => {
-        setProgress(progress.get())
-    })
-    return progressState
-}
 
 interface VideoProps {
     video: string
@@ -42,19 +34,18 @@ const Video = ({
     leavingProgress,
 }: VideoProps) => {
     const videoRef: React.LegacyRef<HTMLVideoElement> = useRef(null)
-    const progress = useProgress(stayProgress)
     const { y, opacity, scale } = useVideoAnimation(
         enterProgress,
         leavingProgress
     )
-    useEffect(() => {
+    stayProgress.on('change', (value) => {
         if (videoRef.current) {
             const duration = videoRef.current.duration
             if (duration) {
-                videoRef.current.currentTime = progress * duration
+                videoRef.current.currentTime = value * duration
             }
         }
-    }, [progress])
+    })
 
     return (
         <div className="flex-1 h-full flex items-center justify-center">
