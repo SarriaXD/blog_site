@@ -62,7 +62,7 @@ const Video = ({
                 ref={videoRef}
                 src={video}
                 preload="auto"
-                className="max-h-full max-w-full object-contain rounded-3xl border-2"
+                className="max-h-full max-w-full object-contain rounded-3xl border-2 border-gray-600"
                 style={{
                     y,
                     opacity,
