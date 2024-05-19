@@ -105,7 +105,7 @@ const IntroductionVariants = {
 }
 
 const useIntroductionAnimation = (leavingProgress: MotionValue<number>) => {
-    const opacity = useTransform(leavingProgress, [0, 0.2], [1, 0])
+    const opacity = useTransform(leavingProgress, [0, 0.3], [1, 0])
     return { opacity }
 }
 
@@ -138,9 +138,9 @@ const IntroductionText = ({
 }
 
 const Introduction = ({ stayProgress, leavingProgress }: IntroductionProps) => {
+    const isMobile = useMediaQuery({ query: '(max-width: 720px)' })
     const { opacity } = useIntroductionAnimation(leavingProgress)
     const [isVisible, setVisible] = useState(false)
-    const isMobile = useMediaQuery({ query: '(max-width: 720px)' })
     useMotionValueEvent(stayProgress, 'change', (value) => {
         if (value > 0.1 && !isVisible) {
             setVisible(true)
@@ -232,20 +232,33 @@ const Project = ({
 }
 
 interface ProjectItemProps {
-    progress: MotionValue<number>
-    leavingProgress: MotionValue<number>
+    index: number
+    totalSize: number
+    totalProgress: MotionValue<number>
     className: string
     video: string
     reverse: boolean
 }
 
 const ProjectItem = ({
-    progress,
-    leavingProgress,
+    index,
+    totalSize,
+    totalProgress,
     className,
     video,
     reverse,
 }: ProjectItemProps) => {
+    const rate = 5
+    const rateSize = rate * totalSize + 1
+    const low = (index * rate) / rateSize
+    const high = ((index + 1) * rate) / rateSize
+    const ratio = 1 / rateSize
+    const progress = useTransform(totalProgress, [low, high], [0, 1])
+    const leavingProgress = useTransform(
+        totalProgress,
+        [high, high + ratio],
+        [0, 1]
+    )
     return (
         <>
             <div className={`${className} sticky top-0 h-[100vh] w-full pt-20`}>
@@ -256,69 +269,51 @@ const ProjectItem = ({
                     reverse={reverse}
                 />
             </div>
-            <div className="h-[400vh]" />
+            <div className={`h-[400vh]`} />
         </>
     )
 }
+
+const ProjectItemList = [
+    {
+        video: ipadPro,
+        className: 'bg-night-shift',
+        reverse: true,
+    },
+    {
+        video: iphone,
+        className: 'bg-night-club',
+        reverse: false,
+    },
+    {
+        video: macbookPro,
+        className: 'bg-worker-day',
+        reverse: true,
+    },
+]
 
 export const ProjectListSection = () => {
     const target = useRef(null)
     const { scrollYProgress } = useScroll({
         target,
-        offset: ['start end', 'end end'],
-    })
-    // entering and staying progress
-    const scrollRatio = 1 / 5
-    const size = 3
-    const ratio = 1 / size
-    const basicStep = scrollRatio / size
-    const firstProgress = useTransform(scrollYProgress, [0, ratio], [0, 1])
-    const secondProgress = useTransform(
-        scrollYProgress,
-        [ratio, ratio * 2],
-        [0, 1]
-    )
-    const thirdProgress = useTransform(scrollYProgress, [ratio * 2, 1], [0, 1])
-
-    // Leaving progress
-    const firstLeavingProgress = useTransform(
-        scrollYProgress,
-        [ratio, ratio + basicStep],
-        [0, 1]
-    )
-    const secondLeavingProgress = useTransform(
-        scrollYProgress,
-        [ratio * 2, ratio * 2 + basicStep],
-        [0, 1]
-    )
-    const { scrollYProgress: leavingScrollYProgress } = useScroll({
-        target,
-        offset: ['end end', 'end start'],
+        offset: ['start end', 'end start'],
     })
     return (
         <>
             <motion.div ref={target}>
-                <ProjectItem
-                    progress={firstProgress}
-                    leavingProgress={firstLeavingProgress}
-                    className="bg-night-shift"
-                    video={ipadPro}
-                    reverse={true}
-                />
-                <ProjectItem
-                    progress={secondProgress}
-                    leavingProgress={secondLeavingProgress}
-                    className="bg-night-club"
-                    video={iphone}
-                    reverse={false}
-                />
-                <ProjectItem
-                    progress={thirdProgress}
-                    leavingProgress={leavingScrollYProgress}
-                    className="bg-worker-day"
-                    video={macbookPro}
-                    reverse={true}
-                />
+                {ProjectItemList.map((item, index) => {
+                    return (
+                        <ProjectItem
+                            key={index}
+                            index={index}
+                            totalSize={ProjectItemList.length}
+                            totalProgress={scrollYProgress}
+                            className={item.className}
+                            video={item.video}
+                            reverse={item.reverse}
+                        />
+                    )
+                })}
             </motion.div>
         </>
     )
