@@ -147,10 +147,10 @@ const Introduction = ({ stayProgress, leavingProgress }: IntroductionProps) => {
     const [isVisible, setVisible] = useState(false)
     const isMobile = useMediaQuery({ query: '(max-width: 720px)' })
     useMotionValueEvent(stayProgress, 'change', (value) => {
-        if (value > 0 && !isVisible) {
+        if (value > 0.15 && !isVisible) {
             setVisible(true)
         }
-        if (value === 0 && isVisible) {
+        if (value <= 0.15 && isVisible) {
             setVisible(false)
         }
     })
@@ -200,8 +200,8 @@ const Project = ({
     leavingProgress,
     reverse,
 }: ProjectProps) => {
-    const enterProgress = useTransform(progress, [0, 1 / 10], [0, 1])
-    const stayProgress = useTransform(progress, [1 / 10, 1], [0, 1])
+    const enterProgress = useTransform(progress, [0, 1 / 5], [0, 1])
+    const stayProgress = useTransform(progress, [1 / 5, 1], [0, 1])
     return (
         <>
             <div className="w-full h-full flex flex-col md:flex-row justify-center  items-center p-4 md:p-8 xl:p-16">
@@ -261,7 +261,7 @@ const ProjectItem = ({
                     reverse={reverse}
                 />
             </div>
-            <div className="h-[900vh]" />
+            <div className="h-[400vh]" />
         </>
     )
 }
@@ -273,7 +273,7 @@ export const ProjectListSection = () => {
         offset: ['start end', 'end end'],
     })
     // entering and staying progress
-    const scrollRatio = 1 / 10
+    const scrollRatio = 1 / 5
     const size = 3
     const ratio = 1 / size
     const basicStep = scrollRatio / size
