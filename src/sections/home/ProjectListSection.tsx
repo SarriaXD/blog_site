@@ -1,70 +1,136 @@
 import {
+    animate,
     motion,
     MotionValue,
+    useMotionValue,
     useMotionValueEvent,
     useScroll,
     useTransform,
 } from 'framer-motion'
-import React, { useEffect, useRef, useState } from 'react'
-import { ipadPro, iphone, macbookPro } from '../../assets/video'
+import { useEffect, useRef, useState } from 'react'
 import { Typography } from '@material-tailwind/react'
 import { useMediaQuery } from 'react-responsive'
+import { flutterProjectData } from '../../data/FlutterProjectData.ts'
+import { ProjectFrame } from '../../data/ProjectFrame.ts'
 
-interface VideoProps {
-    video: string
+interface FramesProps {
+    frames: ProjectFrame[]
     enterProgress: MotionValue<number>
     stayProgress: MotionValue<number>
     leavingProgress: MotionValue<number>
 }
 
-const useVideoAnimation = (
-    enterProgress: MotionValue<number>,
-    leavingProgress: MotionValue<number>
-) => {
-    const scale = useTransform(enterProgress, [0, 1], [0.6, 1])
-    const opacity = useTransform(leavingProgress, [0, 0.45], [1, 0])
-    return { opacity, scale }
+const ImageItem = ({
+    img,
+    index,
+    currentIndex,
+}: {
+    img: string
+    index: number
+    currentIndex: number
+}) => {
+    let opacity
+    if (index === currentIndex) {
+        opacity = 1
+    } else {
+        opacity = 0.6
+    }
+    let rotateY = 0
+    if (index < currentIndex) {
+        rotateY = 30
+    }
+    if (index > currentIndex) {
+        rotateY = -30
+    }
+    let translateZ = '0px'
+    if (index === currentIndex) {
+        translateZ = '150px'
+    }
+    const zIndex = index === currentIndex ? 'z-30' : 'z-10'
+    return (
+        <div className="flex-none w-1/2 p-2 md:p-4">
+            <motion.img
+                className={`w-full h-full object-contain ${zIndex}`}
+                src={img}
+                animate={{
+                    opacity: opacity,
+                    scale: opacity,
+                    rotateY: rotateY,
+                    translateZ: translateZ,
+                    transition: {
+                        type: 'tween',
+                        duration: 0.4,
+                        ease: 'easeOut',
+                    },
+                }}
+            />
+        </div>
+    )
 }
 
-const Video = ({
-    video,
-    enterProgress,
-    stayProgress,
+const Frames = ({
+    frames,
     leavingProgress,
-}: VideoProps) => {
-    const videoRef: React.LegacyRef<HTMLVideoElement> = useRef(null)
-    const { opacity, scale } = useVideoAnimation(enterProgress, leavingProgress)
+    stayProgress,
+    enterProgress,
+}: FramesProps) => {
+    const scale = useTransform(enterProgress, [0, 1], [0.6, 1])
+    const opacity = useTransform(leavingProgress, [0, 0.45], [1, 0])
+    const [currentIndex, setCurrentIndex] = useState(0)
     stayProgress.on('change', (value) => {
-        if (videoRef.current) {
-            const duration = videoRef.current.duration
-            if (duration) {
-                videoRef.current.currentTime = value * duration
-            }
+        const index = Math.floor(value * frames.length)
+        if (index !== currentIndex) {
+            setCurrentIndex(index)
         }
     })
-
+    const scrollX = useMotionValue(0)
+    const scrollContainerRef = useRef<HTMLDivElement>(null)
     useEffect(() => {
-        if (videoRef.current) {
-            videoRef.current.load()
-        }
-    }, [videoRef])
-
+        if (scrollContainerRef.current === null) return
+        const targetOffset =
+            (scrollContainerRef.current.clientWidth / 2) * currentIndex
+        animate(scrollX, targetOffset, {
+            type: 'spring',
+            stiffness: 100,
+            damping: 20,
+        })
+    }, [currentIndex])
+    useMotionValueEvent(scrollX, 'change', (value) => {
+        if (scrollContainerRef.current === null) return
+        scrollContainerRef.current.scrollLeft = value
+    })
     return (
-        <div className="flex-1 h-full flex items-center justify-center">
-            <motion.video
-                ref={videoRef}
-                preload="auto"
-                className="max-h-full max-w-full object-contain rounded-3xl border-2 border-gray-600"
-                style={{
-                    opacity,
-                    scale,
+        <motion.div
+            className="flex-1 h-full p-4 md:p-0"
+            style={{
+                scale,
+                opacity,
+            }}
+        >
+            <motion.div
+                ref={scrollContainerRef}
+                animate={{
+                    scrollMarginLeft: [0, 0],
                 }}
-                muted={true}
-                playsInline={true}
+                className="flex w-full h-full overflow-hidden scroll-auto"
+                style={{
+                    transformPerspective: 1000,
+                }}
             >
-                <source src={video} type="video/mp4" />
-            </motion.video>
-        </div>
+                <div className="flex-none w-1/4" />
+                {frames.map((frame, index) => {
+                    return (
+                        <ImageItem
+                            key={index}
+                            img={frame.img}
+                            index={index}
+                            currentIndex={currentIndex}
+                        />
+                    )
+                })}
+                <div className="flex-none w-1/4" />
+            </motion.div>
+        </motion.div>
     )
 }
 
@@ -185,13 +251,13 @@ const Introduction = ({ stayProgress, leavingProgress }: IntroductionProps) => {
 interface ProjectProps {
     leavingProgress: MotionValue<number>
     progress: MotionValue<number>
-    video: string
+    frames: ProjectFrame[]
     reverse: boolean
 }
 
 const Project = ({
     progress,
-    video,
+    frames,
     leavingProgress,
     reverse,
 }: ProjectProps) => {
@@ -201,8 +267,8 @@ const Project = ({
         <>
             <div className="w-full h-full flex flex-col md:flex-row justify-center  items-center p-4 md:p-8 xl:p-16">
                 {reverse ? (
-                    <Video
-                        video={video}
+                    <Frames
+                        frames={frames}
                         enterProgress={enterProgress}
                         stayProgress={stayProgress}
                         leavingProgress={leavingProgress}
@@ -219,8 +285,8 @@ const Project = ({
                         leavingProgress={leavingProgress}
                     />
                 ) : (
-                    <Video
-                        video={video}
+                    <Frames
+                        frames={frames}
                         enterProgress={enterProgress}
                         stayProgress={stayProgress}
                         leavingProgress={leavingProgress}
@@ -236,7 +302,7 @@ interface ProjectItemProps {
     totalSize: number
     totalProgress: MotionValue<number>
     className: string
-    video: string
+    frames: ProjectFrame[]
     reverse: boolean
 }
 
@@ -245,7 +311,7 @@ const ProjectItem = ({
     totalSize,
     totalProgress,
     className,
-    video,
+    frames,
     reverse,
 }: ProjectItemProps) => {
     const rate = 5
@@ -263,7 +329,7 @@ const ProjectItem = ({
         <>
             <div className={`${className} sticky top-0 h-[100vh] w-full pt-20`}>
                 <Project
-                    video={video}
+                    frames={frames}
                     progress={progress}
                     leavingProgress={leavingProgress}
                     reverse={reverse}
@@ -276,17 +342,17 @@ const ProjectItem = ({
 
 const ProjectItemList = [
     {
-        video: ipadPro,
+        frames: flutterProjectData[0],
         className: 'bg-night-shift',
         reverse: true,
     },
     {
-        video: iphone,
+        frames: flutterProjectData[1],
         className: 'bg-night-club',
         reverse: false,
     },
     {
-        video: macbookPro,
+        frames: flutterProjectData[2],
         className: 'bg-worker-day',
         reverse: true,
     },
@@ -309,7 +375,7 @@ export const ProjectListSection = () => {
                             totalSize={ProjectItemList.length}
                             totalProgress={scrollYProgress}
                             className={item.className}
-                            video={item.video}
+                            frames={item.frames}
                             reverse={item.reverse}
                         />
                     )
