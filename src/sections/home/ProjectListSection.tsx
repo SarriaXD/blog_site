@@ -33,30 +33,16 @@ const ImageItem = ({
     if (index === currentIndex) {
         opacity = 1
     } else {
-        opacity = 0.6
+        opacity = 0.65
     }
-    let rotateY = 0
-    if (index < currentIndex) {
-        rotateY = 30
-    }
-    if (index > currentIndex) {
-        rotateY = -30
-    }
-    let translateZ = '0px'
-    if (index === currentIndex) {
-        translateZ = '150px'
-    }
-    const zIndex = index === currentIndex ? 'z-30' : 'z-10'
     return (
-        <div className="flex-none w-1/2 p-2 md:p-4">
+        <div className="flex-none w-full p-2 md:p-4">
             <motion.img
-                className={`w-full h-full object-contain ${zIndex}`}
+                className={`w-full h-full object-contain`}
                 src={img}
                 animate={{
                     opacity: opacity,
                     scale: opacity,
-                    rotateY: rotateY,
-                    translateZ: translateZ,
                     transition: {
                         type: 'tween',
                         duration: 0.4,
@@ -77,23 +63,22 @@ const Frames = ({
     const scale = useTransform(enterProgress, [0, 1], [0.6, 1])
     const opacity = useTransform(leavingProgress, [0, 0.45], [1, 0])
     const [currentIndex, setCurrentIndex] = useState(0)
-    stayProgress.on('change', (value) => {
+    useMotionValueEvent(stayProgress, 'change', (value) => {
         const index = Math.floor(value * frames.length)
-        if (index !== currentIndex) {
-            setCurrentIndex(index)
-        }
+        setCurrentIndex(index)
     })
     const scrollX = useMotionValue(0)
     const scrollContainerRef = useRef<HTMLDivElement>(null)
     useEffect(() => {
         if (scrollContainerRef.current === null) return
         const targetOffset =
-            (scrollContainerRef.current.clientWidth / 2) * currentIndex
-        animate(scrollX, targetOffset, {
+            scrollContainerRef.current.clientWidth * currentIndex
+        const controls = animate(scrollX, targetOffset, {
             type: 'spring',
             stiffness: 100,
             damping: 20,
         })
+        return () => controls.stop()
     }, [currentIndex])
     useMotionValueEvent(scrollX, 'change', (value) => {
         if (scrollContainerRef.current === null) return
@@ -109,15 +94,8 @@ const Frames = ({
         >
             <motion.div
                 ref={scrollContainerRef}
-                animate={{
-                    scrollMarginLeft: [0, 0],
-                }}
                 className="flex w-full h-full overflow-hidden scroll-auto"
-                style={{
-                    transformPerspective: 1000,
-                }}
             >
-                <div className="flex-none w-1/4" />
                 {frames.map((frame, index) => {
                     return (
                         <ImageItem
@@ -128,7 +106,6 @@ const Frames = ({
                         />
                     )
                 })}
-                <div className="flex-none w-1/4" />
             </motion.div>
         </motion.div>
     )
