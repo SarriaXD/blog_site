@@ -4,7 +4,10 @@ import {
     motion,
     useAnimationFrame,
     useMotionValue,
+    useScroll,
+    useSpring,
     useTransform,
+    useVelocity,
     wrap,
 } from 'framer-motion'
 import { useRef } from 'react'
@@ -45,11 +48,11 @@ const TechCard = ({ img, title, link, onSelected }: TechCardProps) => {
             onTap={() => onSelected(false)}
         >
             <a href={link}>
-                <div className="flex items-center flex-col gap-4">
+                <div className="flex items-center flex-col gap-4 xl:flex-row">
                     <img
                         src={img}
                         alt="card image"
-                        className="size-32 md:size-44 xl:size-64 object-contain"
+                        className="size-32 md:size-48 xl:size-72 object-contain"
                     />
                     <Typography variant="h3">{title}</Typography>
                 </div>
@@ -58,18 +61,54 @@ const TechCard = ({ img, title, link, onSelected }: TechCardProps) => {
     )
 }
 
+const useScrollToHide = () => {
+    const target = useRef(null)
+    const { scrollYProgress } = useScroll({
+        target: target,
+        offset: ['start 80px', 'end start'],
+    })
+    const scale = useTransform(scrollYProgress, [0, 1], [1, 0.6])
+    const opacity = useTransform(scrollYProgress, [0, 1], [1, 0])
+    return { target, scale, opacity }
+}
+
+const useVelocityFactor = () => {
+    const { scrollY } = useScroll()
+    const scrollVelocity = useVelocity(scrollY)
+    const smoothVelocity = useSpring(scrollVelocity, {
+        damping: 50,
+        stiffness: 400,
+    })
+    return useTransform(smoothVelocity, [0, 1000], [0, 30], {
+        clamp: false,
+    })
+}
+
+const baseVelocity = 1
+const selectedVelocity = 0.3
+
 export const TechStackSection = () => {
     const baseX = useMotionValue(0)
     const x = useTransform(baseX, (v) => `${wrap(-50, 0, v)}%`)
     const isSelecting = useRef(false)
-    useAnimationFrame(() => {
-        if (isSelecting.current) return
-        console.log(x.get())
-        baseX.set(baseX.get() + -0.013)
+    const { target, scale, opacity } = useScrollToHide()
+    const velocityFactor = useVelocityFactor()
+    useAnimationFrame((_, delta) => {
+        let moveBy = -baseVelocity * (delta / 1000)
+        if (velocityFactor.get() > 0) {
+            moveBy += velocityFactor.get() * moveBy
+        } else if (isSelecting.current) {
+            moveBy = -selectedVelocity * (delta / 1000)
+        }
+        if (scale.get() < 0.85) {
+            moveBy = 0
+        }
+        baseX.set(baseX.get() + moveBy)
     })
     return (
         <>
             <motion.section
+                ref={target}
                 animate={{
                     opacity: [0, 1],
                     y: [100, 0],
@@ -79,8 +118,24 @@ export const TechStackSection = () => {
                         delay: 1,
                     },
                 }}
+                style={{
+                    scale,
+                    opacity,
+                }}
                 className="w-11/12 mx-auto py-8 md:py-12 xl:py-16"
             >
+                <div className="w-full flex justify-end">
+                    <Typography
+                        as="a"
+                        href="#"
+                        variant="h6"
+                        color="gray"
+                        className="uppercase text-xs md:text-lg xl:text-xl flex items-center gap-2 hover:gap-4 hover:text-gray-300 hover:pr-4 transition-all"
+                    >
+                        Find Me
+                        <i className="fa-solid fa-angle-right" />
+                    </Typography>
+                </div>
                 <div className="py-8 md:py-12 xl:py-16 overflow-hidden [mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-50px),transparent_100%)] xl:[mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-150px),transparent_100%)]">
                     <motion.ul
                         className="flex w-[max-content] flex-nowrap whitespace-nowrap"
