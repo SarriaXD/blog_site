@@ -41,7 +41,7 @@ export const IntroductionSection = () => {
                     className="text-4xl md:text-6xl xl:text-8xl"
                 >
                     <span className="text-transparent bg-clip-text bg-hero-text-gradient">
-                        I'm Qi Wang
+                        I'm Qi
                     </span>
                     , a software engineer based in Canada.
                 </MotionTypography>
