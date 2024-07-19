@@ -28,6 +28,9 @@ export const IntroductionSection = () => {
                 className="container mx-auto flex flex-col gap-4 p-2 text-center md:gap-8 md:p-4 xl:gap-12 xl:p-8"
             >
                 <MotionTypography
+                    initial={{
+                        opacity: 0,
+                    }}
                     animate={{
                         opacity: [0, 1],
                         y: [50, 0],
@@ -47,6 +50,9 @@ export const IntroductionSection = () => {
                     , a software engineer based in Canada.
                 </MotionTypography>
                 <MotionTypography
+                    initial={{
+                        opacity: 0,
+                    }}
                     animate={{
                         opacity: [0, 1],
                         y: [100, 0],

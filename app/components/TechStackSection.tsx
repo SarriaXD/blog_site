@@ -72,6 +72,9 @@ export const TechStackSection = () => {
     return (
         <>
             <motion.section
+                initial={{
+                    opacity: 0,
+                }}
                 animate={{
                     opacity: [0, 1],
                     y: [100, 0],
