@@ -82,7 +82,7 @@ const Frames = ({
             damping: 20,
         })
         return () => controls.stop()
-    }, [currentIndex])
+    }, [currentIndex, scrollX])
     useMotionValueEvent(scrollX, 'change', (value) => {
         if (scrollContainerRef.current === null) return
         scrollContainerRef.current.scrollLeft = value
