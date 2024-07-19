@@ -1,3 +1,4 @@
+'use client'
 import {
     animate,
     motion,
@@ -10,11 +11,13 @@ import {
 import { useEffect, useRef, useState } from 'react'
 import { Typography } from '@material-tailwind/react'
 import { useMediaQuery } from 'react-responsive'
-import { flutterProjectData } from '../../data/FlutterProjectData.ts'
-import { ProjectFrame } from '../../data/ProjectFrame.ts'
+import {
+    flutterProjectData,
+    FlutterDataItem,
+} from '../data/FlutterProjectData.ts'
 
 interface FramesProps {
-    frames: ProjectFrame[]
+    frames: FlutterDataItem[]
     enterProgress: MotionValue<number>
     stayProgress: MotionValue<number>
     leavingProgress: MotionValue<number>
@@ -36,9 +39,9 @@ const ImageItem = ({
         opacity = 0.65
     }
     return (
-        <div className="flex-none w-full p-2 md:p-4">
+        <div className="w-full flex-none p-2 md:p-4">
             <motion.img
-                className={`w-full h-full object-contain`}
+                className={`h-full w-full object-contain`}
                 src={img}
                 animate={{
                     opacity: opacity,
@@ -86,7 +89,7 @@ const Frames = ({
     })
     return (
         <motion.div
-            className="flex-1 h-full p-4 md:p-0"
+            className="h-full flex-1 p-4 md:p-0"
             style={{
                 scale,
                 opacity,
@@ -94,13 +97,13 @@ const Frames = ({
         >
             <motion.div
                 ref={scrollContainerRef}
-                className="flex w-full h-full overflow-hidden scroll-auto"
+                className="flex h-full w-full overflow-hidden scroll-auto"
             >
                 {frames.map((frame, index) => {
                     return (
                         <ImageItem
                             key={index}
-                            img={frame.img}
+                            img={frame.image.src}
                             index={index}
                             currentIndex={currentIndex}
                         />
@@ -228,7 +231,7 @@ const Introduction = ({ stayProgress, leavingProgress }: IntroductionProps) => {
 interface ProjectProps {
     leavingProgress: MotionValue<number>
     progress: MotionValue<number>
-    frames: ProjectFrame[]
+    frames: FlutterDataItem[]
     reverse: boolean
 }
 
@@ -242,7 +245,7 @@ const Project = ({
     const stayProgress = useTransform(progress, [1 / 3, 1], [0, 1])
     return (
         <>
-            <div className="w-full h-full flex flex-col md:flex-row justify-center  items-center p-4 md:p-8 xl:p-16">
+            <div className="flex h-full w-full flex-col items-center justify-center  p-4 md:flex-row md:p-8 xl:p-16">
                 {reverse ? (
                     <Frames
                         frames={frames}
@@ -279,7 +282,7 @@ interface ProjectItemProps {
     totalSize: number
     totalProgress: MotionValue<number>
     className: string
-    frames: ProjectFrame[]
+    frames: FlutterDataItem[]
     reverse: boolean
 }
 

@@ -1,5 +1,6 @@
+'use client'
 import { Typography } from '@material-tailwind/react'
-import { myTechData } from '../../data/MyTechData'
+import { myTechData } from '../data/MyTechData.ts'
 import {
     motion,
     useAnimationFrame,
@@ -8,6 +9,7 @@ import {
     wrap,
 } from 'framer-motion'
 import { useRef } from 'react'
+import { StaticImageData } from 'next/image'
 
 // Duplicate the data to make looping easier
 const cardData = [...myTechData, ...myTechData]
@@ -21,21 +23,21 @@ const itemVariants = {
 }
 
 interface TechCardProps {
-    img: string
+    image: StaticImageData
     title: string
     subtitle: string
     link: string
     onSelected: (isSelected: boolean) => void
 }
 
-const TechCard = ({ img, title, link, onSelected }: TechCardProps) => {
+const TechCard = ({ image, title, link, onSelected }: TechCardProps) => {
     return (
         <motion.li
             variants={itemVariants}
-            className="flex-shrink-0 rounded-2xl
-             py-2
-             mx-2 md:mx-4 lg:mx-6
-             px-2 md:px-4 lg:px-6
+            className="mx-2 flex-shrink-0
+             rounded-2xl
+             px-2 py-2 md:mx-4
+             md:px-4 lg:mx-6 lg:px-6
              "
             whileHover="selected"
             whileTap="selected"
@@ -45,11 +47,11 @@ const TechCard = ({ img, title, link, onSelected }: TechCardProps) => {
             onTap={() => onSelected(false)}
         >
             <a href={link}>
-                <div className="flex items-center flex-col gap-4">
+                <div className="flex flex-col items-center gap-4">
                     <img
-                        src={img}
+                        src={image.src}
                         alt="card image"
-                        className="size-32 md:size-44 xl:size-64 object-contain"
+                        className="size-32 object-contain md:size-44 xl:size-64"
                     />
                     <Typography variant="h3">{title}</Typography>
                 </div>
@@ -79,9 +81,9 @@ export const TechStackSection = () => {
                         delay: 1,
                     },
                 }}
-                className="w-11/12 mx-auto py-8 md:py-12 xl:py-16"
+                className="mx-auto w-11/12 py-8 md:py-12 xl:py-16"
             >
-                <div className="py-8 md:py-12 xl:py-16 overflow-hidden [mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-50px),transparent_100%)] xl:[mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-150px),transparent_100%)]">
+                <div className="overflow-hidden py-8 [mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-50px),transparent_100%)] md:py-12 xl:py-16 xl:[mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-150px),transparent_100%)]">
                     <motion.ul
                         className="flex w-[max-content] flex-nowrap whitespace-nowrap"
                         style={{

@@ -1,4 +1,4 @@
-import { Button, IconButton } from '@material-tailwind/react'
+import { Button, IconButton } from './Material.tsx'
 
 interface LinkProps {
     href: string
@@ -28,16 +28,16 @@ const NavLink = ({ href, text }: LinkProps) => {
     )
 }
 
-export const Nav = () => {
+export const Header = () => {
     return (
-        <>
+        <header>
             <nav
                 className="fixed
-              top-0 left-0 right-0
+              left-0 right-0 top-0
               z-50
-              pl-4 pr-8 py-2
-              bg-[#050C0F] bg-opacity-60
-              flex justify-between items-center gap-4
+              flex items-center justify-between
+              gap-4 bg-[#050C0F]
+              bg-opacity-60 py-2 pl-4 pr-8
               backdrop-blur
               md:px-12
               "
@@ -45,8 +45,8 @@ export const Nav = () => {
                 <IconButton size="lg" className="md:hidden">
                     <i className="fa-solid fa-bars fa-lg" />
                 </IconButton>
-                <i className="fa-solid fa-dog text-gray-200 text-2xl" />
-                <ul className="hidden md:flex md:items-center gap-2">
+                <i className="fa-solid fa-dog text-2xl text-gray-200" />
+                <ul className="hidden gap-2 md:flex md:items-center">
                     {links.map((link) => (
                         <NavLink
                             key={link.text}
@@ -61,6 +61,6 @@ export const Nav = () => {
                     </li>
                 </ul>
             </nav>
-        </>
+        </header>
     )
 }
