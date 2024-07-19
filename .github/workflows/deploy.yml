@@ -19,7 +19,7 @@ jobs:
         run: pnpm install
 
       - name: Build
-        run: next build
+        run: pnpm run build
 
       - name: S3 and CloudFront Deploy
         uses: lbertenasco/s3-deploy@v1.2.4
