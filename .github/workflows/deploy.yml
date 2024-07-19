@@ -13,15 +13,15 @@ jobs:
       - uses: actions/checkout@v1
 
       - name: Install dependencies
-        run: npm install
+        run: pnpm install
 
       - name: Build
-        run: npm run build
+        run: next build
 
       - name: S3 and CloudFront Deploy
         uses: lbertenasco/s3-deploy@v1.2.4
         with:
-          folder: dist
+          folder: out
           bucket: ${{ secrets.AWS_S3_BUCKET_NAME }}
           dist-id: ${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }}
           invalidation: /*
