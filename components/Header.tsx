@@ -1,5 +1,9 @@
+'use client'
+
 import { Button, IconButton, Tooltip } from './Material.tsx'
 import Link from 'next/link'
+import { SideBar } from './SideBar.tsx'
+import { useState } from 'react'
 
 interface InternalLinkProps {
     href: string
@@ -67,6 +71,8 @@ const ExternalLink = ({ href, className, tip }: ExternalLinkProps) => {
 }
 
 export const Header = () => {
+    const [open, setOpen] = useState(false)
+    const onClose = () => setOpen(false)
     return (
         <header>
             <nav
@@ -80,7 +86,11 @@ export const Header = () => {
               md:px-12
               "
             >
-                <IconButton size="lg" className="md:hidden">
+                <IconButton
+                    size="lg"
+                    className="md:hidden"
+                    onClick={() => setOpen(true)}
+                >
                     <i className="fa-solid fa-bars fa-lg" />
                 </IconButton>
                 <Link href="/">
@@ -95,6 +105,7 @@ export const Header = () => {
                     ))}
                 </ul>
             </nav>
+            <SideBar open={open} onClose={onClose} />
         </header>
     )
 }
