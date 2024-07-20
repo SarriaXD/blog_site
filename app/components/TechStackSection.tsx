@@ -9,7 +9,7 @@ import {
     wrap,
 } from 'framer-motion'
 import { useRef } from 'react'
-import { StaticImageData } from 'next/image'
+import Image, { StaticImageData } from 'next/image'
 
 // Duplicate the data to make looping easier
 const cardData = [...myTechData, ...myTechData]
@@ -48,11 +48,14 @@ const TechCard = ({ image, title, link, onSelected }: TechCardProps) => {
         >
             <a href={link}>
                 <div className="flex flex-col items-center gap-4">
-                    <img
-                        src={image.src}
-                        alt="card image"
-                        className="size-32 object-contain md:size-44 xl:size-64"
-                    />
+                    <div className="relative size-32 md:size-44 xl:size-64">
+                        <Image
+                            src={image}
+                            alt={`Logo of ${title}`}
+                            fill={true}
+                            className="object-contain"
+                        />
+                    </div>
                     <Typography variant="h3">{title}</Typography>
                 </div>
             </a>

@@ -15,6 +15,7 @@ import {
     flutterProjectData,
     FlutterDataItem,
 } from '../data/FlutterProjectData.ts'
+import Image, { StaticImageData } from 'next/image'
 
 interface FramesProps {
     frames: FlutterDataItem[]
@@ -28,7 +29,7 @@ const ImageItem = ({
     index,
     currentIndex,
 }: {
-    img: string
+    img: StaticImageData
     index: number
     currentIndex: number
 }) => {
@@ -39,21 +40,25 @@ const ImageItem = ({
         opacity = 0.65
     }
     return (
-        <div className="w-full flex-none p-2 md:p-4">
-            <motion.img
-                className={`h-full w-full object-contain`}
+        <motion.div
+            className={`relative h-full w-full flex-none p-2 md:p-4`}
+            animate={{
+                opacity: opacity,
+                scale: opacity,
+                transition: {
+                    type: 'tween',
+                    duration: 0.4,
+                    ease: 'easeOut',
+                },
+            }}
+        >
+            <Image
                 src={img}
-                animate={{
-                    opacity: opacity,
-                    scale: opacity,
-                    transition: {
-                        type: 'tween',
-                        duration: 0.4,
-                        ease: 'easeOut',
-                    },
-                }}
+                alt={`play index ${index}`}
+                fill={true}
+                className="object-contain"
             />
-        </div>
+        </motion.div>
     )
 }
 
@@ -89,7 +94,7 @@ const Frames = ({
     })
     return (
         <motion.div
-            className="h-full flex-1 p-4 md:p-0"
+            className="w-full flex-1 p-4 md:h-full md:p-0"
             style={{
                 scale,
                 opacity,
@@ -103,7 +108,7 @@ const Frames = ({
                     return (
                         <ImageItem
                             key={index}
-                            img={frame.image.src}
+                            img={frame.image}
                             index={index}
                             currentIndex={currentIndex}
                         />
