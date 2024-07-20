@@ -1,30 +1,31 @@
-# React + TypeScript + Vite
+# Sarria Personal Website
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Welcome to the open-source repository for my personal website, [sarria.ca](https://sarria.ca). This project showcases a modern web development stack featuring Next.js, Tailwind CSS, Material-UI components, and Framer Motion for animations. The website is deployed on an S3 bucket with automated deployment via GitHub workflows, and is written entirely in TypeScript.
 
-Currently, two official plugins are available:
+## Table of Contents
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Deployment](#deployment)
+- [License](#license)
 
-## Expanding the ESLint configuration
+## Features
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- **Next.js**: A React framework for building server-side rendered and statically generated web applications.
+- **Tailwind CSS**: A utility-first CSS framework for rapid UI development.
+- **Material-UI**: A popular React UI framework that implements Google's Material Design.
+- **Framer Motion**: A library for creating smooth, powerful animations in React.
+- **TypeScript**: A statically typed superset of JavaScript.
 
-- Configure the top-level `parserOptions` property like this:
+## Installation
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+To get started with the project, follow these steps:
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/SarriaXD/blog_site.git
+   cd blog_site
+   pnpm install
+   pnpm dev
+    ```
