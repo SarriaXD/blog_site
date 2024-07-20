@@ -1,4 +1,4 @@
-import { Button, IconButton } from './Material.tsx'
+import { Button, IconButton, Tooltip } from './Material.tsx'
 import Link from 'next/link'
 
 interface InternalLinkProps {
@@ -28,26 +28,39 @@ const InternalLink = ({ href, text }: InternalLinkProps) => {
     )
 }
 
-const externalLinks: ExternalLinkProps[] = [
-    {
-        href: 'https://www.linkedin.com/in/qi-wang-793a562a7',
-        className: 'fa-brands fa-linkedin',
-    },
-    { href: 'https://github.com/SarriaXD', className: 'fa-brands fa-github' },
-]
-
 interface ExternalLinkProps {
     href: string
     className: string
+    tip: string
 }
 
-const ExternalLink = ({ href, className }: ExternalLinkProps) => {
+const externalLinks: ExternalLinkProps[] = [
+    {
+        href: 'mailto:sarria.qi.wang@gmail.com',
+        className: 'fa-solid fa-envelope',
+        tip: 'Contact me via email',
+    },
+    {
+        href: 'https://www.linkedin.com/in/qi-wang-793a562a7',
+        className: 'fa-brands fa-linkedin',
+        tip: 'Connect with me on LinkedIn',
+    },
+    {
+        href: 'https://github.com/SarriaXD',
+        className: 'fa-brands fa-github',
+        tip: 'Check out my GitHub',
+    },
+]
+
+const ExternalLink = ({ href, className, tip }: ExternalLinkProps) => {
     return (
         <li>
             <Link href={href}>
-                <IconButton>
-                    <i className={`${className} text-2xl`} />
-                </IconButton>
+                <Tooltip content={tip}>
+                    <IconButton>
+                        <i className={`${className} text-2xl`} />
+                    </IconButton>
+                </Tooltip>
             </Link>
         </li>
     )
@@ -73,7 +86,7 @@ export const Header = () => {
                 <Link href="/">
                     <i className="fa-solid fa-dog text-2xl text-gray-200" />
                 </Link>
-                <ul className="hidden gap-2 md:flex md:items-center">
+                <ul className="hidden gap-6 md:flex md:items-center">
                     {internalLinks.map((link) => (
                         <InternalLink key={link.text} {...link} />
                     ))}

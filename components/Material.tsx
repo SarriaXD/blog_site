@@ -1,5 +1,5 @@
 'use client'
 
-import { Button, IconButton } from '@material-tailwind/react'
+import { Button, IconButton, Tooltip } from '@material-tailwind/react'
 
-export { Button, IconButton }
+export { Button, IconButton, Tooltip }
