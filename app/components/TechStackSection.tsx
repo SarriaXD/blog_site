@@ -69,7 +69,6 @@ export const TechStackSection = () => {
     const isSelecting = useRef(false)
     useAnimationFrame(() => {
         if (isSelecting.current) return
-        console.log(x.get())
         baseX.set(baseX.get() + -0.013)
     })
     return (
