@@ -1,20 +1,20 @@
 import { Button, IconButton } from './Material.tsx'
+import Link from 'next/link'
 
-interface LinkProps {
+interface InternalLinkProps {
     href: string
     text: string
 }
 
-const links: LinkProps[] = [
-    { href: '#', text: 'Home' },
-    { href: '#', text: 'Articles' },
-    { href: '#', text: 'Projects' },
+const internalLinks: InternalLinkProps[] = [
+    { href: '/articles', text: 'Articles' },
+    { href: 'https://github.com/SarriaXD?tab=repositories', text: 'Projects' },
 ]
 
-const NavLink = ({ href, text }: LinkProps) => {
+const InternalLink = ({ href, text }: InternalLinkProps) => {
     return (
         <li>
-            <a href={href}>
+            <Link href={href}>
                 <Button
                     variant="text"
                     size="lg"
@@ -23,7 +23,32 @@ const NavLink = ({ href, text }: LinkProps) => {
                 >
                     {text}
                 </Button>
-            </a>
+            </Link>
+        </li>
+    )
+}
+
+const externalLinks: ExternalLinkProps[] = [
+    {
+        href: 'https://www.linkedin.com/in/qi-wang-793a562a7',
+        className: 'fa-brands fa-linkedin',
+    },
+    { href: 'https://github.com/SarriaXD', className: 'fa-brands fa-github' },
+]
+
+interface ExternalLinkProps {
+    href: string
+    className: string
+}
+
+const ExternalLink = ({ href, className }: ExternalLinkProps) => {
+    return (
+        <li>
+            <Link href={href}>
+                <IconButton>
+                    <i className={`${className} text-2xl`} />
+                </IconButton>
+            </Link>
         </li>
     )
 }
@@ -45,20 +70,16 @@ export const Header = () => {
                 <IconButton size="lg" className="md:hidden">
                     <i className="fa-solid fa-bars fa-lg" />
                 </IconButton>
-                <i className="fa-solid fa-dog text-2xl text-gray-200" />
+                <Link href="/">
+                    <i className="fa-solid fa-dog text-2xl text-gray-200" />
+                </Link>
                 <ul className="hidden gap-2 md:flex md:items-center">
-                    {links.map((link) => (
-                        <NavLink
-                            key={link.text}
-                            href={link.href}
-                            text={link.text}
-                        />
+                    {internalLinks.map((link) => (
+                        <InternalLink key={link.text} {...link} />
                     ))}
-                    <li>
-                        <IconButton>
-                            <i className="fa-brands fa-github text-2xl" />
-                        </IconButton>
-                    </li>
+                    {externalLinks.map((link) => (
+                        <ExternalLink key={link.href} {...link} />
+                    ))}
                 </ul>
             </nav>
         </header>
