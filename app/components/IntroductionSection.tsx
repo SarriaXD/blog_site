@@ -30,15 +30,16 @@ export const IntroductionSection = () => {
                 <MotionTypography
                     initial={{
                         opacity: 0,
+                        y: 50,
                     }}
                     animate={{
-                        opacity: [0, 1],
-                        y: [50, 0],
-                        transition: {
-                            type: 'tween',
-                            duration: 0.6,
-                            delay: 0.2,
-                        },
+                        opacity: 1,
+                        y: 0,
+                    }}
+                    transition={{
+                        type: 'tween',
+                        duration: 0.6,
+                        delay: 0.2,
                     }}
                     style={{ y: smoothTitleY }}
                     variant="h1"
@@ -52,15 +53,16 @@ export const IntroductionSection = () => {
                 <MotionTypography
                     initial={{
                         opacity: 0,
+                        y: 100,
                     }}
                     animate={{
-                        opacity: [0, 1],
-                        y: [100, 0],
-                        transition: {
-                            type: 'tween',
-                            duration: 0.6,
-                            delay: 0.5,
-                        },
+                        opacity: 1,
+                        y: 0,
+                    }}
+                    transition={{
+                        type: 'tween',
+                        duration: 0.6,
+                        delay: 0.5,
                     }}
                     style={{ y: smoothSubtitleY }}
                     variant="h2"
