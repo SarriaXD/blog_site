@@ -5,7 +5,6 @@ import { Typography } from '@material-tailwind/react'
 import { useRef } from 'react'
 import Image, { StaticImageData } from 'next/image'
 import { hero_mobile, hero_web } from '../../assets/images'
-import { useMediaQuery } from 'react-responsive'
 
 const MotionTypography = motion(Typography)
 
@@ -137,11 +136,18 @@ const HeroImageWithIntroduction = ({
                 duration: 0.6,
                 delay: 1,
             }}
-            className="flex flex-col items-center justify-center gap-2 md:flex-row md:gap-40"
         >
-            {reversed && <HeroImageIntroduction {...introductionProps} />}
-            <HeroImage image={image} alt={alt} />
-            {!reversed && <HeroImageIntroduction {...introductionProps} />}
+            {/* for desktop layout */}
+            <div className="hidden items-center justify-center lg:flex lg:flex-row lg:gap-40 ">
+                {reversed && <HeroImageIntroduction {...introductionProps} />}
+                <HeroImage image={image} alt={alt} />
+                {!reversed && <HeroImageIntroduction {...introductionProps} />}
+            </div>
+            {/* for mobile layout */}
+            <div className="flex flex-col items-center justify-center gap-2 lg:hidden">
+                <HeroImage image={image} alt={alt} />
+                <HeroImageIntroduction {...introductionProps} />
+            </div>
         </motion.div>
     )
 }
@@ -152,10 +158,20 @@ interface HeroImageProps {
 }
 
 const HeroImage = ({ image, alt }: HeroImageProps) => {
+    const ref = useRef(null)
+    const { scrollYProgress } = useScroll({
+        target: ref,
+        offset: ['start end', 'end end'],
+    })
+    const smoothScrollYProgress = useSpring(scrollYProgress, {
+        stiffness: 200,
+        damping: 20,
+    })
+    const y = useTransform(smoothScrollYProgress, [0, 1], [200, 0])
     return (
-        <div className="flex-1">
+        <motion.div ref={ref} className="flex-1" style={{ y }}>
             <Image src={image} alt={alt} />
-        </div>
+        </motion.div>
     )
 }
 
@@ -182,7 +198,6 @@ const HeroImageIntroduction = ({
 }
 
 export const HeroSection = () => {
-    const isMobile = useMediaQuery({ query: '(max-width: 720px)' })
     return (
         <>
             <section className="bg-hero-section-gradient ">
@@ -198,7 +213,7 @@ export const HeroSection = () => {
                     />
                     <HeroImageWithIntroduction
                         {...heroImageWithIntroductionData[1]}
-                        reversed={!isMobile}
+                        reversed={true}
                     />
                 </div>
             </section>
