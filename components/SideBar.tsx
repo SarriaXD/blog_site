@@ -22,8 +22,6 @@ const internalLinks = [
 interface InternalLinkProps {
     href: string
     text: string
-    index: number
-    open: boolean
 }
 
 const InternalLink = ({ href, text }: InternalLinkProps) => {
@@ -137,12 +135,7 @@ export function SideBar({ open, onClose }: SideBarProps) {
                 </div>
                 <List>
                     {internalLinks.map((link) => (
-                        <InternalLink
-                            key={link.text}
-                            {...link}
-                            index={internalLinks.indexOf(link)}
-                            open={open}
-                        />
+                        <InternalLink key={link.text} {...link} />
                     ))}
                     {externalLinks.map((link) => (
                         <ExternalLink
