@@ -74,9 +74,10 @@ export const Header = () => {
     const [open, setOpen] = useState(false)
     const onClose = () => setOpen(false)
     return (
-        <header>
-            <nav
-                className="fixed
+        <>
+            <header>
+                <nav
+                    className="fixed
               left-0 right-0 top-0
               z-50
               flex items-center justify-between
@@ -85,27 +86,28 @@ export const Header = () => {
               backdrop-blur
               md:px-12
               "
-            >
-                <IconButton
-                    size="lg"
-                    className="md:hidden"
-                    onClick={() => setOpen(true)}
                 >
-                    <i className="fa-solid fa-bars fa-lg" />
-                </IconButton>
-                <Link href="/">
-                    <i className="fa-solid fa-dog text-2xl text-gray-200" />
-                </Link>
-                <ul className="hidden gap-6 md:flex md:items-center">
-                    {internalLinks.map((link) => (
-                        <InternalLink key={link.text} {...link} />
-                    ))}
-                    {externalLinks.map((link) => (
-                        <ExternalLink key={link.href} {...link} />
-                    ))}
-                </ul>
-            </nav>
+                    <IconButton
+                        size="lg"
+                        className="md:hidden"
+                        onClick={() => setOpen(true)}
+                    >
+                        <i className="fa-solid fa-bars fa-lg" />
+                    </IconButton>
+                    <Link href="/">
+                        <i className="fa-solid fa-dog text-2xl text-gray-200" />
+                    </Link>
+                    <ul className="hidden gap-6 md:flex md:items-center">
+                        {internalLinks.map((link) => (
+                            <InternalLink key={link.text} {...link} />
+                        ))}
+                        {externalLinks.map((link) => (
+                            <ExternalLink key={link.href} {...link} />
+                        ))}
+                    </ul>
+                </nav>
+            </header>
             <SideBar open={open} onClose={onClose} />
-        </header>
+        </>
     )
 }
