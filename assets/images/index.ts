@@ -6,6 +6,10 @@ import jetpackCompose from './jetpack_compose.png'
 import kotlin from './kotlin.png'
 import react from './react.png'
 import springBoot from './spring_boot.png'
+import python from './python.png'
+import typescript from './typescript.png'
+import hero_mobile from './hero_mobile.png'
+import hero_web from './hero_web.png'
 
 export {
     android,
@@ -16,4 +20,8 @@ export {
     kotlin,
     react,
     springBoot,
+    python,
+    typescript,
+    hero_mobile,
+    hero_web,
 }
