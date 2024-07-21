@@ -83,19 +83,19 @@ const heroImageWithIntroductionData = [
     {
         image: hero_mobile,
         alt: 'Hero Section',
-        title: 'Build Mobile Apps',
-        subtitle: 'A mobile developer',
+        title: 'Building Cross-Platform Apps',
+        subtitle: 'Mobile Developer & Innovator',
         content:
-            'Use Flutter to build multi-platform apps, including iOS and Android. Use Jetpack Compose to build native Android apps.',
+            'I create high-performance apps for iOS and Android using Flutter. For native Android, I leverage Jetpack Compose, ensuring smooth animations and optimal performance.',
         reversed: true,
     },
     {
         image: hero_web,
         alt: 'Hero Section',
-        title: 'Build Websites',
-        subtitle: 'A web developer',
+        title: 'Building Fast Web Apps',
+        subtitle: 'Experienced React Developer',
         content:
-            'Use React to build single-page applications. Use Spring Boot to build back-end services.',
+            'I create smooth single-page applications with React, focusing on performance and cool animations.',
         reversed: false,
     },
 ]
@@ -117,6 +117,11 @@ const HeroImageWithIntroduction = ({
     content,
     reversed,
 }: HeroImageWithIntroductionProps) => {
+    const introductionProps = {
+        title,
+        subtitle,
+        content,
+    }
     return (
         <motion.div
             initial={{
@@ -132,30 +137,47 @@ const HeroImageWithIntroduction = ({
                 duration: 0.6,
                 delay: 1,
             }}
-            className="flex flex-col items-center justify-center gap-8 md:flex-row md:gap-16 xl:gap-32"
+            className="flex flex-col items-center justify-center gap-2 md:flex-row md:gap-40"
         >
-            {reversed && (
-                <div className="gap flex flex-1 flex-col gap-4 p-4">
-                    <Typography variant={'h4'}>{title}</Typography>
-                    <Typography variant={'h1'}>{subtitle}</Typography>
-                    <Typography variant={'paragraph'} className="text-lg">
-                        {content}
-                    </Typography>
-                </div>
-            )}
-            <div className="flex-1">
-                <Image src={image} alt={alt} />
-            </div>
-            {!reversed && (
-                <div className="gap flex flex-1 flex-col gap-4 p-4">
-                    <Typography variant={'h4'}>{title}</Typography>
-                    <Typography variant={'h1'}>{subtitle}</Typography>
-                    <Typography variant={'paragraph'} className="text-lg">
-                        {content}
-                    </Typography>
-                </div>
-            )}
+            {reversed && <HeroImageIntroduction {...introductionProps} />}
+            <HeroImage image={image} alt={alt} />
+            {!reversed && <HeroImageIntroduction {...introductionProps} />}
         </motion.div>
+    )
+}
+
+interface HeroImageProps {
+    image: StaticImageData
+    alt: string
+}
+
+const HeroImage = ({ image, alt }: HeroImageProps) => {
+    return (
+        <div className="flex-1">
+            <Image src={image} alt={alt} />
+        </div>
+    )
+}
+
+interface HeroImageIntroductionProps {
+    title: string
+    subtitle: string
+    content: string
+}
+
+const HeroImageIntroduction = ({
+    title,
+    subtitle,
+    content,
+}: HeroImageIntroductionProps) => {
+    return (
+        <div className="flex flex-1 flex-col p-4">
+            <Typography variant={'h5'}>{title}</Typography>
+            <Typography variant={'h1'}>{subtitle}</Typography>
+            <Typography variant={'paragraph'} className="pt-4 text-xl">
+                {content}
+            </Typography>
+        </div>
     )
 }
 
