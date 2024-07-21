@@ -48,7 +48,7 @@ const TechCard = ({ image, title, link, onSelected }: TechCardProps) => {
         >
             <a href={link}>
                 <div className="flex flex-col items-center gap-4">
-                    <div className="relative size-32 md:size-44 xl:size-64">
+                    <div className="relative size-16 md:size-24 xl:size-32">
                         <Image
                             src={image}
                             alt={`Logo of ${title}`}
@@ -56,7 +56,12 @@ const TechCard = ({ image, title, link, onSelected }: TechCardProps) => {
                             className="object-contain"
                         />
                     </div>
-                    <Typography variant="h3">{title}</Typography>
+                    <Typography
+                        variant="h4"
+                        className="text-sm md:text-xl xl:text-2xl"
+                    >
+                        {title}
+                    </Typography>
                 </div>
             </a>
         </motion.li>
