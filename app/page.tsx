@@ -8,7 +8,6 @@ export default function Page() {
             <HeroSection />
             <TechStackSection />
             <ProjectListSection />
-            <section className="h-[2000px]" />
         </main>
     )
 }
