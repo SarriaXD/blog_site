@@ -69,18 +69,11 @@ const ExternalLink = ({
     index,
     open,
 }: ExternalLinkProps) => {
-    const animation = open
-        ? {
-              x: 0,
-              opacity: 1,
-          }
-        : {
-              x: '-100%',
-              opacity: 0,
-          }
     return (
         <motion.div
-            animate={animation}
+            animate={{
+                x: open ? 0 : '-100%',
+            }}
             transition={{
                 type: 'spring',
                 stiffness: 120,
