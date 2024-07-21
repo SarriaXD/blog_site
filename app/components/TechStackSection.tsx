@@ -1,6 +1,7 @@
 'use client'
+
 import { Typography } from '@material-tailwind/react'
-import { myTechData } from '../data/MyTechData.ts'
+import { frameworkTechData, languageTechData } from '../data/TechStackData.ts'
 import {
     motion,
     useAnimationFrame,
@@ -8,45 +9,41 @@ import {
     useTransform,
     wrap,
 } from 'framer-motion'
-import { useRef } from 'react'
 import Image, { StaticImageData } from 'next/image'
+import Link from 'next/link'
 
 // Duplicate the data to make looping easier
-const cardData = [...myTechData, ...myTechData]
+const frameworksCarouselData = [
+    ...frameworkTechData,
+    ...frameworkTechData,
+    ...frameworkTechData,
+    ...frameworkTechData,
+]
 
-const itemVariants = {
-    selected: {
-        scale: 1.05,
-        border: '1px solid var(--tw-ring-color)',
-        boxShadow: '0 0 1rem var(--tw-ring-color)',
-    },
-}
+const languagesCarouselData = [
+    ...languageTechData,
+    ...languageTechData,
+    ...languageTechData,
+    ...languageTechData,
+]
 
-interface TechCardProps {
+interface CarouselItemProps {
     image: StaticImageData
     title: string
     subtitle: string
     link: string
-    onSelected: (isSelected: boolean) => void
 }
 
-const TechCard = ({ image, title, link, onSelected }: TechCardProps) => {
+const CarouselItem = ({ image, title, link }: CarouselItemProps) => {
     return (
-        <motion.li
-            variants={itemVariants}
+        <li
             className="mx-2 flex-shrink-0
              rounded-2xl
              px-2 py-2 md:mx-4
              md:px-4 lg:mx-6 lg:px-6
              "
-            whileHover="selected"
-            whileTap="selected"
-            onHoverStart={() => onSelected(true)}
-            onHoverEnd={() => onSelected(false)}
-            onTapStart={() => onSelected(true)}
-            onTap={() => onSelected(false)}
         >
-            <a href={link}>
+            <Link href={link}>
                 <div className="flex flex-col items-center gap-4">
                     <div className="relative size-16 md:size-24 xl:size-32">
                         <Image
@@ -57,60 +54,79 @@ const TechCard = ({ image, title, link, onSelected }: TechCardProps) => {
                         />
                     </div>
                     <Typography
-                        variant="h4"
-                        className="text-sm md:text-xl xl:text-2xl"
+                        variant="h6"
+                        className="text-xs md:text-sm xl:text-lg"
                     >
                         {title}
                     </Typography>
                 </div>
-            </a>
-        </motion.li>
+            </Link>
+        </li>
+    )
+}
+
+interface CarouselProps {
+    data: CarouselItemProps[]
+    reversed: boolean
+}
+
+const Carousel = ({ data, reversed }: CarouselProps) => {
+    const baseX = useMotionValue(0)
+    const speed = 0.03
+    const delta = reversed ? -speed : speed
+    const x = useTransform(baseX, (v) => `${wrap(-50, 0, v)}%`)
+    useAnimationFrame(() => {
+        baseX.set(baseX.get() + delta)
+    })
+    return (
+        <div
+            className="flex h-full w-full
+         flex-col
+         rounded-lg
+         bg-opacity-60
+         p-4 md:p-6 lg:p-8"
+        >
+            <div className="overflow-hidden [mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-50px),transparent_100%)] xl:[mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-150px),transparent_100%)]">
+                <motion.ul
+                    className="flex w-[max-content] flex-nowrap whitespace-nowrap"
+                    style={{
+                        x,
+                    }}
+                >
+                    {data.map((tech, index) => (
+                        <CarouselItem key={index} {...tech} />
+                    ))}
+                </motion.ul>
+            </div>
+            <Typography variant="h6" className="mt-2 text-center text-xs">
+                {`${reversed ? 'Languages' : 'Frameworks'} I've worked with`}
+            </Typography>
+        </div>
     )
 }
 
 export const TechStackSection = () => {
-    const baseX = useMotionValue(0)
-    const x = useTransform(baseX, (v) => `${wrap(-50, 0, v)}%`)
-    const isSelecting = useRef(false)
-    useAnimationFrame(() => {
-        if (isSelecting.current) return
-        baseX.set(baseX.get() + -0.013)
-    })
     return (
         <>
             <motion.section
                 initial={{
                     opacity: 0,
+                    y: 100,
                 }}
                 animate={{
-                    opacity: [0, 1],
-                    y: [100, 0],
-                    transition: {
-                        type: 'tween',
-                        duration: 0.6,
-                        delay: 1,
-                    },
+                    opacity: 1,
+                    y: 0,
+                }}
+                transition={{
+                    type: 'tween',
+                    duration: 0.6,
+                    delay: 1,
                 }}
                 className="mx-auto w-11/12 py-8 md:py-12 xl:py-16"
             >
-                <div className="overflow-hidden py-8 [mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-50px),transparent_100%)] md:py-12 xl:py-16 xl:[mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-150px),transparent_100%)]">
-                    <motion.ul
-                        className="flex w-[max-content] flex-nowrap whitespace-nowrap"
-                        style={{
-                            x,
-                        }}
-                    >
-                        {cardData.map((tech, index) => (
-                            <TechCard
-                                key={index}
-                                {...tech}
-                                onSelected={(isSelected) => {
-                                    isSelecting.current = isSelected
-                                }}
-                            />
-                        ))}
-                    </motion.ul>
-                </div>
+                <Carousel data={frameworksCarouselData} reversed={false} />
+                <div className="mt-8" />
+                <Carousel data={languagesCarouselData} reversed={true} />
             </motion.section>
         </>
     )
