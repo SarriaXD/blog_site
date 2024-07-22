@@ -169,7 +169,7 @@ const HeroImage = ({ image, alt }: HeroImageProps) => {
     const ref = useRef(null)
     const { scrollYProgress } = useScroll({
         target: ref,
-        offset: ['start end', 'center center'],
+        offset: ['start end', 'start center'],
     })
     const smoothScrollYProgress = useSpring(scrollYProgress, {
         stiffness: 200,
@@ -216,13 +216,13 @@ const HeroImageIntroduction = ({
     const ref = useRef(null)
     const { scrollYProgress } = useScroll({
         target: ref,
-        offset: ['start end', '90% end'],
+        offset: ['start end', 'center end'],
     })
     const smoothScrollYProgress = useSpring(scrollYProgress, {
         stiffness: 200,
         damping: 20,
     })
-    const y = useTransform(smoothScrollYProgress, [0, 1], ['50%', '0%'])
+    const y = useTransform(smoothScrollYProgress, [0, 1], ['30%', '0%'])
     const opacity = useTransform(smoothScrollYProgress, [0, 1], [0, 1])
     return (
         <motion.div
@@ -246,25 +246,22 @@ export const HeroSection = () => {
     return (
         <>
             <section className="bg-hero-section-gradient ">
-                <div
-                    className="container mx-auto
-                 flex flex-col items-stretch gap-20
-                 px-4 pb-32 pt-24
-                 md:px-8 xl:px-12"
-                >
+                <div className="container mx-auto flex flex-col items-stretch gap-8 px-4 pb-32 pt-24 md:gap-16 md:px-8 xl:gap-24 xl:px-12">
                     <Introduction />
-                    <HeroImageWithIntroduction
-                        {...heroImageWithIntroductionData[0]}
-                        reversed={false}
-                    />
-                    <HeroImageWithIntroduction
-                        {...heroImageWithIntroductionData[1]}
-                        reversed={true}
-                    />
-                    <HeroImageWithIntroduction
-                        {...heroImageWithIntroductionData[2]}
-                        reversed={false}
-                    />
+                    <div className="flex flex-col gap-24">
+                        <HeroImageWithIntroduction
+                            {...heroImageWithIntroductionData[0]}
+                            reversed={false}
+                        />
+                        <HeroImageWithIntroduction
+                            {...heroImageWithIntroductionData[1]}
+                            reversed={true}
+                        />
+                        <HeroImageWithIntroduction
+                            {...heroImageWithIntroductionData[2]}
+                            reversed={false}
+                        />
+                    </div>
                 </div>
             </section>
         </>
