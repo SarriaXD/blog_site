@@ -138,13 +138,19 @@ const HeroImageWithIntroduction = ({
             }}
         >
             {/* for desktop layout */}
-            <div className="hidden items-center justify-center lg:flex lg:flex-row lg:gap-40 ">
+            <div
+                className="hidden items-center justify-center lg:flex lg:flex-row lg:gap-40"
+                style={{ perspective: 3000 }}
+            >
                 {reversed && <HeroImageIntroduction {...introductionProps} />}
                 <HeroImage image={image} alt={alt} />
                 {!reversed && <HeroImageIntroduction {...introductionProps} />}
             </div>
             {/* for mobile layout */}
-            <div className="flex flex-col items-center justify-center gap-2 lg:hidden">
+            <div
+                className="flex flex-col items-center justify-center gap-2 lg:hidden"
+                style={{ perspective: 3000 }}
+            >
                 <HeroImage image={image} alt={alt} />
                 <HeroImageIntroduction {...introductionProps} />
             </div>
@@ -161,15 +167,30 @@ const HeroImage = ({ image, alt }: HeroImageProps) => {
     const ref = useRef(null)
     const { scrollYProgress } = useScroll({
         target: ref,
-        offset: ['start end', 'end end'],
+        offset: ['start 90%', 'center center'],
     })
     const smoothScrollYProgress = useSpring(scrollYProgress, {
         stiffness: 200,
         damping: 20,
     })
-    const y = useTransform(smoothScrollYProgress, [0, 1], [200, 0])
+    const y = useTransform(smoothScrollYProgress, [0, 1], ['10%', '0%'])
+    const rotateX = useTransform(
+        smoothScrollYProgress,
+        [0, 1],
+        ['30deg', '0deg']
+    )
+    const scale = useTransform(smoothScrollYProgress, [0, 1], [0.98, 1])
     return (
-        <motion.div ref={ref} className="flex-1" style={{ y }}>
+        <motion.div
+            ref={ref}
+            style={{
+                transformOrigin: 'bottom',
+                scale,
+                rotateX,
+                y,
+            }}
+            className="flex-1"
+        >
             <Image src={image} alt={alt} />
         </motion.div>
     )
@@ -186,14 +207,32 @@ const HeroImageIntroduction = ({
     subtitle,
     content,
 }: HeroImageIntroductionProps) => {
+    const ref = useRef(null)
+    const { scrollYProgress } = useScroll({
+        target: ref,
+        offset: ['start end', '90% end'],
+    })
+    const smoothScrollYProgress = useSpring(scrollYProgress, {
+        stiffness: 200,
+        damping: 20,
+    })
+    const y = useTransform(smoothScrollYProgress, [0, 1], ['50%', '0%'])
+    const opacity = useTransform(smoothScrollYProgress, [0, 1], [0, 1])
     return (
-        <div className="flex flex-1 flex-col p-4">
+        <motion.div
+            ref={ref}
+            style={{
+                opacity,
+                y,
+            }}
+            className="flex flex-1 flex-col p-4"
+        >
             <Typography variant={'h5'}>{title}</Typography>
             <Typography variant={'h1'}>{subtitle}</Typography>
             <Typography variant={'paragraph'} className="pt-4 text-xl">
                 {content}
             </Typography>
-        </div>
+        </motion.div>
     )
 }
 
@@ -203,8 +242,8 @@ export const HeroSection = () => {
             <section className="bg-hero-section-gradient ">
                 <div
                     className="container mx-auto
-                 flex flex-col items-stretch gap-24
-                 px-4 py-24 md:px-8 xl:px-12"
+                 flex flex-col items-stretch gap-8 px-4 py-24
+                 md:gap-12 md:px-8 xl:px-12"
                 >
                     <Introduction />
                     <HeroImageWithIntroduction
