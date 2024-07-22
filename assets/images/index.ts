@@ -10,6 +10,7 @@ import python from './python.png'
 import typescript from './typescript.png'
 import hero_mobile from './hero_mobile.png'
 import hero_web from './hero_web.png'
+import hero_backend from './hero_backend.png'
 
 export {
     android,
@@ -24,4 +25,5 @@ export {
     typescript,
     hero_mobile,
     hero_web,
+    hero_backend,
 }

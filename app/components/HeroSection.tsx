@@ -4,7 +4,7 @@ import { motion, useScroll, useSpring, useTransform } from 'framer-motion'
 import { Typography } from '@material-tailwind/react'
 import { useRef } from 'react'
 import Image, { StaticImageData } from 'next/image'
-import { hero_mobile, hero_web } from '../../assets/images'
+import { hero_backend, hero_mobile, hero_web } from '../../assets/images'
 
 const MotionTypography = motion(Typography)
 
@@ -97,6 +97,14 @@ const heroImageWithIntroductionData = [
             'I create smooth single-page applications with React, focusing on performance and cool animations.',
         reversed: false,
     },
+    {
+        image: hero_backend,
+        alt: 'Hero Section',
+        title: 'Building Robust Backend Systems',
+        subtitle: 'Backend Developer & Cloud Enthusiast',
+        content:
+            'I develop high-performance backend services using Spring Boot, ensuring scalable and reliable applications. With expertise in AWS deployments and CI/CD pipelines, I deliver optimized backend solutions tailored to your needs.',
+    },
 ]
 
 interface HeroImageWithIntroductionProps {
@@ -138,19 +146,13 @@ const HeroImageWithIntroduction = ({
             }}
         >
             {/* for desktop layout */}
-            <div
-                className="hidden items-center justify-center lg:flex lg:flex-row lg:gap-40"
-                style={{ perspective: 3000 }}
-            >
+            <div className="hidden items-center justify-center lg:flex lg:flex-row lg:gap-32">
                 {reversed && <HeroImageIntroduction {...introductionProps} />}
                 <HeroImage image={image} alt={alt} />
                 {!reversed && <HeroImageIntroduction {...introductionProps} />}
             </div>
             {/* for mobile layout */}
-            <div
-                className="flex flex-col items-center justify-center gap-2 lg:hidden"
-                style={{ perspective: 3000 }}
-            >
+            <div className="flex flex-col items-center justify-center gap-2 lg:hidden">
                 <HeroImage image={image} alt={alt} />
                 <HeroImageIntroduction {...introductionProps} />
             </div>
@@ -167,32 +169,36 @@ const HeroImage = ({ image, alt }: HeroImageProps) => {
     const ref = useRef(null)
     const { scrollYProgress } = useScroll({
         target: ref,
-        offset: ['start 90%', 'center center'],
+        offset: ['start end', 'center center'],
     })
     const smoothScrollYProgress = useSpring(scrollYProgress, {
         stiffness: 200,
         damping: 20,
     })
-    const y = useTransform(smoothScrollYProgress, [0, 1], ['10%', '0%'])
+    const y = useTransform(smoothScrollYProgress, [0, 1], ['50%', '0%'])
     const rotateX = useTransform(
         smoothScrollYProgress,
         [0, 1],
-        ['30deg', '0deg']
+        ['60deg', '0deg']
     )
-    const scale = useTransform(smoothScrollYProgress, [0, 1], [0.98, 1])
     return (
-        <motion.div
-            ref={ref}
-            style={{
-                transformOrigin: 'bottom',
-                scale,
-                rotateX,
-                y,
-            }}
+        <div
             className="flex-1"
+            style={{
+                perspective: 1200,
+            }}
         >
-            <Image src={image} alt={alt} />
-        </motion.div>
+            <motion.div
+                ref={ref}
+                style={{
+                    transformOrigin: 'bottom',
+                    rotateX,
+                    y,
+                }}
+            >
+                <Image src={image} alt={alt} />
+            </motion.div>
+        </div>
     )
 }
 
@@ -242,8 +248,9 @@ export const HeroSection = () => {
             <section className="bg-hero-section-gradient ">
                 <div
                     className="container mx-auto
-                 flex flex-col items-stretch gap-8 px-4 py-24
-                 md:gap-12 md:px-8 xl:px-12"
+                 flex flex-col items-stretch gap-20
+                 px-4 pb-32 pt-24
+                 md:px-8 xl:px-12"
                 >
                     <Introduction />
                     <HeroImageWithIntroduction
@@ -253,6 +260,10 @@ export const HeroSection = () => {
                     <HeroImageWithIntroduction
                         {...heroImageWithIntroductionData[1]}
                         reversed={true}
+                    />
+                    <HeroImageWithIntroduction
+                        {...heroImageWithIntroductionData[2]}
+                        reversed={false}
                     />
                 </div>
             </section>
