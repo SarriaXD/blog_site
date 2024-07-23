@@ -13,19 +13,9 @@ import Image, { StaticImageData } from 'next/image'
 import Link from 'next/link'
 
 // Duplicate the data to make looping easier
-const frameworksCarouselData = [
-    ...frameworkTechData,
-    ...frameworkTechData,
-    ...frameworkTechData,
-    ...frameworkTechData,
-]
+const frameworksCarouselData = [...frameworkTechData]
 
-const languagesCarouselData = [
-    ...languageTechData,
-    ...languageTechData,
-    ...languageTechData,
-    ...languageTechData,
-]
+const languagesCarouselData = [...languageTechData]
 
 interface CarouselItemProps {
     image: StaticImageData
@@ -65,6 +55,15 @@ const CarouselItem = ({ image, title, link }: CarouselItemProps) => {
     )
 }
 
+const CarouseEmptyItem = () => {
+    return (
+        <span
+            className="block size-16 flex-shrink-0 md:size-24 xl:size-32
+             "
+        />
+    )
+}
+
 interface CarouselProps {
     data: CarouselItemProps[]
     reversed: boolean
@@ -72,9 +71,9 @@ interface CarouselProps {
 
 const Carousel = ({ data, reversed }: CarouselProps) => {
     const baseX = useMotionValue(0)
-    const speed = 0.03
+    const speed = 0.035
     const delta = reversed ? -speed : speed
-    const x = useTransform(baseX, (v) => `${wrap(-50, 0, v)}%`)
+    const x = useTransform(baseX, (v) => `${wrap(-33.33333333333333, 0, v)}%`)
     useAnimationFrame(() => {
         baseX.set(baseX.get() + delta)
     })
@@ -88,7 +87,7 @@ const Carousel = ({ data, reversed }: CarouselProps) => {
         >
             <div className="overflow-hidden [mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-50px),transparent_100%)] xl:[mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-150px),transparent_100%)]">
                 <motion.ul
-                    className="flex w-[max-content] flex-nowrap whitespace-nowrap"
+                    className="flex w-[max-content]"
                     style={{
                         x,
                     }}
@@ -96,6 +95,15 @@ const Carousel = ({ data, reversed }: CarouselProps) => {
                     {data.map((tech, index) => (
                         <CarouselItem key={index} {...tech} />
                     ))}
+                    <CarouseEmptyItem />
+                    {data.map((tech, index) => (
+                        <CarouselItem key={index} {...tech} />
+                    ))}
+                    <CarouseEmptyItem />
+                    {data.map((tech, index) => (
+                        <CarouselItem key={index} {...tech} />
+                    ))}
+                    <CarouseEmptyItem />
                 </motion.ul>
             </div>
             <Typography variant="h6" className="mt-2 text-center text-xs">
