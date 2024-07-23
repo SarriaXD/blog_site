@@ -195,8 +195,10 @@ const HeroImage = ({ image, alt }: HeroImageProps) => {
                     rotateX,
                     y,
                 }}
+                className="relative"
             >
-                <Image src={image} alt={alt} />
+                <Image src={image} alt={alt} className="relative z-10" />
+                <div className="absolute inset-x-0 -bottom-[15%] h-3/4 rounded-b-full bg-gradient-to-t from-purple-800 via-blue-800 to-transparent blur-3xl" />
             </motion.div>
         </div>
     )
@@ -216,7 +218,7 @@ const HeroImageIntroduction = ({
     const ref = useRef(null)
     const { scrollYProgress } = useScroll({
         target: ref,
-        offset: ['start end', 'center end'],
+        offset: ['start end', 'end end'],
     })
     const smoothScrollYProgress = useSpring(scrollYProgress, {
         stiffness: 200,
