@@ -100,9 +100,9 @@ const Carousel = ({ colorsMap, data, reversed }: CarouselProps) => {
             className="flex w-full
          flex-col items-start"
         >
-            <div className="mask-gradient w-full overflow-x-hidden py-8 md:py-16 lg:py-24">
+            <div className="mask-gradient w-full overflow-x-hidden">
                 <motion.ul
-                    className="flex w-[max-content]"
+                    className="flex w-[max-content] py-8 md:py-16 lg:py-24"
                     style={{
                         x,
                     }}
@@ -133,9 +133,9 @@ const Carousel = ({ colorsMap, data, reversed }: CarouselProps) => {
                     <CarouseEmptyItem />
                 </motion.ul>
             </div>
-            <Typography variant="h6" className="mt-2 text-center text-xs">
-                {`${reversed ? 'Languages' : 'Frameworks'} I've worked with`}
-            </Typography>
+            {/*<Typography variant="h6" className="mt-2 text-center text-xs">*/}
+            {/*    {`${reversed ? 'Languages' : 'Frameworks'} I've worked with`}*/}
+            {/*</Typography>*/}
         </div>
     )
 }
