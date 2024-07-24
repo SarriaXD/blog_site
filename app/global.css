@@ -29,3 +29,8 @@ body {
     background-color: #2d3436;
     background-image: linear-gradient(315deg, #2d3436 0%, #000000 74%);
 }
+
+.mask-gradient {
+    mask-image:
+            linear-gradient(to right, transparent 0, black 128px, black calc(100% - 50px), transparent 100%);
+}

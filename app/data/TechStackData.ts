@@ -12,7 +12,7 @@ import {
 } from '../../assets/images'
 import { StaticImageData } from 'next/image'
 
-interface TechDataItem {
+export interface TechDataItem {
     image: StaticImageData
     title: string
     subtitle: string

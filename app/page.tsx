@@ -8,7 +8,7 @@ export default async function Page() {
     return (
         <main>
             <HeroSection colorsMap={colorsMap} />
-            <TechStackSection />
+            <TechStackSection colorsMap={colorsMap} />
             <ProjectListSection />
         </main>
     )
