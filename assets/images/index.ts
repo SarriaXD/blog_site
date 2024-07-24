@@ -12,6 +12,7 @@ import hero_mobile from './hero_mobile.png'
 import hero_web from './hero_web.png'
 import hero_backend from './hero_backend.png'
 
+// we need rowPath for Vibrant to read the image
 export const allStaticImages = [
     { staticImageData: android, rowPath: 'assets/images/android.png' },
     { staticImageData: dart, rowPath: 'assets/images/dart.png' },

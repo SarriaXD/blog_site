@@ -13,6 +13,8 @@ export const getAllStaticImageColors = cache(async () => {
         const vibrant = await Vibrant.from(image.rowPath).getPalette()
         const mainColor = vibrant.DarkVibrant?.hex
         const secondaryColor = vibrant.Muted?.hex
+        // we use the src as the key to the dictionary, because if we use the StaticImageData object as the key,
+        // it will not be the same object when we import it in different files
         dictionary.set(image.staticImageData.src, {
             mainColor: mainColor ?? 'transparent',
             secondaryColor: secondaryColor ?? 'transparent',
