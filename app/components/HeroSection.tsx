@@ -271,7 +271,7 @@ export const HeroSection = ({ colorsMap }: HeroSectionProps) => {
                                     key={index}
                                     color={colorsMap.get(data.image.src)!}
                                     {...data}
-                                    reversed={index % 2 === 0}
+                                    reversed={index % 2 === 1}
                                 />
                             )
                         })}
