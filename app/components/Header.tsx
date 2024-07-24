@@ -94,7 +94,7 @@ export const Header = () => {
                     >
                         <i className="fa-solid fa-bars fa-lg" />
                     </IconButton>
-                    <Link href="/">
+                    <Link href="/public">
                         <i className="fa-solid fa-dog text-2xl text-gray-200" />
                     </Link>
                     <ul className="hidden gap-6 md:flex md:items-center">

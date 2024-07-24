@@ -1,8 +1,8 @@
 import React from 'react'
 import './global.css'
-import { Header } from '../components/Header.tsx'
+import { Header } from './components/Header.tsx'
 import Script from 'next/script'
-import { Footer } from '../components/Footer.tsx'
+import { Footer } from './components/Footer.tsx'
 
 export default function RootLayout({
     children,
