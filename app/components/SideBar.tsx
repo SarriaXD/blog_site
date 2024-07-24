@@ -8,6 +8,10 @@ import {
 } from '@material-tailwind/react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
+import { faDog, faEnvelope } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons'
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 
 interface SideBarProps {
     open: boolean
@@ -39,36 +43,30 @@ const InternalLink = ({ href, text }: InternalLinkProps) => {
 const externalLinks = [
     {
         href: 'mailto:sarria.qi.wang@gmail.com',
-        className: 'fa-solid fa-envelope',
+        icon: faEnvelope,
         text: 'Email me',
     },
     {
         href: 'https://www.linkedin.com/in/qi-wang-793a562a7',
-        className: 'fa-brands fa-linkedin',
+        icon: faLinkedin,
         text: 'LinkedIn',
     },
     {
         href: 'https://github.com/SarriaXD',
-        className: 'fa-brands fa-github',
+        icon: faGithub,
         text: 'GitHub',
     },
 ]
 
 interface ExternalLinkProps {
     href: string
-    className: string
+    icon: IconDefinition
     text: string
     index: number
     open: boolean
 }
 
-const ExternalLink = ({
-    href,
-    className,
-    text,
-    index,
-    open,
-}: ExternalLinkProps) => {
+const ExternalLink = ({ href, icon, text, index, open }: ExternalLinkProps) => {
     return (
         <motion.div
             animate={{
@@ -87,7 +85,7 @@ const ExternalLink = ({
                         {text}
                     </Typography>
                     <ListItemSuffix>
-                        <i className={`${className} text-2xl text-white`} />
+                        <FontAwesomeIcon icon={icon} />
                     </ListItemSuffix>
                 </ListItem>
             </Link>
@@ -107,7 +105,7 @@ export function SideBar({ open, onClose }: SideBarProps) {
             >
                 <div className="flex items-center justify-between p-4">
                     <Link href="/">
-                        <i className="fa-solid fa-dog text-2xl text-gray-200" />
+                        <FontAwesomeIcon icon={faDog} size="xl" />
                     </Link>
                     <IconButton variant="text" color="white" onClick={onClose}>
                         <svg

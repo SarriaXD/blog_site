@@ -1,7 +1,6 @@
 import React from 'react'
 import './global.css'
 import { Header } from './components/Header.tsx'
-import Script from 'next/script'
 import { Footer } from './components/Footer.tsx'
 
 export default function RootLayout({
@@ -14,10 +13,6 @@ export default function RootLayout({
             <head>
                 <meta charSet="UTF-8" />
                 <link rel="icon" type="image/svg+xml" href="/logo.png" />
-                <Script
-                    src="https://kit.fontawesome.com/991aaa700a.js"
-                    crossOrigin="anonymous"
-                />
                 <meta
                     name="viewport"
                     content="width=device-width, initial-scale=1.0"

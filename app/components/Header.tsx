@@ -4,6 +4,10 @@ import { Button, IconButton, Tooltip } from './Material.tsx'
 import Link from 'next/link'
 import { SideBar } from './SideBar.tsx'
 import { useState } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faBars, faDog, faEnvelope } from '@fortawesome/free-solid-svg-icons'
+import { faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons'
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 
 interface InternalLinkProps {
     href: string
@@ -34,35 +38,35 @@ const InternalLink = ({ href, text }: InternalLinkProps) => {
 
 interface ExternalLinkProps {
     href: string
-    className: string
+    icon: IconDefinition
     tip: string
 }
 
 const externalLinks: ExternalLinkProps[] = [
     {
         href: 'mailto:sarria.qi.wang@gmail.com',
-        className: 'fa-solid fa-envelope',
+        icon: faEnvelope,
         tip: 'Contact me via email',
     },
     {
         href: 'https://www.linkedin.com/in/qi-wang-793a562a7',
-        className: 'fa-brands fa-linkedin',
+        icon: faLinkedin,
         tip: 'Connect with me on LinkedIn',
     },
     {
         href: 'https://github.com/SarriaXD',
-        className: 'fa-brands fa-github',
+        icon: faGithub,
         tip: 'Check out my GitHub',
     },
 ]
 
-const ExternalLink = ({ href, className, tip }: ExternalLinkProps) => {
+const ExternalLink = ({ href, icon, tip }: ExternalLinkProps) => {
     return (
         <li>
             <Link href={href}>
                 <Tooltip content={tip}>
                     <IconButton>
-                        <i className={`${className} text-2xl`} />
+                        <FontAwesomeIcon icon={icon} size="2xl" />
                     </IconButton>
                 </Tooltip>
             </Link>
@@ -92,10 +96,10 @@ export const Header = () => {
                         className="md:hidden"
                         onClick={() => setOpen(true)}
                     >
-                        <i className="fa-solid fa-bars fa-lg" />
+                        <FontAwesomeIcon icon={faBars} size="lg" />
                     </IconButton>
                     <Link href="/">
-                        <i className="fa-solid fa-dog text-2xl text-gray-200" />
+                        <FontAwesomeIcon icon={faDog} size="xl" />
                     </Link>
                     <ul className="hidden gap-6 md:flex md:items-center">
                         {internalLinks.map((link) => (
