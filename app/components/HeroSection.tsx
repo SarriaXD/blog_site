@@ -5,6 +5,7 @@ import { Typography } from '@material-tailwind/react'
 import { useRef } from 'react'
 import Image, { StaticImageData } from 'next/image'
 import { hero_backend, hero_mobile, hero_web } from '../../assets/images'
+import { StaticImageColor } from '../utils.ts'
 
 const MotionTypography = motion(Typography)
 
@@ -108,6 +109,7 @@ const heroImageWithIntroductionData = [
 ]
 
 interface HeroImageWithIntroductionProps {
+    color: StaticImageColor
     image: StaticImageData
     alt: string
     title: string
@@ -117,6 +119,7 @@ interface HeroImageWithIntroductionProps {
 }
 
 const HeroImageWithIntroduction = ({
+    color,
     image,
     alt,
     title,
@@ -148,12 +151,12 @@ const HeroImageWithIntroduction = ({
             {/* for desktop layout */}
             <div className="hidden items-center justify-center lg:flex lg:flex-row lg:gap-32">
                 {reversed && <HeroImageIntroduction {...introductionProps} />}
-                <HeroImage image={image} alt={alt} />
+                <HeroImage image={image} color={color} alt={alt} />
                 {!reversed && <HeroImageIntroduction {...introductionProps} />}
             </div>
             {/* for mobile layout */}
             <div className="flex flex-col items-center justify-center gap-2 lg:hidden">
-                <HeroImage image={image} alt={alt} />
+                <HeroImage image={image} color={color} alt={alt} />
                 <HeroImageIntroduction {...introductionProps} />
             </div>
         </motion.div>
@@ -162,10 +165,11 @@ const HeroImageWithIntroduction = ({
 
 interface HeroImageProps {
     image: StaticImageData
+    color: StaticImageColor
     alt: string
 }
 
-const HeroImage = ({ image, alt }: HeroImageProps) => {
+const HeroImage = ({ image, color, alt }: HeroImageProps) => {
     const ref = useRef(null)
     const { scrollYProgress } = useScroll({
         target: ref,
@@ -181,6 +185,7 @@ const HeroImage = ({ image, alt }: HeroImageProps) => {
         [0, 1],
         ['60deg', '0deg']
     )
+    const gradientBackground = `linear-gradient(to top, ${color.mainColor}, ${color.secondaryColor}, transparent)`
     return (
         <div
             className="flex-1"
@@ -198,7 +203,12 @@ const HeroImage = ({ image, alt }: HeroImageProps) => {
                 className="relative"
             >
                 <Image src={image} alt={alt} className="relative z-10" />
-                <div className="absolute inset-x-0 -bottom-[15%] h-3/4 rounded-b-full bg-gradient-to-t from-purple-800 via-blue-800 to-transparent blur-3xl" />
+                <div
+                    className="absolute inset-x-0 -bottom-[15%] h-3/4 rounded-b-full blur-3xl"
+                    style={{
+                        background: gradientBackground,
+                    }}
+                />
             </motion.div>
         </div>
     )
@@ -244,25 +254,27 @@ const HeroImageIntroduction = ({
     )
 }
 
-export const HeroSection = () => {
+interface HeroSectionProps {
+    colorsMap: Map<string, StaticImageColor>
+}
+
+export const HeroSection = ({ colorsMap }: HeroSectionProps) => {
     return (
         <>
             <section className="bg-hero-section-gradient ">
                 <div className="container mx-auto flex flex-col items-stretch gap-8 px-4 pb-32 pt-24 md:gap-16 md:px-8 xl:gap-24 xl:px-12">
                     <Introduction />
                     <div className="flex flex-col gap-24">
-                        <HeroImageWithIntroduction
-                            {...heroImageWithIntroductionData[0]}
-                            reversed={false}
-                        />
-                        <HeroImageWithIntroduction
-                            {...heroImageWithIntroductionData[1]}
-                            reversed={true}
-                        />
-                        <HeroImageWithIntroduction
-                            {...heroImageWithIntroductionData[2]}
-                            reversed={false}
-                        />
+                        {heroImageWithIntroductionData.map((data, index) => {
+                            return (
+                                <HeroImageWithIntroduction
+                                    key={index}
+                                    color={colorsMap.get(data.image.src)!}
+                                    {...data}
+                                    reversed={index % 2 === 0}
+                                />
+                            )
+                        })}
                     </div>
                 </div>
             </section>

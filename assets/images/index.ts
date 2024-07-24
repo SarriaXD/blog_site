@@ -12,6 +12,28 @@ import hero_mobile from './hero_mobile.png'
 import hero_web from './hero_web.png'
 import hero_backend from './hero_backend.png'
 
+export const allStaticImages = [
+    { staticImageData: android, rowPath: 'assets/images/android.png' },
+    { staticImageData: dart, rowPath: 'assets/images/dart.png' },
+    { staticImageData: flutter, rowPath: 'assets/images/flutter.png' },
+    { staticImageData: java, rowPath: 'assets/images/java.png' },
+    {
+        staticImageData: jetpackCompose,
+        rowPath: 'assets/images/jetpack_compose.png',
+    },
+    { staticImageData: kotlin, rowPath: 'assets/images/kotlin.png' },
+    { staticImageData: react, rowPath: 'assets/images/react.png' },
+    { staticImageData: springBoot, rowPath: 'assets/images/spring_boot.png' },
+    { staticImageData: python, rowPath: 'assets/images/python.png' },
+    { staticImageData: typescript, rowPath: 'assets/images/typescript.png' },
+    { staticImageData: hero_mobile, rowPath: 'assets/images/hero_mobile.png' },
+    { staticImageData: hero_web, rowPath: 'assets/images/hero_web.png' },
+    {
+        staticImageData: hero_backend,
+        rowPath: 'assets/images/hero_backend.png',
+    },
+]
+
 export {
     android,
     dart,
