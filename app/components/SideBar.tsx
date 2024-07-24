@@ -106,7 +106,7 @@ export function SideBar({ open, onClose }: SideBarProps) {
                 className="bg-gray-900 bg-opacity-80 backdrop-blur-md"
             >
                 <div className="flex items-center justify-between p-4">
-                    <Link href="/public">
+                    <Link href="/">
                         <i className="fa-solid fa-dog text-2xl text-gray-200" />
                     </Link>
                     <IconButton variant="text" color="white" onClick={onClose}>
