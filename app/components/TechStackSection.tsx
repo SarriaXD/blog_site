@@ -72,7 +72,42 @@ const CarouseEmptyItem = () => {
     )
 }
 
+const useCarouselAnimation = (index: number) => {
+    const isMobile = useMediaQuery('(max-width: 720px)')
+    const ref = useRef(null)
+    const { scrollYProgress } = useScroll({
+        target: ref,
+        offset: ['start end', 'end end'],
+    })
+    const smoothScrollYProgress = useSpring(scrollYProgress, {
+        stiffness: 200,
+        damping: 20,
+    })
+    let startX = index % 2 === 0 ? '50%' : '-50%'
+    startX = isMobile ? '0%' : startX
+    const x = useTransform(smoothScrollYProgress, [0, 1], [startX, '0%'])
+    let startScale = index % 2 === 0 ? 0.6 : 0.8
+    startScale = isMobile ? 0.8 : startScale
+    const scale = useTransform(smoothScrollYProgress, [0, 1], [startScale, 1])
+    let startY = index % 2 === 0 ? 200 : 50
+    startY = isMobile ? 0 : startY
+    const y = useTransform(smoothScrollYProgress, [0, 1], [startY, 0])
+    return { ref, x, y, scale }
+}
+
+const useCarouselScrollAnimation = (reversed: boolean) => {
+    const baseX = useMotionValue(0)
+    const speed = 0.06
+    const delta = reversed ? -speed : speed
+    const x = useTransform(baseX, (v) => `${wrap(-33.33333333333333, 0, v)}%`)
+    useAnimationFrame(() => {
+        baseX.set(baseX.get() + delta)
+    })
+    return x
+}
+
 interface CarouselProps {
+    index: number
     colorsMap: Map<string, StaticImageColor>
     data: { name: string; image: StaticImageData }[]
     title: string
@@ -81,26 +116,30 @@ interface CarouselProps {
 }
 
 const Carousel = ({
+    index,
     colorsMap,
     title,
     subtitle,
     data,
     reversed,
 }: CarouselProps) => {
-    const baseX = useMotionValue(0)
-    const speed = 0.06
-    const delta = reversed ? -speed : speed
-    const x = useTransform(baseX, (v) => `${wrap(-33.33333333333333, 0, v)}%`)
-    useAnimationFrame(() => {
-        baseX.set(baseX.get() + delta)
-    })
+    const scrollX = useCarouselScrollAnimation(reversed)
+    const { ref, x, y, scale } = useCarouselAnimation(index)
     return (
-        <div className="flex flex-1 flex-col overflow-hidden rounded-lg border border-[#1F1F1F]">
+        <motion.div
+            ref={ref}
+            className="flex flex-1 flex-col overflow-hidden rounded-lg border border-[#1F1F1F] bg-black"
+            style={{
+                x,
+                y,
+                scale,
+            }}
+        >
             <div className="mask-gradient w-full overflow-hidden">
                 <motion.ul
                     className="flex w-[max-content]"
                     style={{
-                        x,
+                        x: scrollX,
                     }}
                 >
                     {data.map((item, index) => (
@@ -138,7 +177,7 @@ const Carousel = ({
                     {subtitle}
                 </Typography>
             </div>
-        </div>
+        </motion.div>
     )
 }
 
@@ -156,20 +195,29 @@ const TechTackSectionTitle = () => {
         stiffness: 200,
         damping: 20,
     })
-    const titleScale = useTransform(smoothScrollYProgress, [0, 0.6], [0.8, 1])
-    const titleY = useTransform(smoothScrollYProgress, [0, 0.6], [50, 0])
-    const titleOpacity = useTransform(smoothScrollYProgress, [0, 0.6], [0, 1])
+    const titleScale = useTransform(smoothScrollYProgress, [0, 0.3], [0.8, 1])
+    const titleY = useTransform(smoothScrollYProgress, [0, 0.3], [-100, 0])
+    const titleOpacity = useTransform(smoothScrollYProgress, [0, 0.3], [0, 1])
     const subtitleScale = useTransform(
         smoothScrollYProgress,
-        [0.6, 1],
-        [1.2, 0.8]
+        [0.3, 1],
+        [1.2, 0.7]
     )
-    const subtitleY = useTransform(smoothScrollYProgress, [0.3, 1], [-100, 0])
     return (
         <>
             <motion.div
+                className="sticky top-3/4 z-50 self-center rounded-full bg-gray-100 bg-opacity-30 p-8 backdrop-blur-md"
+                style={{
+                    scale: subtitleScale,
+                }}
+            >
+                <Typography variant={'h4'} className="text-center">
+                    My Code Engines
+                </Typography>
+            </motion.div>
+            <motion.div
                 ref={ref}
-                className="self-center"
+                className="mb-4 self-center"
                 style={{
                     scale: titleScale,
                     opacity: titleOpacity,
@@ -181,17 +229,6 @@ const TechTackSectionTitle = () => {
                     className="text-center text-[#E9E9E9]"
                 >
                     Frameworks & Languages
-                </Typography>
-            </motion.div>
-            <motion.div
-                className="sticky top-3/4 z-50 self-center rounded-full bg-gray-100 bg-opacity-30 p-8 backdrop-blur-md"
-                style={{
-                    scale: subtitleScale,
-                    y: subtitleY,
-                }}
-            >
-                <Typography variant={'h4'} className="text-center">
-                    My Code Engines
                 </Typography>
             </motion.div>
         </>
@@ -223,32 +260,54 @@ interface TechIntroductionItemProps {
     introduction: string
 }
 
+const useTechIntroductionAnimation = () => {
+    const ref = useRef(null)
+    const { scrollYProgress } = useScroll({
+        target: ref,
+        offset: ['start end', 'end end'],
+    })
+    const smoothScrollYProgress = useSpring(scrollYProgress, {
+        stiffness: 200,
+        damping: 20,
+    })
+    const scale = useTransform(smoothScrollYProgress, [0, 1], [0.9, 1])
+    return { ref, scale }
+}
+
 const TechIntroductionItem = ({
     images,
     names,
     introduction,
 }: TechIntroductionItemProps) => {
+    const { ref, scale } = useTechIntroductionAnimation()
     return (
-        <Card color={'gray'}>
-            <CardBody className="flex flex-col gap-4">
-                <div className="flex flex-wrap gap-2">
-                    {images.map((image, techIndex) => (
-                        <Avatar key={techIndex} src={image.src} />
-                    ))}
-                </div>
-                <div className="flex flex-wrap gap-2">
-                    {names.map((tech, techIndex) => (
-                        <Chip
-                            key={techIndex}
-                            size="md"
-                            value={tech}
-                            color="blue"
-                        />
-                    ))}
-                </div>
-                <Typography variant="paragraph">{introduction}</Typography>
-            </CardBody>
-        </Card>
+        <motion.div
+            ref={ref}
+            style={{
+                scale,
+            }}
+        >
+            <Card color={'gray'}>
+                <CardBody className="flex flex-col gap-4">
+                    <div className="flex flex-wrap gap-2">
+                        {images.map((image, techIndex) => (
+                            <Avatar key={techIndex} src={image.src} />
+                        ))}
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                        {names.map((tech, techIndex) => (
+                            <Chip
+                                key={techIndex}
+                                size="md"
+                                value={tech}
+                                color="blue"
+                            />
+                        ))}
+                    </div>
+                    <Typography variant="paragraph">{introduction}</Typography>
+                </CardBody>
+            </Card>
+        </motion.div>
     )
 }
 
@@ -291,11 +350,13 @@ export const TechStackSection = ({ colorsMap }: TechStackSectionProps) => {
                     <TechTackSectionTitle />
                     <div className="flex flex-col gap-4 md:flex-row">
                         <Carousel
+                            index={0}
                             colorsMap={colorsMap}
                             {...frameworkTechData}
                             reversed={false}
                         />
                         <Carousel
+                            index={1}
                             colorsMap={colorsMap}
                             {...languageTechData}
                             reversed={true}
