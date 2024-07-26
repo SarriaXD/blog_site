@@ -228,7 +228,7 @@ const TechTackSectionTitle = () => {
                     variant={'h1'}
                     className="text-center text-[#E9E9E9]"
                 >
-                    Frameworks & Languages
+                    Frameworks & Languages I Master
                 </Typography>
             </motion.div>
         </>
