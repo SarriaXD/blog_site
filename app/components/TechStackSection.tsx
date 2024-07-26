@@ -206,13 +206,13 @@ const TechTackSectionTitle = () => {
     return (
         <>
             <motion.div
-                className="sticky top-3/4 z-50 self-center rounded-full bg-gray-100 bg-opacity-30 p-8 backdrop-blur-md"
+                className="sticky top-3/4 z-50 self-center rounded-full bg-gray-600 bg-opacity-30 p-8 backdrop-blur-md"
                 style={{
                     scale: subtitleScale,
                 }}
             >
                 <Typography variant={'h4'} className="text-center">
-                    My Code Engines
+                    Code Engines
                 </Typography>
             </motion.div>
             <motion.div
