@@ -1,12 +1,6 @@
 'use client'
 
-import {
-    Avatar,
-    Card,
-    CardBody,
-    Chip,
-    Typography,
-} from '@material-tailwind/react'
+import { Card, CardBody, Chip, Typography } from '@material-tailwind/react'
 import {
     motion,
     useAnimationFrame,
@@ -291,7 +285,13 @@ const TechIntroductionItem = ({
                 <CardBody className="flex flex-col gap-4">
                     <div className="flex flex-wrap gap-2">
                         {images.map((image, techIndex) => (
-                            <Avatar key={techIndex} src={image.src} />
+                            <Image
+                                key={techIndex}
+                                src={image}
+                                width={48}
+                                height={48}
+                                alt={`${names[techIndex]} image`}
+                            />
                         ))}
                     </div>
                     <div className="flex flex-wrap gap-2">
