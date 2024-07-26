@@ -133,7 +133,6 @@ const HeroImageWithIntroduction = ({
         subtitle,
         content,
     }
-    console.log('reversed', reversed)
     return (
         <motion.div
             initial={{
