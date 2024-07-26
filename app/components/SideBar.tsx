@@ -26,11 +26,12 @@ const internalLinks = [
 interface InternalLinkProps {
     href: string
     text: string
+    onClose: () => void
 }
 
-const InternalLink = ({ href, text }: InternalLinkProps) => {
+const InternalLink = ({ href, text, onClose }: InternalLinkProps) => {
     return (
-        <Link href={href}>
+        <Link href={href} onClick={onClose}>
             <ListItem>
                 <Typography variant="h6" color="white">
                     {text}
@@ -64,32 +65,44 @@ interface ExternalLinkProps {
     text: string
     index: number
     open: boolean
+    onClose: () => void
 }
 
-const ExternalLink = ({ href, icon, text, index, open }: ExternalLinkProps) => {
+const ExternalLink = ({
+    href,
+    icon,
+    text,
+    index,
+    open,
+    onClose,
+}: ExternalLinkProps) => {
     return (
-        <motion.div
-            animate={{
-                x: open ? 0 : '-100%',
-            }}
-            transition={{
-                type: 'spring',
-                stiffness: 120,
-                damping: 12,
-                delay: index * 0.2,
-            }}
-        >
-            <Link href={href}>
+        <Link href={href} onClick={onClose}>
+            <motion.div
+                animate={{
+                    x: open ? 0 : '-100%',
+                }}
+                transition={{
+                    type: 'spring',
+                    stiffness: 120,
+                    damping: 12,
+                    delay: index * 0.2,
+                }}
+            >
                 <ListItem>
                     <Typography variant="h6" color="white">
                         {text}
                     </Typography>
                     <ListItemSuffix>
-                        <FontAwesomeIcon icon={icon} />
+                        <FontAwesomeIcon
+                            icon={icon}
+                            color="#FFFFFF"
+                            size="xl"
+                        />
                     </ListItemSuffix>
                 </ListItem>
-            </Link>
-        </motion.div>
+            </motion.div>
+        </Link>
     )
 }
 
@@ -104,7 +117,7 @@ export function SideBar({ open, onClose }: SideBarProps) {
                 className="bg-gray-900 bg-opacity-80 backdrop-blur-md"
             >
                 <div className="flex items-center justify-between p-4">
-                    <Link href="/">
+                    <Link href="/" onClick={onClose}>
                         <FontAwesomeIcon icon={faDog} size="xl" />
                     </Link>
                     <IconButton variant="text" color="white" onClick={onClose}>
@@ -126,7 +139,11 @@ export function SideBar({ open, onClose }: SideBarProps) {
                 </div>
                 <List>
                     {internalLinks.map((link) => (
-                        <InternalLink key={link.text} {...link} />
+                        <InternalLink
+                            key={link.text}
+                            {...link}
+                            onClose={onClose}
+                        />
                     ))}
                     {externalLinks.map((link) => (
                         <ExternalLink
@@ -134,6 +151,7 @@ export function SideBar({ open, onClose }: SideBarProps) {
                             {...link}
                             index={externalLinks.indexOf(link)}
                             open={open}
+                            onClose={onClose}
                         />
                     ))}
                 </List>
