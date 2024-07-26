@@ -32,5 +32,5 @@ body {
 
 .mask-gradient {
     mask-image:
-            linear-gradient(to right, transparent 0, black 128px, black calc(100% - 50px), transparent 100%);
+            linear-gradient(to right, transparent 0, black 50px, black calc(100% - 50px), transparent 100%);
 }

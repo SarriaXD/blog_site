@@ -1,5 +1,5 @@
 import { HeroSection } from './components/HeroSection.tsx'
-import { ProjectListSection } from './components/ProjectListSection.tsx'
+// import { ProjectListSection } from './components/ProjectListSection.tsx'
 import { TechStackSection } from './components/TechStackSection.tsx'
 import { getAllStaticImageColors } from './utils.ts'
 
@@ -9,7 +9,7 @@ export default async function Page() {
         <main>
             <HeroSection colorsMap={colorsMap} />
             <TechStackSection colorsMap={colorsMap} />
-            <ProjectListSection />
+            {/*<ProjectListSection />*/}
         </main>
     )
 }

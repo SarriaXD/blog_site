@@ -10,87 +10,98 @@ import {
     python,
     typescript,
 } from '../../assets/images'
-import { StaticImageData } from 'next/image'
 
-export interface TechDataItem {
-    image: StaticImageData
-    title: string
-    subtitle: string
-    link: string
+export const frameworkTechData = {
+    title: 'Frameworks I Excel At',
+    subtitle:
+        'Building Powerful Applications: Jetpack Compose, Android, Flutter, React, Spring Boot - Leveraging cutting-edge frameworks to create robust, scalable solutions.',
+    data: [
+        {
+            image: android,
+            name: 'Android',
+        },
+        {
+            image: flutter,
+            name: 'Flutter',
+        },
+        {
+            image: jetpackCompose,
+            name: 'Compose',
+        },
+        {
+            image: react,
+            name: 'React',
+        },
+        {
+            image: springBoot,
+            name: 'Spring',
+        },
+    ],
 }
 
-export const frameworkTechData: TechDataItem[] = [
-    {
-        image: android,
-        title: 'Android',
-        subtitle:
-            'Android is a mobile operating system based on a modified version of the Linux kernel and other open source software, designed primarily for touchscreen mobile devices such as smartphones and tablets.',
-        link: 'https://developer.android.com/',
-    },
-    {
-        image: flutter,
-        title: 'Flutter',
-        subtitle:
-            'Flutter is Google’s UI toolkit for building natively compiled applications for mobile, web, and desktop from a single codebase.',
-        link: 'https://flutter.dev/',
-    },
-    {
-        image: jetpackCompose,
-        title: 'Compose',
-        subtitle:
-            'Jetpack Compose is Android’s modern toolkit for building native UI. It simplifies and accelerates UI development on Android.',
-        link: 'https://developer.android.com/jetpack/compose',
-    },
-    {
-        image: react,
-        title: 'React',
-        subtitle:
-            'React is an open-source, front end, JavaScript library for building user interfaces or UI components.',
-        link: 'https://reactjs.org/',
-    },
-    {
-        image: springBoot,
-        title: 'Spring',
-        subtitle:
-            'Spring Boot makes it easy to create stand-alone, production-grade Spring-based Applications that you can "just run".',
-        link: 'https://spring.io/projects/spring-boot',
-    },
-]
+export const languageTechData = {
+    title: 'Languages I Master',
+    subtitle:
+        'Multi-Language Proficiency: Java, Dart, Python, Kotlin, TypeScript - Harnessing diverse programming languages to efficiently solve complex challenges.',
+    data: [
+        {
+            image: java,
+            name: 'Java',
+        },
+        {
+            image: kotlin,
+            name: 'Kotlin',
+        },
+        {
+            image: dart,
+            name: 'Dart',
+        },
+        {
+            image: python,
+            name: 'Python',
+        },
+        {
+            image: typescript,
+            name: 'TypeScript',
+        },
+    ],
+}
 
-export const languageTechData: TechDataItem[] = [
+export const techIntroductions = [
     {
-        image: java,
-        title: 'Java',
-        subtitle:
-            'Java is a high-level, class-based, object-oriented programming language that is designed to have as few implementation dependencies as possible.',
-        link: 'https://www.java.com/',
+        images: [android, java, kotlin],
+        names: ['Android', 'Java', 'Kotlin'],
+        introduction:
+            'The primary technology stack for developing native Android mobile applications, offering robust performance and full access to device features.',
     },
     {
-        image: kotlin,
-        title: 'Kotlin',
-        subtitle:
-            'Kotlin is a cross-platform, statically typed, general-purpose programming language with type inference. Kotlin is designed to be fully interoperable with Java.',
-        link: 'https://kotlinlang.org/',
+        images: [jetpackCompose, kotlin],
+        names: ['Jetpack Compose', 'Kotlin'],
+        introduction:
+            'A modern UI toolkit for Android development, using Kotlin to create declarative user interfaces. It simplifies UI development and supports multi-platform projects for desktop and web.',
     },
     {
-        image: dart,
-        title: 'Dart',
-        subtitle:
-            'Dart is a client-optimized programming language for apps on multiple platforms. It is developed by Google and is used to build mobile, desktop, server, and web applications.',
-        link: 'https://dart.dev/',
+        images: [flutter, dart],
+        names: ['Flutter', 'Dart'],
+        introduction:
+            "Google's cross-platform development framework for building high-performance native interface applications that run on multiple platforms from a single codebase.",
     },
     {
-        image: python,
-        title: 'Python',
-        subtitle:
-            'Python is an interpreted, high-level, general-purpose programming language. Created by Guido van Rossum and first released in 1991.',
-        link: 'https://www.python.org/',
+        images: [react, typescript],
+        names: ['React', 'TypeScript'],
+        introduction:
+            'A popular front-end technology combination for building modern, reactive web applications, with TypeScript adding static type checking for enhanced reliability.',
     },
     {
-        image: typescript,
-        title: 'TypeScript',
-        subtitle:
-            'TypeScript is a strict syntactical superset of JavaScript that adds optional static typing to the language. TypeScript is designed for the development of large applications and transcompiles to JavaScript.',
-        link: 'https://www.typescriptlang.org/',
+        images: [python],
+        names: ['Python'],
+        introduction:
+            "My primary tool for data analysis and artificial intelligence. Python's rich ecosystem of libraries makes it ideal for processing large datasets, creating machine learning models, and developing AI applications.",
+    },
+    {
+        images: [springBoot, java, kotlin],
+        names: ['Spring Boot', 'Java', 'Kotlin'],
+        introduction:
+            'A framework for rapidly developing and deploying enterprise-grade Java applications, with Kotlin offering a more modern and concise syntax option.',
     },
 ]

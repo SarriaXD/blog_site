@@ -1,73 +1,64 @@
 'use client'
 
-import { Typography } from '@material-tailwind/react'
 import {
-    frameworkTechData,
-    languageTechData,
-    TechDataItem,
-} from '../data/TechStackData.ts'
+    Avatar,
+    Card,
+    CardBody,
+    Chip,
+    Typography,
+} from '@material-tailwind/react'
 import {
     motion,
     useAnimationFrame,
     useMotionValue,
+    useScroll,
+    useSpring,
     useTransform,
     wrap,
 } from 'framer-motion'
 import Image, { StaticImageData } from 'next/image'
-import Link from 'next/link'
 import { StaticImageColor } from '../utils.ts'
-
-// Duplicate the data to make looping easier
-const frameworksCarouselData = [...frameworkTechData]
-
-const languagesCarouselData = [...languageTechData]
+import { useRef } from 'react'
+import {
+    frameworkTechData,
+    languageTechData,
+    techIntroductions,
+} from '../data/TechStackData.ts'
+import { useMediaQuery } from '../Hooks.ts'
 
 interface CarouselItemProps {
     color: StaticImageColor
     image: StaticImageData
-    title: string
-    subtitle: string
-    link: string
+    name: string
 }
 
-const CarouselItem = ({ color, image, title, link }: CarouselItemProps) => {
+const CarouselItem = ({ color, image, name }: CarouselItemProps) => {
     const gradientBackground = `linear-gradient(to top, ${color.mainColor}, ${color.secondaryColor})`
     return (
-        <li
-            className="mx-2 flex-shrink-0
-             rounded-2xl
-             px-2 py-2 md:mx-4
-             md:px-4 lg:mx-6 lg:px-6
-             "
-        >
-            <Link href={link}>
-                <div className="flex flex-col items-center gap-4">
-                    <div className="relative size-16 md:size-24 xl:size-32">
-                        <Image
-                            src={image}
-                            alt={`Logo of ${title}`}
-                            fill={true}
-                            className="relative z-10 object-contain"
-                        />
-                        <div className="absolute inset-x-[5%] -bottom-[30%] h-[20%] blur-md md:blur-lg">
-                            <div
-                                className="h-full w-full rounded-full"
-                                style={{
-                                    background: gradientBackground,
-                                    clipPath:
-                                        'polygon(50% 0%, 0% 100%, 100% 100%)',
-                                }}
-                            ></div>
-                        </div>
+        <li className="rounded-2xl px-4 py-2">
+            <div className="flex flex-col items-center gap-2">
+                <div className="relative size-20">
+                    <Image
+                        src={image}
+                        alt={`Logo of ${name}`}
+                        fill={true}
+                        className="relative z-10 object-contain"
+                    />
+                    {/* background shadow */}
+                    <div className="absolute inset-x-[5%] -bottom-[20%] h-[20%] blur-[6px]">
+                        <div
+                            className="h-full w-full rounded-full"
+                            style={{
+                                background: gradientBackground,
+                                clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)',
+                            }}
+                        ></div>
                     </div>
-                    <Typography
-                        variant="h6"
-                        className="text-xs md:text-sm xl:text-lg"
-                    >
-                        {title}
-                    </Typography>
                 </div>
-            </Link>
+                <Typography variant="h6" className="relative z-10 text-xs">
+                    {name}
+                </Typography>
+            </div>
         </li>
     )
 }
@@ -75,7 +66,7 @@ const CarouselItem = ({ color, image, title, link }: CarouselItemProps) => {
 const CarouseEmptyItem = () => {
     return (
         <span
-            className="block size-16 flex-shrink-0 md:size-24 xl:size-32
+            className="block size-12
              "
         />
     )
@@ -83,59 +74,70 @@ const CarouseEmptyItem = () => {
 
 interface CarouselProps {
     colorsMap: Map<string, StaticImageColor>
-    data: TechDataItem[]
+    data: { name: string; image: StaticImageData }[]
+    title: string
+    subtitle: string
     reversed: boolean
 }
 
-const Carousel = ({ colorsMap, data, reversed }: CarouselProps) => {
+const Carousel = ({
+    colorsMap,
+    title,
+    subtitle,
+    data,
+    reversed,
+}: CarouselProps) => {
     const baseX = useMotionValue(0)
-    const speed = 0.035
+    const speed = 0.06
     const delta = reversed ? -speed : speed
     const x = useTransform(baseX, (v) => `${wrap(-33.33333333333333, 0, v)}%`)
     useAnimationFrame(() => {
         baseX.set(baseX.get() + delta)
     })
     return (
-        <div
-            className="flex w-full
-         flex-col items-start"
-        >
-            <div className="mask-gradient w-full overflow-x-hidden">
+        <div className="flex flex-1 flex-col overflow-hidden rounded-lg border border-[#1F1F1F]">
+            <div className="mask-gradient w-full overflow-hidden">
                 <motion.ul
-                    className="flex w-[max-content] py-8 md:py-16 lg:py-24"
+                    className="flex w-[max-content]"
                     style={{
                         x,
                     }}
                 >
-                    {data.map((tech, index) => (
+                    {data.map((item, index) => (
                         <CarouselItem
-                            color={colorsMap.get(tech.image.src)!}
+                            color={colorsMap.get(item.image.src)!}
                             key={index}
-                            {...tech}
+                            {...item}
                         />
                     ))}
                     <CarouseEmptyItem />
-                    {data.map((tech, index) => (
+                    {data.map((item, index) => (
                         <CarouselItem
-                            color={colorsMap.get(tech.image.src)!}
+                            color={colorsMap.get(item.image.src)!}
                             key={index}
-                            {...tech}
+                            {...item}
                         />
                     ))}
                     <CarouseEmptyItem />
-                    {data.map((tech, index) => (
+                    {data.map((item, index) => (
                         <CarouselItem
-                            color={colorsMap.get(tech.image.src)!}
+                            color={colorsMap.get(item.image.src)!}
                             key={index}
-                            {...tech}
+                            {...item}
                         />
                     ))}
                     <CarouseEmptyItem />
                 </motion.ul>
             </div>
-            {/*<Typography variant="h6" className="mt-2 text-center text-xs">*/}
-            {/*    {`${reversed ? 'Languages' : 'Frameworks'} I've worked with`}*/}
-            {/*</Typography>*/}
+            <div className="flex flex-col gap-4 p-6">
+                <Typography variant="h5">{title}</Typography>
+                <Typography
+                    variant="paragraph"
+                    className="text-xl text-[#989898]"
+                >
+                    {subtitle}
+                </Typography>
+            </div>
         </div>
     )
 }
@@ -144,37 +146,165 @@ interface TechStackSectionProps {
     colorsMap: Map<string, StaticImageColor>
 }
 
+const TechTackSectionTitle = () => {
+    const ref = useRef(null)
+    const { scrollYProgress } = useScroll({
+        target: ref,
+        offset: ['end end', 'start start'],
+    })
+    const smoothScrollYProgress = useSpring(scrollYProgress, {
+        stiffness: 200,
+        damping: 20,
+    })
+    const titleScale = useTransform(smoothScrollYProgress, [0, 0.6], [0.8, 1])
+    const titleY = useTransform(smoothScrollYProgress, [0, 0.6], [50, 0])
+    const titleOpacity = useTransform(smoothScrollYProgress, [0, 0.6], [0, 1])
+    const subtitleScale = useTransform(
+        smoothScrollYProgress,
+        [0.6, 1],
+        [1.2, 0.8]
+    )
+    const subtitleY = useTransform(smoothScrollYProgress, [0.3, 1], [-100, 0])
+    return (
+        <>
+            <motion.div
+                ref={ref}
+                className="self-center"
+                style={{
+                    scale: titleScale,
+                    opacity: titleOpacity,
+                    y: titleY,
+                }}
+            >
+                <Typography
+                    variant={'h1'}
+                    className="text-center text-[#E9E9E9]"
+                >
+                    Frameworks & Languages
+                </Typography>
+            </motion.div>
+            <motion.div
+                className="sticky top-3/4 z-50 self-center rounded-full bg-gray-100 bg-opacity-30 p-8 backdrop-blur-md"
+                style={{
+                    scale: subtitleScale,
+                    y: subtitleY,
+                }}
+            >
+                <Typography variant={'h4'} className="text-center">
+                    My Code Engines
+                </Typography>
+            </motion.div>
+        </>
+    )
+}
+
+function chunkArray(
+    array: {
+        images: StaticImageData[]
+        names: string[]
+        introduction: string
+    }[],
+    chunkSize: number
+): {
+    images: StaticImageData[]
+    names: string[]
+    introduction: string
+}[][] {
+    const result = []
+    for (let i = 0; i < array.length; i += chunkSize) {
+        result.push(array.slice(i, i + chunkSize))
+    }
+    return result
+}
+
+interface TechIntroductionItemProps {
+    images: StaticImageData[]
+    names: string[]
+    introduction: string
+}
+
+const TechIntroductionItem = ({
+    images,
+    names,
+    introduction,
+}: TechIntroductionItemProps) => {
+    return (
+        <Card color={'gray'}>
+            <CardBody className="flex flex-col gap-4">
+                <div className="flex flex-wrap gap-2">
+                    {images.map((image, techIndex) => (
+                        <Avatar key={techIndex} src={image.src} />
+                    ))}
+                </div>
+                <div className="flex flex-wrap gap-2">
+                    {names.map((tech, techIndex) => (
+                        <Chip
+                            key={techIndex}
+                            size="md"
+                            value={tech}
+                            color="blue"
+                        />
+                    ))}
+                </div>
+                <Typography variant="paragraph">{introduction}</Typography>
+            </CardBody>
+        </Card>
+    )
+}
+
+interface TechIntroductionsProps {
+    techIntroductions: {
+        images: StaticImageData[]
+        names: string[]
+        introduction: string
+    }[]
+}
+
+const TechIntroduction = ({ techIntroductions }: TechIntroductionsProps) => {
+    const isMobile = useMediaQuery('(max-width: 720px)')
+    const columns = isMobile ? 1 : 2
+    const chunkedTechIntroduction = chunkArray(
+        techIntroductions,
+        Math.floor(techIntroductions.length / columns)
+    )
+    return (
+        <div className="flex gap-4">
+            {chunkedTechIntroduction.map((techIntroduction, index) => (
+                <div key={index} className="flex flex-1 flex-col gap-4">
+                    {techIntroduction.map((techIntroduction, index) => (
+                        <TechIntroductionItem
+                            key={index}
+                            {...techIntroduction}
+                        />
+                    ))}
+                </div>
+            ))}
+        </div>
+    )
+}
+
 export const TechStackSection = ({ colorsMap }: TechStackSectionProps) => {
     return (
         <>
-            <motion.section
-                initial={{
-                    opacity: 0,
-                    y: 100,
-                }}
-                animate={{
-                    opacity: 1,
-                    y: 0,
-                }}
-                transition={{
-                    type: 'tween',
-                    duration: 0.6,
-                    delay: 1,
-                }}
-                className="mx-auto w-11/12 py-8 md:py-12 xl:py-16"
-            >
-                <Carousel
-                    colorsMap={colorsMap}
-                    data={frameworksCarouselData}
-                    reversed={false}
-                />
-                <div className="mt-8" />
-                <Carousel
-                    colorsMap={colorsMap}
-                    data={languagesCarouselData}
-                    reversed={true}
-                />
-            </motion.section>
+            <section className="bg-black px-8 py-16">
+                <div className="mx-auto flex min-h-[100vh] flex-col gap-8 lg:max-w-[1080px]">
+                    <TechTackSectionTitle />
+                    <div className="flex flex-col gap-4 md:flex-row">
+                        <Carousel
+                            colorsMap={colorsMap}
+                            {...frameworkTechData}
+                            reversed={false}
+                        />
+                        <Carousel
+                            colorsMap={colorsMap}
+                            {...languageTechData}
+                            reversed={true}
+                        />
+                    </div>
+                    <TechIntroduction techIntroductions={techIntroductions} />
+                    <div className="h-[200px]" />
+                </div>
+            </section>
         </>
     )
 }
