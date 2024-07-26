@@ -9,13 +9,13 @@ import {
     useTransform,
 } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
-import { Typography } from '@material-tailwind/react'
 import {
     flutterProjectData,
     FlutterDataItem,
 } from '../data/FlutterProjectData.ts'
 import Image, { StaticImageData } from 'next/image'
 import { useMediaQuery } from '../Hooks.ts'
+import { Typography } from './Material.tsx'
 
 interface FramesProps {
     frames: FlutterDataItem[]

@@ -1,6 +1,6 @@
 'use client'
 
-import { Card, CardBody, Chip, Typography } from '@material-tailwind/react'
+import { Card, CardBody, Chip, Typography } from './Material.tsx'
 import {
     motion,
     useAnimationFrame,

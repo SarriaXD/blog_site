@@ -1,11 +1,12 @@
 import React from 'react'
-import { Drawer, IconButton } from './Material.tsx'
 import {
+    Drawer,
+    IconButton,
     List,
     ListItem,
     ListItemSuffix,
     Typography,
-} from '@material-tailwind/react'
+} from './Material.tsx'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { faDog, faEnvelope } from '@fortawesome/free-solid-svg-icons'

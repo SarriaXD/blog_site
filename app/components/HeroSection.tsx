@@ -1,12 +1,12 @@
 'use client'
 
 import { motion, useScroll, useSpring, useTransform } from 'framer-motion'
-import { Typography } from '@material-tailwind/react'
 import { useRef } from 'react'
 import Image, { StaticImageData } from 'next/image'
 import { hero_backend, hero_mobile, hero_web } from '../../assets/images'
 import { StaticImageColor } from '../utils.ts'
 import { useMediaQuery } from '../Hooks.ts'
+import { Typography } from './Material.tsx'
 
 const MotionTypography = motion(Typography)
 
