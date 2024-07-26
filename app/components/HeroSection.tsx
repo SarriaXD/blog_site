@@ -6,6 +6,7 @@ import { useRef } from 'react'
 import Image, { StaticImageData } from 'next/image'
 import { hero_backend, hero_mobile, hero_web } from '../../assets/images'
 import { StaticImageColor } from '../utils.ts'
+import { useMediaQuery } from '../Hooks.ts'
 
 const MotionTypography = motion(Typography)
 
@@ -132,6 +133,7 @@ const HeroImageWithIntroduction = ({
         subtitle,
         content,
     }
+    console.log('reversed', reversed)
     return (
         <motion.div
             initial={{
@@ -148,17 +150,22 @@ const HeroImageWithIntroduction = ({
                 delay: 1,
             }}
         >
-            {/* for desktop layout */}
-            <div className="hidden items-center justify-center lg:flex lg:flex-row lg:gap-32">
+            <div className="flex flex-col items-center justify-center gap-2 lg:flex-row lg:gap-32">
                 {reversed && <HeroImageIntroduction {...introductionProps} />}
                 <HeroImage image={image} color={color} alt={alt} />
                 {!reversed && <HeroImageIntroduction {...introductionProps} />}
             </div>
-            {/* for mobile layout */}
-            <div className="flex flex-col items-center justify-center gap-2 lg:hidden">
-                <HeroImage image={image} color={color} alt={alt} />
-                <HeroImageIntroduction {...introductionProps} />
-            </div>
+            {/* for desktop layout */}
+            {/*<div className="hidden items-center justify-center lg:flex lg:flex-row lg:gap-32">*/}
+            {/*    {reversed && <HeroImageIntroduction {...introductionProps} />}*/}
+            {/*    <HeroImage image={image} color={color} alt={alt} />*/}
+            {/*    {!reversed && <HeroImageIntroduction {...introductionProps} />}*/}
+            {/*</div>*/}
+            {/*/!* for mobile layout *!/*/}
+            {/*<div className="flex flex-col items-center justify-center gap-2 lg:hidden">*/}
+            {/*    <HeroImage image={image} color={color} alt={alt} />*/}
+            {/*    <HeroImageIntroduction {...introductionProps} />*/}
+            {/*</div>*/}
         </motion.div>
     )
 }
@@ -259,6 +266,7 @@ interface HeroSectionProps {
 }
 
 export const HeroSection = ({ colorsMap }: HeroSectionProps) => {
+    const isMobile = useMediaQuery('(max-width: 960px)')
     return (
         <>
             <section className="bg-hero-section-gradient ">
@@ -266,12 +274,14 @@ export const HeroSection = ({ colorsMap }: HeroSectionProps) => {
                     <Introduction />
                     <div className="flex flex-col gap-24">
                         {heroImageWithIntroductionData.map((data, index) => {
+                            const preReverse = index % 2 !== 0
+                            const reversed = isMobile ? false : preReverse
                             return (
                                 <HeroImageWithIntroduction
                                     key={index}
                                     color={colorsMap.get(data.image.src)!}
                                     {...data}
-                                    reversed={index % 2 === 1}
+                                    reversed={reversed}
                                 />
                             )
                         })}
