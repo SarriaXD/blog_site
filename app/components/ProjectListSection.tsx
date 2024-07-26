@@ -10,12 +10,12 @@ import {
 } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
 import { Typography } from '@material-tailwind/react'
-import { useMediaQuery } from 'react-responsive'
 import {
     flutterProjectData,
     FlutterDataItem,
 } from '../data/FlutterProjectData.ts'
 import Image, { StaticImageData } from 'next/image'
+import { useMediaQuery } from '../Hooks.ts'
 
 interface FramesProps {
     frames: FlutterDataItem[]
@@ -189,7 +189,7 @@ const IntroductionText = ({
 }
 
 const Introduction = ({ stayProgress, leavingProgress }: IntroductionProps) => {
-    const isMobile = useMediaQuery({ query: '(max-width: 720px)' })
+    const isMobile = useMediaQuery('(max-width: 720px)')
     const { opacity } = useIntroductionAnimation(leavingProgress)
     const [isVisible, setVisible] = useState(false)
     useMotionValueEvent(stayProgress, 'change', (value) => {
