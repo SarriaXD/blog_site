@@ -217,7 +217,7 @@ const TechTackSectionTitle = () => {
             </motion.div>
             <motion.div
                 ref={ref}
-                className="mb-4 self-center"
+                className="mb-8 self-center"
                 style={{
                     scale: titleScale,
                     opacity: titleOpacity,
