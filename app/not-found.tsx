@@ -23,10 +23,11 @@ const NotFoundText = () => {
             </Typography>
             <Typography
                 variant={'h2'}
-                color={'white'}
+                color={'gray'}
+                textGradient={true}
                 className="text-center text-2xl md:text-3xl xl:text-4xl"
             >
-                <span className="text-red-400">404</span> Page not found
+                <span className="text-red-500">404</span> Page not found
             </Typography>
             <Link href="/">
                 <Button color="black">Go back to home</Button>
@@ -38,7 +39,7 @@ const NotFoundText = () => {
 export default function NotFound() {
     return (
         <main>
-            <div className="flex min-h-[100vh] items-center bg-black px-8 py-24 xl:px-16">
+            <div className="flex min-h-[100vh] items-center bg-black px-8 xl:px-16">
                 <div className="flex flex-col items-center gap-8 md:flex-row xl:gap-32">
                     <NotFoundImage />
                     <NotFoundText />

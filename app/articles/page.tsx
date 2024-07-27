@@ -7,14 +7,14 @@ import { Button, Typography } from '../components/Material.tsx'
 const NotFoundImage = () => {
     return (
         <div className="rounded-mask animate-ghost animate-pulse md:h-full">
-            <Image src={not_found} alt="404 not fount image" />
+            <Image src={not_found} alt="under development image" />
         </div>
     )
 }
 
 const NotFoundText = () => {
     return (
-        <div className="flex flex-shrink-0 flex-col items-center justify-center gap-4 self-center xl:gap-8">
+        <div className="flex flex-col items-center justify-center gap-4 self-center xl:gap-8">
             <Typography
                 variant={'h1'}
                 color="white"
@@ -24,7 +24,8 @@ const NotFoundText = () => {
             </Typography>
             <Typography
                 variant={'h2'}
-                color={'white'}
+                color={'gray'}
+                textGradient={true}
                 className="text-center text-2xl md:text-3xl xl:text-4xl"
             >
                 This Page is under development
@@ -39,7 +40,7 @@ const NotFoundText = () => {
 export default function Page() {
     return (
         <main>
-            <div className="flex min-h-[100vh] items-center bg-black px-8 py-24 xl:px-16">
+            <div className="flex min-h-[100vh] items-center bg-black px-8 xl:px-16">
                 <div className="flex flex-col items-center gap-8 md:flex-row xl:gap-32">
                     <NotFoundImage />
                     <NotFoundText />
