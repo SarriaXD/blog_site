@@ -285,13 +285,14 @@ const TechIntroductionItem = ({
                 <CardBody className="flex flex-col gap-4">
                     <div className="flex flex-wrap gap-2">
                         {images.map((image, techIndex) => (
-                            <Image
-                                key={techIndex}
-                                src={image}
-                                width={48}
-                                height={48}
-                                alt={`${names[techIndex]} image`}
-                            />
+                            <div key={techIndex} className="relative size-12">
+                                <Image
+                                    src={image}
+                                    fill={true}
+                                    alt={`${names[techIndex]} image`}
+                                    className="object-contain"
+                                />
+                            </div>
                         ))}
                     </div>
                     <div className="flex flex-wrap gap-2">
