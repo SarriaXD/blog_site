@@ -1,9 +1,9 @@
-import { redirect } from 'next/navigation'
+// import { redirect } from 'next/navigation'
 
 import { Spinner, Typography } from '../components/Material.tsx'
 
 export default function Page() {
-    redirect('https://www.linkedin.com/in/qi-wang-793a562a7')
+    // redirect('https://www.linkedin.com/in/qi-wang-793a562a7')
 
     return (
         <main>
