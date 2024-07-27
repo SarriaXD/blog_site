@@ -154,17 +154,6 @@ const HeroImageWithIntroduction = ({
                 <HeroImage image={image} color={color} alt={alt} />
                 {!reversed && <HeroImageIntroduction {...introductionProps} />}
             </div>
-            {/* for desktop layout */}
-            {/*<div className="hidden items-center justify-center lg:flex lg:flex-row lg:gap-32">*/}
-            {/*    {reversed && <HeroImageIntroduction {...introductionProps} />}*/}
-            {/*    <HeroImage image={image} color={color} alt={alt} />*/}
-            {/*    {!reversed && <HeroImageIntroduction {...introductionProps} />}*/}
-            {/*</div>*/}
-            {/*/!* for mobile layout *!/*/}
-            {/*<div className="flex flex-col items-center justify-center gap-2 lg:hidden">*/}
-            {/*    <HeroImage image={image} color={color} alt={alt} />*/}
-            {/*    <HeroImageIntroduction {...introductionProps} />*/}
-            {/*</div>*/}
         </motion.div>
     )
 }
