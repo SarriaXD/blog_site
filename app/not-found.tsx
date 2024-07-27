@@ -5,7 +5,7 @@ import Link from 'next/link'
 
 const NotFoundImage = () => {
     return (
-        <div className="max-w-[80%] md:h-full">
+        <div className="rounded-mask animate-ghost max-w-[90%] animate-pulse md:h-full">
             <Image src={not_found} alt="404 not fount image" />
         </div>
     )
@@ -18,10 +18,10 @@ const NotFoundText = () => {
                 Opps!
             </Typography>
             <Typography variant={'h2'} color={'white'}>
-                Page not found
+                <span className="text-red-400">404</span> Page not found
             </Typography>
             <Link href="/">
-                <Button color="gray">Go back to home</Button>
+                <Button color="black">Go back to home</Button>
             </Link>
         </div>
     )
