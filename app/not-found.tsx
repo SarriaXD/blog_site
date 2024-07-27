@@ -14,10 +14,14 @@ const NotFoundImage = () => {
 const NotFoundText = () => {
     return (
         <div className="flex flex-shrink-0 flex-col items-center justify-center gap-4 self-center xl:gap-8">
-            <Typography variant={'h1'} color="white" className="text-8xl">
+            <Typography
+                variant={'h1'}
+                color="white"
+                className="text-center text-8xl"
+            >
                 Opps!
             </Typography>
-            <Typography variant={'h2'} color={'white'}>
+            <Typography variant={'h2'} color={'white'} className="text-center">
                 <span className="text-red-400">404</span> Page not found
             </Typography>
             <Link href="/">
