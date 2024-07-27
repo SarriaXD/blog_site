@@ -12,6 +12,7 @@ import {
     Card,
     CardBody,
     Chip,
+    Spinner,
 } from '@material-tailwind/react'
 
 export {
@@ -26,4 +27,5 @@ export {
     Card,
     CardBody,
     Chip,
+    Spinner,
 }
