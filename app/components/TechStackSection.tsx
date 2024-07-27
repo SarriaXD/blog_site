@@ -77,7 +77,7 @@ const useCarouselAnimation = (index: number) => {
         stiffness: 200,
         damping: 20,
     })
-    let startX = index % 2 === 0 ? '50%' : '-50%'
+    let startX = index % 2 === 0 ? '60%' : '-60%'
     startX = isMobile ? '0%' : startX
     const x = useTransform(smoothScrollYProgress, [0, 1], [startX, '0%'])
     let startScale = index % 2 === 0 ? 0.6 : 0.8
@@ -179,7 +179,7 @@ interface TechStackSectionProps {
     colorsMap: Map<string, StaticImageColor>
 }
 
-const TechTackSectionTitle = () => {
+const useTechTackSectionTitleAnimation = () => {
     const ref = useRef(null)
     const { scrollYProgress } = useScroll({
         target: ref,
@@ -195,8 +195,14 @@ const TechTackSectionTitle = () => {
     const subtitleScale = useTransform(
         smoothScrollYProgress,
         [0.3, 1],
-        [1.2, 0.7]
+        [1.3, 0.9]
     )
+    return { ref, titleScale, titleY, titleOpacity, subtitleScale }
+}
+
+const TechTackSectionTitle = () => {
+    const { ref, titleScale, titleY, titleOpacity, subtitleScale } =
+        useTechTackSectionTitleAnimation()
     return (
         <>
             <motion.div
@@ -364,7 +370,7 @@ export const TechStackSection = ({ colorsMap }: TechStackSectionProps) => {
                         />
                     </div>
                     <TechIntroduction techIntroductions={techIntroductions} />
-                    <div className="h-[200px]" />
+                    <div className="h-[10vh]" />
                 </div>
             </section>
         </>
