@@ -1,9 +1,19 @@
-// import { redirect } from 'next/navigation'
+'use client'
+
+import { useRouter } from 'next/navigation'
 
 import { Spinner, Typography } from '../components/Material.tsx'
+import { useEffect } from 'react'
 
 export default function Page() {
-    // redirect('https://www.linkedin.com/in/qi-wang-793a562a7')
+    const router = useRouter()
+    useEffect(() => {
+        const redirectAfterOneSecond = async () => {
+            await new Promise((resolve) => setTimeout(resolve, 1000))
+            router.push('https://www.linkedin.com/in/qi-wang-793a562a7')
+        }
+        redirectAfterOneSecond().catch()
+    })
 
     return (
         <main>
