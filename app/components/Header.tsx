@@ -4,22 +4,14 @@ import { Button, IconButton, Tooltip } from './Material.tsx'
 import Link from 'next/link'
 import { SideBar } from './SideBar.tsx'
 import { useState } from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBars, faDog, faEnvelope } from '@fortawesome/free-solid-svg-icons'
-import { faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons'
-import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
+import { BurgerMenu, Dog, Email, Github, Linkedin } from '../../assets/icons'
 
-interface InternalLinkProps {
-    href: string
-    text: string
-}
-
-const internalLinks: InternalLinkProps[] = [
+const internalLinks = [
     { href: '/articles', text: 'Articles' },
     { href: 'https://github.com/SarriaXD?tab=repositories', text: 'Projects' },
 ]
 
-const InternalLink = ({ href, text }: InternalLinkProps) => {
+const InternalLink = ({ href, text }: { href: string; text: string }) => {
     return (
         <li>
             <Link href={href}>
@@ -31,44 +23,6 @@ const InternalLink = ({ href, text }: InternalLinkProps) => {
                 >
                     {text}
                 </Button>
-            </Link>
-        </li>
-    )
-}
-
-interface ExternalLinkProps {
-    href: string
-    icon: IconDefinition
-    tip: string
-}
-
-const externalLinks: ExternalLinkProps[] = [
-    {
-        href: 'mailto:sarria.qi.wang@gmail.com',
-        icon: faEnvelope,
-        tip: 'Contact me via email',
-    },
-    {
-        href: 'https://www.linkedin.com/in/qi-wang-793a562a7',
-        icon: faLinkedin,
-        tip: 'Connect with me on LinkedIn',
-    },
-    {
-        href: 'https://github.com/SarriaXD',
-        icon: faGithub,
-        tip: 'Check out my GitHub',
-    },
-]
-
-const ExternalLink = ({ href, icon, tip }: ExternalLinkProps) => {
-    return (
-        <li>
-            <Link href={href}>
-                <Tooltip content={tip}>
-                    <IconButton>
-                        <FontAwesomeIcon icon={icon} size="2xl" />
-                    </IconButton>
-                </Tooltip>
             </Link>
         </li>
     )
@@ -96,18 +50,42 @@ export const Header = () => {
                         className="md:hidden"
                         onClick={() => setOpen(true)}
                     >
-                        <FontAwesomeIcon icon={faBars} size="lg" />
+                        <BurgerMenu className="size-6 text-white" />
                     </IconButton>
                     <Link href="/">
-                        <FontAwesomeIcon icon={faDog} size="xl" />
+                        <Dog className="size-8 text-white" />
                     </Link>
                     <ul className="hidden gap-6 md:flex md:items-center">
                         {internalLinks.map((link) => (
-                            <InternalLink key={link.text} {...link} />
+                            <InternalLink key={link.href} {...link} />
                         ))}
-                        {externalLinks.map((link) => (
-                            <ExternalLink key={link.href} {...link} />
-                        ))}
+                        <li>
+                            <Link href="mailto:sarria.qi.wang@gmail.com">
+                                <Tooltip content="Contact me via email">
+                                    <IconButton>
+                                        <Email className="size-6 text-white" />
+                                    </IconButton>
+                                </Tooltip>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href="https://www.linkedin.com/in/qi-wang-793a562a7">
+                                <Tooltip content="Connect with me on LinkedIn">
+                                    <IconButton>
+                                        <Linkedin className="size-6 text-white" />
+                                    </IconButton>
+                                </Tooltip>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href="https://github.com/SarriaXD">
+                                <Tooltip content="Check out my GitHub">
+                                    <IconButton>
+                                        <Github className="size-6 text-white" />
+                                    </IconButton>
+                                </Tooltip>
+                            </Link>
+                        </li>
                     </ul>
                 </nav>
             </header>

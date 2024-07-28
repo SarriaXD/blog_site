@@ -9,10 +9,7 @@ import {
 } from './Material.tsx'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { faDog, faEnvelope } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons'
-import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
+import { Close, Dog, Email, Github, Linkedin } from '../../assets/icons'
 
 interface SideBarProps {
     open: boolean
@@ -42,31 +39,46 @@ const InternalLink = ({ href, text, onClose }: InternalLinkProps) => {
     )
 }
 
-const externalLinks = [
+const externalLinks: {
+    href: string
+    icon: 'email' | 'linkedin' | 'github'
+    text: string
+}[] = [
     {
         href: 'mailto:sarria.qi.wang@gmail.com',
-        icon: faEnvelope,
+        icon: 'email',
         text: 'Email me',
     },
     {
         href: 'https://www.linkedin.com/in/qi-wang-793a562a7',
-        icon: faLinkedin,
+        icon: 'linkedin',
         text: 'LinkedIn',
     },
     {
         href: 'https://github.com/SarriaXD',
-        icon: faGithub,
+        icon: 'github',
         text: 'GitHub',
     },
 ]
 
 interface ExternalLinkProps {
     href: string
-    icon: IconDefinition
+    icon: 'email' | 'linkedin' | 'github'
     text: string
     index: number
     open: boolean
     onClose: () => void
+}
+
+const ExternalIcon = ({ icon }: { icon: 'email' | 'linkedin' | 'github' }) => {
+    switch (icon) {
+        case 'email':
+            return <Email className="size-8 text-white" />
+        case 'linkedin':
+            return <Linkedin className="size-8 text-white" />
+        case 'github':
+            return <Github className="size-8 text-white" />
+    }
 }
 
 const ExternalLink = ({
@@ -95,11 +107,7 @@ const ExternalLink = ({
                         {text}
                     </Typography>
                     <ListItemSuffix>
-                        <FontAwesomeIcon
-                            icon={icon}
-                            color="#FFFFFF"
-                            size="xl"
-                        />
+                        <ExternalIcon icon={icon} />
                     </ListItemSuffix>
                 </ListItem>
             </motion.div>
@@ -119,23 +127,10 @@ export function SideBar({ open, onClose }: SideBarProps) {
             >
                 <div className="flex items-center justify-between p-4">
                     <Link href="/" onClick={onClose}>
-                        <FontAwesomeIcon icon={faDog} size="xl" />
+                        <Dog className="size-8 text-white" />
                     </Link>
-                    <IconButton variant="text" color="white" onClick={onClose}>
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth={2}
-                            stroke="currentColor"
-                            className="h-5 w-5"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M6 18L18 6M6 6l12 12"
-                            />
-                        </svg>
+                    <IconButton variant="text" onClick={onClose}>
+                        <Close className="size-6 text-white" />
                     </IconButton>
                 </div>
                 <List>
