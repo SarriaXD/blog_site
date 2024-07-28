@@ -29,7 +29,7 @@ export const Introduction = () => {
     return (
         <div
             ref={ref}
-            className="flex flex-col gap-4 text-center md:gap-8 xl:gap-12"
+            className="flex flex-col gap-4 py-8 text-center md:gap-8 md:py-12 xl:gap-12 xl:py-16"
         >
             <MotionTypography
                 initial={{
@@ -272,7 +272,7 @@ export const HeroSection = ({ colorsMap }: HeroSectionProps) => {
     return (
         <>
             <section className="bg-hero-section-gradient ">
-                <div className="container mx-auto flex flex-col items-stretch gap-8 px-4 pb-32 pt-24 md:gap-16 md:px-8 xl:gap-24 xl:px-12">
+                <div className="container mx-auto px-4 py-24 md:px-8 xl:px-12">
                     <Introduction />
                     <div className="flex flex-col gap-24">
                         {heroImageWithIntroductionData.map((data, index) => {
