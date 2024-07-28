@@ -2,6 +2,9 @@ import React from 'react'
 import './global.css'
 import { Header } from './components/Header.tsx'
 import { Footer } from './components/Footer.tsx'
+import { config } from '@fortawesome/fontawesome-svg-core'
+import '@fortawesome/fontawesome-svg-core/styles.css'
+config.autoAddCss = false
 
 export default function RootLayout({
     children,
