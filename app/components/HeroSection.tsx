@@ -272,7 +272,7 @@ export const HeroSection = ({ colorsMap }: HeroSectionProps) => {
     return (
         <>
             <section className="bg-hero-section-gradient ">
-                <div className="container mx-auto px-4 py-24 md:px-8 xl:px-12">
+                <div className="container mx-auto px-4 pb-32 pt-24 md:px-8 xl:px-12">
                     <Introduction />
                     <div className="flex flex-col gap-24">
                         {heroImageWithIntroductionData.map((data, index) => {
