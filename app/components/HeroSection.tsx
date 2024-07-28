@@ -117,6 +117,7 @@ interface HeroImageWithIntroductionProps {
     subtitle: string
     content: string
     reversed: boolean
+    index: number
 }
 
 const HeroImageWithIntroduction = ({
@@ -127,6 +128,7 @@ const HeroImageWithIntroduction = ({
     subtitle,
     content,
     reversed,
+    index,
 }: HeroImageWithIntroductionProps) => {
     const introductionProps = {
         title,
@@ -151,7 +153,12 @@ const HeroImageWithIntroduction = ({
         >
             <div className="flex flex-col items-center justify-center gap-2 lg:flex-row lg:gap-32">
                 {reversed && <HeroImageIntroduction {...introductionProps} />}
-                <HeroImage image={image} color={color} alt={alt} />
+                <HeroImage
+                    index={index}
+                    image={image}
+                    color={color}
+                    alt={alt}
+                />
                 {!reversed && <HeroImageIntroduction {...introductionProps} />}
             </div>
         </motion.div>
@@ -162,9 +169,10 @@ interface HeroImageProps {
     image: StaticImageData
     color: StaticImageColor
     alt: string
+    index: number
 }
 
-const HeroImage = ({ image, color, alt }: HeroImageProps) => {
+const HeroImage = ({ image, color, alt, index }: HeroImageProps) => {
     const ref = useRef(null)
     const { scrollYProgress } = useScroll({
         target: ref,
@@ -197,7 +205,13 @@ const HeroImage = ({ image, color, alt }: HeroImageProps) => {
                 }}
                 className="relative"
             >
-                <Image src={image} alt={alt} className="relative z-10" />
+                {/* don't preload if it is first picture */}
+                <Image
+                    src={image}
+                    priority={index === 0}
+                    alt={alt}
+                    className="relative z-10"
+                />
                 <div
                     className="absolute inset-x-0 -bottom-[15%] h-3/4 rounded-b-full blur-3xl"
                     style={{
@@ -268,6 +282,7 @@ export const HeroSection = ({ colorsMap }: HeroSectionProps) => {
                                 <HeroImageWithIntroduction
                                     key={index}
                                     color={colorsMap.get(data.image.src)!}
+                                    index={index}
                                     {...data}
                                     reversed={reversed}
                                 />

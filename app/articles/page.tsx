@@ -7,7 +7,11 @@ import { Button, Typography } from '../components/Material.tsx'
 const NotFoundImage = () => {
     return (
         <div className="rounded-mask animate-ghost animate-pulse md:h-full">
-            <Image src={not_found} alt="under development image" />
+            <Image
+                src={not_found}
+                priority={true}
+                alt="under development image"
+            />
         </div>
     )
 }

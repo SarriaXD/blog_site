@@ -6,7 +6,7 @@ import Link from 'next/link'
 const NotFoundImage = () => {
     return (
         <div className="rounded-mask animate-ghost animate-pulse md:h-full">
-            <Image src={not_found} alt="404 not fount image" />
+            <Image src={not_found} priority={true} alt="404 not fount image" />
         </div>
     )
 }
