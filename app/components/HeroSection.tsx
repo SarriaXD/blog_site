@@ -12,27 +12,24 @@ const useIntroductionAnimation = () => {
     const ref = useRef(null)
     const { scrollYProgress } = useScroll({
         target: ref,
-        offset: ['start 80px', 'end start'],
+        offset: ['start 96px', 'end 96px'],
     })
-    const smoothScrollYProgress = useSpring(scrollYProgress, {
-        stiffness: 200,
-        damping: 20,
-    })
-    const smoothTitleY = useTransform(smoothScrollYProgress, [0, 1], [0, -300])
-    const smoothSubtitleY = useTransform(
-        smoothScrollYProgress,
-        [0, 1],
-        [0, -200]
-    )
+    const titleOpacity = useTransform(scrollYProgress, [0, 1], [1, 0])
+    const titleY = useTransform(scrollYProgress, [0, 1], [0, -50])
+    const subtitleOpacity = useTransform(scrollYProgress, [0, 1], [1, 0])
+    const subtitleY = useTransform(scrollYProgress, [0, 1], [0, -30])
     return {
         ref,
-        smoothTitleY,
-        smoothSubtitleY,
+        titleOpacity,
+        titleY,
+        subtitleOpacity,
+        subtitleY,
     }
 }
 
 export const Introduction = () => {
-    const { ref, smoothTitleY, smoothSubtitleY } = useIntroductionAnimation()
+    const { ref, titleOpacity, subtitleOpacity, titleY, subtitleY } =
+        useIntroductionAnimation()
     return (
         <div
             ref={ref}
@@ -47,7 +44,7 @@ export const Introduction = () => {
                     opacity: 1,
                     y: 0,
                 }}
-                style={{ y: smoothTitleY }}
+                style={{ opacity: titleOpacity, y: titleY }}
                 transition={{
                     type: 'spring',
                     duration: 1,
@@ -79,7 +76,7 @@ export const Introduction = () => {
                     delay: 0.5,
                     duration: 1,
                 }}
-                style={{ y: smoothSubtitleY }}
+                style={{ opacity: subtitleOpacity, y: subtitleY }}
             >
                 <Typography
                     variant="h3"
