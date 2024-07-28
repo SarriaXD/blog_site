@@ -8,9 +8,7 @@ import { StaticImageColor } from '../utils.ts'
 import { useMediaQuery } from '../Hooks.ts'
 import { Typography } from './Material.tsx'
 
-const MotionTypography = motion(Typography)
-
-export const Introduction = () => {
+const useIntroductionAnimation = () => {
     const ref = useRef(null)
     const { scrollYProgress } = useScroll({
         target: ref,
@@ -26,12 +24,48 @@ export const Introduction = () => {
         [0, 1],
         [0, -200]
     )
+    return {
+        ref,
+        smoothTitleY,
+        smoothSubtitleY,
+    }
+}
+
+export const Introduction = () => {
+    const { ref, smoothTitleY, smoothSubtitleY } = useIntroductionAnimation()
     return (
         <div
             ref={ref}
             className="flex flex-col gap-4 py-8 text-center md:gap-8 md:py-12 xl:gap-12 xl:py-16"
         >
-            <MotionTypography
+            <motion.div
+                initial={{
+                    opacity: 0,
+                    y: 50,
+                }}
+                animate={{
+                    opacity: 1,
+                    y: 0,
+                }}
+                style={{ y: smoothTitleY }}
+                transition={{
+                    type: 'spring',
+                    duration: 1,
+                    delay: 0.3,
+                }}
+            >
+                <Typography
+                    variant={'h1'}
+                    color="white"
+                    className="text-4xl md:text-6xl xl:text-8xl"
+                >
+                    <span className="bg-hero-text-gradient bg-clip-text text-transparent">
+                        I'm Qi
+                    </span>
+                    , a software engineer based in Canada.
+                </Typography>
+            </motion.div>
+            <motion.div
                 initial={{
                     opacity: 0,
                     y: 50,
@@ -41,41 +75,20 @@ export const Introduction = () => {
                     y: 0,
                 }}
                 transition={{
-                    type: 'tween',
-                    duration: 0.6,
-                    delay: 0.2,
-                }}
-                style={{ y: smoothTitleY }}
-                variant="h1"
-                className="text-4xl md:text-6xl xl:text-8xl"
-            >
-                <span className="bg-hero-text-gradient bg-clip-text text-transparent">
-                    I'm Qi
-                </span>
-                , a software engineer based in Canada.
-            </MotionTypography>
-            <MotionTypography
-                initial={{
-                    opacity: 0,
-                    y: 100,
-                }}
-                animate={{
-                    opacity: 1,
-                    y: 0,
-                }}
-                transition={{
-                    type: 'tween',
-                    duration: 0.6,
+                    type: 'spring',
                     delay: 0.5,
+                    duration: 1,
                 }}
                 style={{ y: smoothSubtitleY }}
-                variant="h3"
-                color="gray"
-                textGradient={true}
-                className="text-xl md:text-2xl xl:text-3xl"
             >
-                I specialize in full-stack development.
-            </MotionTypography>
+                <Typography
+                    variant="h3"
+                    color="gray"
+                    className="text-4xl md:text-5xl xl:text-6xl"
+                >
+                    A full-stack developer.
+                </Typography>
+            </motion.div>
         </div>
     )
 }
@@ -117,7 +130,6 @@ interface HeroImageWithIntroductionProps {
     subtitle: string
     content: string
     reversed: boolean
-    index: number
 }
 
 const HeroImageWithIntroduction = ({
@@ -128,7 +140,6 @@ const HeroImageWithIntroduction = ({
     subtitle,
     content,
     reversed,
-    index,
 }: HeroImageWithIntroductionProps) => {
     const introductionProps = {
         title,
@@ -153,12 +164,7 @@ const HeroImageWithIntroduction = ({
         >
             <div className="flex flex-col items-center justify-center gap-2 lg:flex-row lg:gap-32">
                 {reversed && <HeroImageIntroduction {...introductionProps} />}
-                <HeroImage
-                    index={index}
-                    image={image}
-                    color={color}
-                    alt={alt}
-                />
+                <HeroImage image={image} color={color} alt={alt} />
                 {!reversed && <HeroImageIntroduction {...introductionProps} />}
             </div>
         </motion.div>
@@ -169,10 +175,9 @@ interface HeroImageProps {
     image: StaticImageData
     color: StaticImageColor
     alt: string
-    index: number
 }
 
-const HeroImage = ({ image, color, alt, index }: HeroImageProps) => {
+const HeroImage = ({ image, color, alt }: HeroImageProps) => {
     const ref = useRef(null)
     const { scrollYProgress } = useScroll({
         target: ref,
@@ -203,12 +208,10 @@ const HeroImage = ({ image, color, alt, index }: HeroImageProps) => {
                     rotateX,
                     y,
                 }}
-                className="relative"
             >
-                {/* don't preload if it is first picture */}
                 <Image
                     src={image}
-                    priority={index === 0}
+                    priority={true}
                     alt={alt}
                     className="relative z-10"
                 />
@@ -282,7 +285,6 @@ export const HeroSection = ({ colorsMap }: HeroSectionProps) => {
                                 <HeroImageWithIntroduction
                                     key={index}
                                     color={colorsMap.get(data.image.src)!}
-                                    index={index}
                                     {...data}
                                     reversed={reversed}
                                 />
