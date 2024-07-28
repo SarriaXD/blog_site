@@ -10,6 +10,7 @@ const NotFoundImage = () => {
             <Image
                 src={not_found}
                 priority={true}
+                placeholder="blur"
                 alt="under development image"
             />
         </div>
