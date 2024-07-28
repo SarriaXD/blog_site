@@ -9,7 +9,7 @@ export default function Page() {
     const router = useRouter()
     useEffect(() => {
         const redirectAfterOneSecond = async () => {
-            await new Promise((resolve) => setTimeout(resolve, 1000))
+            await new Promise((resolve) => setTimeout(resolve, 300))
             router.push('https://www.linkedin.com/in/qi-wang-793a562a7')
         }
         redirectAfterOneSecond().catch()
