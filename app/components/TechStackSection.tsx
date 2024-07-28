@@ -36,6 +36,7 @@ const CarouselItem = ({ color, image, name }: CarouselItemProps) => {
                         src={image}
                         alt={`Logo of ${name}`}
                         fill={true}
+                        sizes={'5rem'}
                         className="relative z-10 object-contain"
                     />
                     {/* background shadow */}
@@ -295,6 +296,7 @@ const TechIntroductionItem = ({
                                 <Image
                                     src={image}
                                     fill={true}
+                                    sizes={'3rem'}
                                     alt={`${names[techIndex]} image`}
                                     className="object-contain"
                                 />
