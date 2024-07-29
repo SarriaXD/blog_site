@@ -129,7 +129,11 @@ export function SideBar({ open, onClose }: SideBarProps) {
                     <Link href="/" onClick={onClose}>
                         <Dog className="size-8 text-white" />
                     </Link>
-                    <IconButton variant="text" onClick={onClose}>
+                    <IconButton
+                        aria-label="Close Side Bar"
+                        variant="text"
+                        onClick={onClose}
+                    >
                         <Close className="size-6 text-white" />
                     </IconButton>
                 </div>

@@ -48,12 +48,16 @@ export const Header = () => {
                     <IconButton
                         size="lg"
                         className="md:hidden"
+                        aria-label="Open sidebar"
                         onClick={() => setOpen(true)}
                     >
                         <BurgerMenu className="size-6 text-white" />
                     </IconButton>
                     <Link href="/">
-                        <Dog className="size-8 text-white" />
+                        <Dog
+                            className="size-8 text-white"
+                            aria-label="Back To Home"
+                        />
                     </Link>
                     <ul className="hidden gap-6 md:flex md:items-center">
                         {internalLinks.map((link) => (
@@ -62,7 +66,7 @@ export const Header = () => {
                         <li>
                             <Link href="mailto:sarria.qi.wang@gmail.com">
                                 <Tooltip content="Contact me via email">
-                                    <IconButton>
+                                    <IconButton aria-label="Email Me">
                                         <Email className="size-6 text-white" />
                                     </IconButton>
                                 </Tooltip>
@@ -71,7 +75,7 @@ export const Header = () => {
                         <li>
                             <Link href="https://www.linkedin.com/in/qi-wang-793a562a7">
                                 <Tooltip content="Connect with me on LinkedIn">
-                                    <IconButton>
+                                    <IconButton aria-label="View My Linkedin">
                                         <Linkedin className="size-6 text-white" />
                                     </IconButton>
                                 </Tooltip>
@@ -80,7 +84,7 @@ export const Header = () => {
                         <li>
                             <Link href="https://github.com/SarriaXD">
                                 <Tooltip content="Check out my GitHub">
-                                    <IconButton>
+                                    <IconButton aria-label="View My Github">
                                         <Github className="size-6 text-white" />
                                     </IconButton>
                                 </Tooltip>
