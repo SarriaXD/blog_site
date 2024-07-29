@@ -40,7 +40,7 @@ export const Header = () => {
               z-50
               flex items-center justify-between
               gap-4 bg-[#050C0F]
-              bg-opacity-60 py-2 pl-4 pr-8
+              bg-opacity-60 px-4 py-2
               backdrop-blur
               md:px-12
               "
@@ -53,7 +53,7 @@ export const Header = () => {
                     >
                         <BurgerMenu className="size-6 text-white" />
                     </IconButton>
-                    <Link href="/">
+                    <Link href="/" className="rounded-lg p-2 hover:bg-gray-900">
                         <Dog
                             className="size-8 text-white"
                             aria-label="Back To Home"

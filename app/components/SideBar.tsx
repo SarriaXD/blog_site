@@ -126,8 +126,15 @@ export function SideBar({ open, onClose }: SideBarProps) {
                 className="bg-gray-900 bg-opacity-80 backdrop-blur-md"
             >
                 <div className="flex items-center justify-between p-4">
-                    <Link href="/" onClick={onClose}>
-                        <Dog className="size-8 text-white" />
+                    <Link
+                        href="/"
+                        className="rounded-lg p-2 hover:bg-gray-900"
+                        onClick={onClose}
+                    >
+                        <Dog
+                            className="size-8 text-white"
+                            aria-label="Back To Home"
+                        />
                     </Link>
                     <IconButton
                         aria-label="Close Side Bar"
