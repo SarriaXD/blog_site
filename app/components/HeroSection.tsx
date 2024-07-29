@@ -79,7 +79,7 @@ export const Introduction = () => {
                 style={{ opacity: subtitleOpacity, y: subtitleY }}
             >
                 <Typography
-                    variant="h3"
+                    variant="h2"
                     color="gray"
                     className="text-4xl md:text-5xl xl:text-6xl"
                 >
@@ -254,7 +254,7 @@ const HeroImageIntroduction = ({
             }}
             className="flex flex-1 flex-col p-4"
         >
-            <Typography variant={'h5'}>{title}</Typography>
+            <Typography variant={'lead'}>{title}</Typography>
             <Typography variant={'h1'}>{subtitle}</Typography>
             <Typography variant={'paragraph'} className="pt-4 text-xl">
                 {content}
