@@ -17,6 +17,10 @@ export default function RootLayout({
                     name="viewport"
                     content="width=device-width, initial-scale=1.0"
                 />
+                <meta
+                    name="description"
+                    content="I'm a mobile and full-stack engineer specializing in app and web development. Explore my portfolio, projects, blog, and contact information on my personal website."
+                />
                 <title>Hi, I'm Qi!</title>
             </head>
             <body>
