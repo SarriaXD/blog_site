@@ -60,7 +60,7 @@ const CarouselItem = ({ color, image, name }: CarouselItemProps) => {
 
 const CarouseEmptyItem = () => {
     return (
-        <span
+        <li
             className="block size-12
              "
         />
@@ -309,7 +309,8 @@ const TechIntroductionItem = ({
                                 key={techIndex}
                                 size="md"
                                 value={tech}
-                                color="blue"
+                                color="gray"
+                                className="bg-gray-800"
                             />
                         ))}
                     </div>
