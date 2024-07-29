@@ -50,7 +50,7 @@ const CarouselItem = ({ color, image, name }: CarouselItemProps) => {
                         ></div>
                     </div>
                 </div>
-                <Typography variant="h6" className="relative z-10 text-xs">
+                <Typography variant="lead" className="relative z-10 text-sm">
                     {name}
                 </Typography>
             </div>
@@ -164,7 +164,9 @@ const Carousel = ({
                 </motion.ul>
             </div>
             <div className="flex flex-col gap-4 p-6">
-                <Typography variant="h5">{title}</Typography>
+                <Typography variant="h3" className="text-xl">
+                    {title}
+                </Typography>
                 <Typography
                     variant="paragraph"
                     className="text-xl text-[#989898]"
@@ -196,7 +198,7 @@ const useTechTackSectionTitleAnimation = () => {
     const subtitleScale = useTransform(
         smoothScrollYProgress,
         [0.3, 1],
-        [1.3, 0.9]
+        [1.0, 0.5]
     )
     return { ref, titleScale, titleY, titleOpacity, subtitleScale }
 }
@@ -212,7 +214,7 @@ const TechTackSectionTitle = () => {
                     scale: subtitleScale,
                 }}
             >
-                <Typography variant={'h4'} className="text-center">
+                <Typography variant={'h1'} className="text-center">
                     Code Engines
                 </Typography>
             </motion.div>
@@ -226,7 +228,7 @@ const TechTackSectionTitle = () => {
                 }}
             >
                 <Typography
-                    variant={'h1'}
+                    variant={'h2'}
                     className="text-center text-[#E9E9E9]"
                 >
                     Frameworks & Languages I Master
