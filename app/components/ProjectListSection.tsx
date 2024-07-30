@@ -14,7 +14,7 @@
 //     FlutterDataItem,
 // } from '../data/FlutterProjectData.ts'
 // import Image, { StaticImageData } from 'next/image'
-// import { useMediaQuery } from '../Hooks.ts'
+// import { useMediaQuery } from '../hooks.ts'
 // import { Typography } from './Material.tsx'
 //
 // interface FramesProps {

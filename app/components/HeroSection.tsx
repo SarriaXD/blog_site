@@ -5,7 +5,7 @@ import { useRef } from 'react'
 import Image, { StaticImageData } from 'next/image'
 import { hero_backend, hero_mobile, hero_web } from '../../assets/images'
 import { StaticImageColor } from '../utils.ts'
-import { useMediaQuery } from '../Hooks.ts'
+import { useMediaQuery } from '../hooks.ts'
 import { Typography } from './Material.tsx'
 
 const useIntroductionAnimation = () => {

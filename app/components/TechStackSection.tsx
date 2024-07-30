@@ -18,7 +18,7 @@ import {
     languageTechData,
     techIntroductions,
 } from '../data/TechStackData.ts'
-import { useMediaQuery } from '../Hooks.ts'
+import { useMediaQuery } from '../hooks.ts'
 
 interface CarouselItemProps {
     color: StaticImageColor
