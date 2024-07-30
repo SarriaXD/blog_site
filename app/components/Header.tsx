@@ -4,7 +4,7 @@ import { Button, IconButton, Tooltip } from './Material.tsx'
 import Link from 'next/link'
 import { SideBar } from './SideBar.tsx'
 import { useState } from 'react'
-import { BurgerMenu, Dog, Email, Github, Linkedin } from '../../assets/icons'
+import { BurgerMenu, Dog, Email, Github, Linkedin } from '../../public/icons'
 
 const internalLinks = [
     { href: '/articles', text: 'Articles' },

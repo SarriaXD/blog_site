@@ -1,7 +1,7 @@
 import Image from 'next/image'
 
 import Link from 'next/link'
-import { not_found } from '../../assets/images'
+import { not_found } from '../../public/images'
 import { Button, Typography } from '../components/Material.tsx'
 
 const NotFoundImage = () => {

@@ -9,7 +9,7 @@ import {
     springBoot,
     python,
     typescript,
-} from '../../assets/images'
+} from '../../public/images'
 
 export const frameworkTechData = {
     title: 'Frameworks I Excel At',

@@ -3,10 +3,10 @@
 import { motion, useScroll, useSpring, useTransform } from 'framer-motion'
 import { useRef } from 'react'
 import Image, { StaticImageData } from 'next/image'
-import { hero_backend, hero_mobile, hero_web } from '../../assets/images'
 import { StaticImageColor } from '../utils.ts'
 import { useMediaQuery } from '../hooks.ts'
 import { Typography } from './Material.tsx'
+import { hero_backend, hero_mobile, hero_web } from '../../public/images'
 
 const useIntroductionAnimation = () => {
     const ref = useRef(null)

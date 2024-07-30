@@ -7,7 +7,7 @@ import {
     kotlin,
     react,
     springBoot,
-} from '../../assets/images'
+} from '../../public/images'
 import { StaticImageData } from 'next/image'
 
 export interface FlutterDataItem {
