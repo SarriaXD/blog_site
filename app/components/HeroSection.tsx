@@ -256,7 +256,7 @@ const HeroImageIntroduction = ({
         >
             <Typography
                 variant={'lead'}
-                className="font-semibold text-gray-300"
+                className="font-semibold text-gray-200"
             >
                 {title}
             </Typography>

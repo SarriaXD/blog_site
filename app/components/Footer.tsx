@@ -9,7 +9,7 @@ interface SectionProps {
 const Section = ({ title, links }: SectionProps) => {
     return (
         <div>
-            <Typography variant={'h4'} className="mb-4 text-lg font-semibold">
+            <Typography variant={'h1'} className="mb-4 text-lg font-semibold">
                 {title}
             </Typography>
             <ul className="flex flex-col items-start gap-2">

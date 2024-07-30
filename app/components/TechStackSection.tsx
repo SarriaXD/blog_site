@@ -164,7 +164,7 @@ const Carousel = ({
                 </motion.ul>
             </div>
             <div className="flex flex-col gap-4 p-6">
-                <Typography variant="h3" className="text-xl">
+                <Typography variant="h2" className="text-xl">
                     {title}
                 </Typography>
                 <Typography
@@ -321,7 +321,7 @@ const TechIntroductionItem = ({
                     </div>
                     <Typography
                         variant="paragraph"
-                        className="font-semibold text-gray-500"
+                        className="font-semibold text-gray-200"
                     >
                         {introduction}
                     </Typography>
