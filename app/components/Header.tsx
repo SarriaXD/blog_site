@@ -53,11 +53,14 @@ export const Header = () => {
                     >
                         <BurgerMenu className="size-6 text-white" />
                     </IconButton>
-                    <Link href="/" className="rounded-lg p-2 hover:bg-gray-900">
-                        <Dog
-                            className="size-8 text-white"
+                    <Link href="/">
+                        <IconButton
+                            size="lg"
                             aria-label="Back To Home"
-                        />
+                            className="bg-transparent"
+                        >
+                            <Dog className="size-8 text-white" />
+                        </IconButton>
                     </Link>
                     <ul className="hidden gap-6 md:flex md:items-center">
                         {internalLinks.map((link) => (
