@@ -67,12 +67,11 @@ const CarouseEmptyItem = () => {
     )
 }
 
-const useCarouselAnimation = (index: number) => {
-    const isMobile = useMediaQuery('(max-width: 720px)')
+const useCarouselAnimation = (index: number, isMobile: boolean) => {
     const ref = useRef(null)
     const { scrollYProgress } = useScroll({
         target: ref,
-        offset: ['start end', 'end 90%'],
+        offset: ['start end', `end ${isMobile ? 'end' : '80%'}`],
     })
     const smoothScrollYProgress = useSpring(scrollYProgress, {
         stiffness: 200,
@@ -108,6 +107,7 @@ interface CarouselProps {
     title: string
     subtitle: string
     reversed: boolean
+    isMobile: boolean
 }
 
 const Carousel = ({
@@ -117,9 +117,10 @@ const Carousel = ({
     subtitle,
     data,
     reversed,
+    isMobile,
 }: CarouselProps) => {
     const scrollX = useCarouselScrollAnimation(reversed)
-    const { ref, x, y, scale } = useCarouselAnimation(index)
+    const { ref, x, y, scale } = useCarouselAnimation(index, isMobile)
     return (
         <motion.div
             ref={ref}
@@ -182,11 +183,11 @@ interface TechStackSectionProps {
     colorsMap: Map<string, StaticImageColor>
 }
 
-const useTechTackSectionTitleAnimation = () => {
+const useTechTackSectionTitleAnimation = (isMobile: boolean) => {
     const ref = useRef(null)
     const { scrollYProgress } = useScroll({
         target: ref,
-        offset: ['start end', 'end 90%'],
+        offset: ['start end', `end ${isMobile ? 'end' : '80%'}`],
     })
     const smoothScrollYProgress = useSpring(scrollYProgress, {
         stiffness: 200,
@@ -197,8 +198,8 @@ const useTechTackSectionTitleAnimation = () => {
     return { ref, y, opacity }
 }
 
-const TechTackSectionTitle = () => {
-    const { ref, y, opacity } = useTechTackSectionTitleAnimation()
+const TechTackSectionTitle = ({ isMobile }: { isMobile: boolean }) => {
+    const { ref, y, opacity } = useTechTackSectionTitleAnimation(isMobile)
     return (
         <>
             <motion.div
@@ -258,7 +259,7 @@ const useTechIntroductionAnimation = (
     const ref = useRef(null)
     const { scrollYProgress } = useScroll({
         target: ref,
-        offset: ['start end', 'end 90%'],
+        offset: ['start end', `end ${isMobile ? 'end' : '80%'}`],
     })
     const smoothScrollYProgress = useSpring(scrollYProgress, {
         stiffness: 200,
@@ -337,10 +338,13 @@ interface TechIntroductionsProps {
         names: string[]
         introduction: string
     }[]
+    isMobile: boolean
 }
 
-const TechIntroduction = ({ techIntroductions }: TechIntroductionsProps) => {
-    const isMobile = useMediaQuery('(max-width: 720px)')
+const TechIntroduction = ({
+    techIntroductions,
+    isMobile,
+}: TechIntroductionsProps) => {
     const columns = isMobile ? 1 : 2
     const chunkedTechIntroduction = chunkArray(
         techIntroductions,
@@ -365,26 +369,32 @@ const TechIntroduction = ({ techIntroductions }: TechIntroductionsProps) => {
 }
 
 export const TechStackSection = ({ colorsMap }: TechStackSectionProps) => {
+    const isMobile = useMediaQuery('(max-width: 720px)')
     return (
         <>
             <section className="bg-black px-8 py-16">
                 <div className="mx-auto flex min-h-[100vh] flex-col gap-8 lg:max-w-[1080px]">
-                    <TechTackSectionTitle />
+                    <TechTackSectionTitle isMobile={isMobile} />
                     <div className="flex flex-col gap-4 md:flex-row">
                         <Carousel
                             index={0}
                             colorsMap={colorsMap}
                             {...frameworkTechData}
                             reversed={false}
+                            isMobile={isMobile}
                         />
                         <Carousel
                             index={1}
                             colorsMap={colorsMap}
                             {...languageTechData}
                             reversed={true}
+                            isMobile={isMobile}
                         />
                     </div>
-                    <TechIntroduction techIntroductions={techIntroductions} />
+                    <TechIntroduction
+                        techIntroductions={techIntroductions}
+                        isMobile={isMobile}
+                    />
                     <div className="h-[10vh]" />
                 </div>
             </section>
