@@ -71,7 +71,7 @@ const useCarouselAnimation = (index: number, isMobile: boolean) => {
     const ref = useRef(null)
     const { scrollYProgress } = useScroll({
         target: ref,
-        offset: ['start end', `end ${isMobile ? 'end' : '80%'}`],
+        offset: ['start end', `end ${isMobile ? 'end' : '90%'}`],
     })
     const smoothScrollYProgress = useSpring(scrollYProgress, {
         stiffness: 200,
@@ -187,7 +187,7 @@ const useTechTackSectionTitleAnimation = (isMobile: boolean) => {
     const ref = useRef(null)
     const { scrollYProgress } = useScroll({
         target: ref,
-        offset: ['start end', `end ${isMobile ? 'end' : '80%'}`],
+        offset: ['start end', `end ${isMobile ? 'end' : '90%'}`],
     })
     const smoothScrollYProgress = useSpring(scrollYProgress, {
         stiffness: 200,
@@ -259,7 +259,7 @@ const useTechIntroductionAnimation = (
     const ref = useRef(null)
     const { scrollYProgress } = useScroll({
         target: ref,
-        offset: ['start end', `end ${isMobile ? 'end' : '80%'}`],
+        offset: ['start end', `end ${isMobile ? 'end' : '90%'}`],
     })
     const smoothScrollYProgress = useSpring(scrollYProgress, {
         stiffness: 200,
