@@ -254,9 +254,17 @@ const HeroImageIntroduction = ({
             }}
             className="flex flex-1 flex-col p-4"
         >
-            <Typography variant={'lead'}>{title}</Typography>
+            <Typography
+                variant={'lead'}
+                className="font-semibold text-gray-300"
+            >
+                {title}
+            </Typography>
             <Typography variant={'h1'}>{subtitle}</Typography>
-            <Typography variant={'paragraph'} className="pt-4 text-xl">
+            <Typography
+                variant={'paragraph'}
+                className="pt-4 text-xl font-semibold text-gray-300"
+            >
                 {content}
             </Typography>
         </motion.div>
