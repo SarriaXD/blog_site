@@ -72,7 +72,7 @@ const useCarouselAnimation = (index: number) => {
     const ref = useRef(null)
     const { scrollYProgress } = useScroll({
         target: ref,
-        offset: ['start end', 'end end'],
+        offset: ['start end', 'end 90%'],
     })
     const smoothScrollYProgress = useSpring(scrollYProgress, {
         stiffness: 200,
@@ -169,7 +169,7 @@ const Carousel = ({
                 </Typography>
                 <Typography
                     variant="paragraph"
-                    className="text-xl text-[#989898]"
+                    className="font-semibold text-gray-500"
                 >
                     {subtitle}
                 </Typography>
@@ -186,13 +186,13 @@ const useTechTackSectionTitleAnimation = () => {
     const ref = useRef(null)
     const { scrollYProgress } = useScroll({
         target: ref,
-        offset: ['start end', 'end end'],
+        offset: ['start end', 'end 90%'],
     })
     const smoothScrollYProgress = useSpring(scrollYProgress, {
         stiffness: 200,
         damping: 20,
     })
-    const y = useTransform(smoothScrollYProgress, [0, 1], ['30%', '0%'])
+    const y = useTransform(smoothScrollYProgress, [0, 1], ['50%', '0%'])
     const opacity = useTransform(smoothScrollYProgress, [0, 1], [0, 1])
     return { ref, y, opacity }
 }
@@ -203,7 +203,7 @@ const TechTackSectionTitle = () => {
         <>
             <motion.div
                 ref={ref}
-                className="mb-8 self-center"
+                className="mb-8 self-center md:px-32 md:py-16 xl:px-48"
                 style={{
                     y,
                     opacity,
@@ -211,7 +211,11 @@ const TechTackSectionTitle = () => {
             >
                 <Typography
                     variant={'h1'}
-                    className="text-center text-[#E9E9E9]"
+                    className="bg-clip-text text-center text-transparent md:text-6xl xl:text-7xl"
+                    style={{
+                        backgroundImage:
+                            'linear-gradient(51deg, #F7B500, #6DD400 76%)',
+                    }}
                 >
                     Frameworks & Languages I Master
                 </Typography>
@@ -243,35 +247,50 @@ interface TechIntroductionItemProps {
     images: StaticImageData[]
     names: string[]
     introduction: string
+    isMobile: boolean
+    groupNumber: number
 }
 
-const useTechIntroductionAnimation = () => {
+const useTechIntroductionAnimation = (
+    isMobile: boolean,
+    groupNumber: number
+) => {
     const ref = useRef(null)
     const { scrollYProgress } = useScroll({
         target: ref,
-        offset: ['start end', 'end end'],
+        offset: ['start end', 'end 90%'],
     })
     const smoothScrollYProgress = useSpring(scrollYProgress, {
         stiffness: 200,
         damping: 20,
     })
-    const scale = useTransform(smoothScrollYProgress, [0, 1], [0.8, 1])
+    let startY = groupNumber % 2 === 0 ? 200 : 400
+    startY = isMobile ? 0 : startY
+    const y = useTransform(smoothScrollYProgress, [0, 1], [startY, 0])
+    const startScale = isMobile ? 0.8 : 1
+    const scale = useTransform(smoothScrollYProgress, [0, 1], [startScale, 1])
     const opacity = useTransform(smoothScrollYProgress, [0, 1], [0.6, 1])
-    return { ref, scale, opacity }
+    return { ref, scale, opacity, y }
 }
 
 const TechIntroductionItem = ({
     images,
     names,
     introduction,
+    isMobile,
+    groupNumber,
 }: TechIntroductionItemProps) => {
-    const { ref, scale, opacity } = useTechIntroductionAnimation()
+    const { ref, scale, opacity, y } = useTechIntroductionAnimation(
+        isMobile,
+        groupNumber
+    )
     return (
         <motion.div
             ref={ref}
             style={{
                 scale,
                 opacity,
+                y,
             }}
         >
             <Card color={'gray'}>
@@ -300,7 +319,12 @@ const TechIntroductionItem = ({
                             />
                         ))}
                     </div>
-                    <Typography variant="paragraph">{introduction}</Typography>
+                    <Typography
+                        variant="paragraph"
+                        className="font-semibold text-gray-500"
+                    >
+                        {introduction}
+                    </Typography>
                 </CardBody>
             </Card>
         </motion.div>
@@ -324,12 +348,14 @@ const TechIntroduction = ({ techIntroductions }: TechIntroductionsProps) => {
     )
     return (
         <div className="flex gap-4">
-            {chunkedTechIntroduction.map((techIntroduction, index) => (
-                <div key={index} className="flex flex-1 flex-col gap-4">
+            {chunkedTechIntroduction.map((techIntroduction, groupNumber) => (
+                <div key={groupNumber} className="flex flex-1 flex-col gap-4">
                     {techIntroduction.map((techIntroduction, index) => (
                         <TechIntroductionItem
                             key={index}
                             {...techIntroduction}
+                            isMobile={isMobile}
+                            groupNumber={groupNumber}
                         />
                     ))}
                 </div>
