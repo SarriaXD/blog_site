@@ -6,7 +6,13 @@ import { Button, Typography } from '../components/Material.tsx'
 
 const NotFoundImage = () => {
     return (
-        <div className="rounded-mask animate-ghost animate-pulse md:h-full">
+        <div
+            className="animate-ghost animate-pulse md:h-full"
+            style={{
+                maskImage:
+                    'radial-gradient(circle, black 0%, transparent 70%, transparent 100%)',
+            }}
+        >
             <Image
                 src={not_found}
                 priority={true}

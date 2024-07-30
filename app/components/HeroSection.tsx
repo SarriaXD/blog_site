@@ -56,7 +56,13 @@ export const Introduction = () => {
                     color="white"
                     className="text-4xl md:text-6xl xl:text-8xl"
                 >
-                    <span className="bg-hero-text-gradient bg-clip-text text-transparent">
+                    <span
+                        className="bg-clip-text text-transparent"
+                        style={{
+                            backgroundImage:
+                                'linear-gradient(90deg, #e8867c, #f5af19, #f12711)',
+                        }}
+                    >
                         I'm Qi
                     </span>
                     , a software engineer based in Canada.
@@ -279,7 +285,12 @@ export const HeroSection = ({ colorsMap }: HeroSectionProps) => {
     const isMobile = useMediaQuery('(max-width: 960px)', true)
     return (
         <>
-            <section className="bg-hero-section-gradient ">
+            <section
+                style={{
+                    backgroundImage:
+                        'linear-gradient(180deg,#000000 0%,rgba(0,0,0,0) 100%), radial-gradient(200% 100% at -66% 36%, #0b014a 40%, rgb(0, 73, 184) 80%, rgb(50, 100, 227) 90%, rgb(0, 204, 255) 100%)',
+                }}
+            >
                 <div className="container mx-auto px-4 pb-32 pt-24 md:px-8 xl:px-12">
                     <Introduction />
                     <div className="flex flex-col gap-24">

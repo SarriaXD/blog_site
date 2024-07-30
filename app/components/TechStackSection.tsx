@@ -131,7 +131,13 @@ const Carousel = ({
                 scale,
             }}
         >
-            <div className="mask-gradient w-full overflow-hidden">
+            <div
+                className="w-full overflow-hidden"
+                style={{
+                    maskImage:
+                        'linear-gradient(to right, transparent 0, black 20%, black 80%, transparent 100%)',
+                }}
+            >
                 <motion.ul
                     className="flex w-[max-content]"
                     style={{
