@@ -276,7 +276,7 @@ interface HeroSectionProps {
 }
 
 export const HeroSection = ({ colorsMap }: HeroSectionProps) => {
-    const isMobile = useMediaQuery('(max-width: 960px)')
+    const isMobile = useMediaQuery('(max-width: 960px)', true)
     return (
         <>
             <section className="bg-hero-section-gradient ">

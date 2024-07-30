@@ -369,7 +369,7 @@ const TechIntroduction = ({
 }
 
 export const TechStackSection = ({ colorsMap }: TechStackSectionProps) => {
-    const isMobile = useMediaQuery('(max-width: 720px)')
+    const isMobile = useMediaQuery('(max-width: 720px)', true)
     return (
         <>
             <section className="bg-black px-8 py-16">

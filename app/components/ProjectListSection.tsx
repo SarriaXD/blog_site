@@ -189,7 +189,7 @@ const IntroductionText = ({
 }
 
 const Introduction = ({ stayProgress, leavingProgress }: IntroductionProps) => {
-    const isMobile = useMediaQuery('(max-width: 720px)')
+    const isMobile = useMediaQuery('(max-width: 720px)', true)
     const { opacity } = useIntroductionAnimation(leavingProgress)
     const [isVisible, setVisible] = useState(false)
     useMotionValueEvent(stayProgress, 'change', (value) => {
