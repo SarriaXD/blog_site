@@ -186,49 +186,31 @@ const useTechTackSectionTitleAnimation = () => {
     const ref = useRef(null)
     const { scrollYProgress } = useScroll({
         target: ref,
-        offset: ['end end', 'start start'],
+        offset: ['start end', 'end end'],
     })
     const smoothScrollYProgress = useSpring(scrollYProgress, {
         stiffness: 200,
         damping: 20,
     })
-    const titleScale = useTransform(smoothScrollYProgress, [0, 0.3], [0.8, 1])
-    const titleY = useTransform(smoothScrollYProgress, [0, 0.3], [-100, 0])
-    const titleOpacity = useTransform(smoothScrollYProgress, [0, 0.3], [0, 1])
-    const subtitleScale = useTransform(
-        smoothScrollYProgress,
-        [0.3, 1],
-        [1.0, 0.5]
-    )
-    return { ref, titleScale, titleY, titleOpacity, subtitleScale }
+    const y = useTransform(smoothScrollYProgress, [0, 1], ['30%', '0%'])
+    const opacity = useTransform(smoothScrollYProgress, [0, 1], [0, 1])
+    return { ref, y, opacity }
 }
 
 const TechTackSectionTitle = () => {
-    const { ref, titleScale, titleY, titleOpacity, subtitleScale } =
-        useTechTackSectionTitleAnimation()
+    const { ref, y, opacity } = useTechTackSectionTitleAnimation()
     return (
         <>
-            <motion.div
-                className="sticky top-[75vh] z-50 self-center rounded-full bg-gray-600 bg-opacity-30 p-8 backdrop-blur-md"
-                style={{
-                    scale: subtitleScale,
-                }}
-            >
-                <Typography variant={'h1'} className="text-center">
-                    Code Engines
-                </Typography>
-            </motion.div>
             <motion.div
                 ref={ref}
                 className="mb-8 self-center"
                 style={{
-                    scale: titleScale,
-                    opacity: titleOpacity,
-                    y: titleY,
+                    y,
+                    opacity,
                 }}
             >
                 <Typography
-                    variant={'h2'}
+                    variant={'h1'}
                     className="text-center text-[#E9E9E9]"
                 >
                     Frameworks & Languages I Master
@@ -273,8 +255,9 @@ const useTechIntroductionAnimation = () => {
         stiffness: 200,
         damping: 20,
     })
-    const scale = useTransform(smoothScrollYProgress, [0, 1], [0.9, 1])
-    return { ref, scale }
+    const scale = useTransform(smoothScrollYProgress, [0, 1], [0.8, 1])
+    const opacity = useTransform(smoothScrollYProgress, [0, 1], [0.6, 1])
+    return { ref, scale, opacity }
 }
 
 const TechIntroductionItem = ({
@@ -282,12 +265,13 @@ const TechIntroductionItem = ({
     names,
     introduction,
 }: TechIntroductionItemProps) => {
-    const { ref, scale } = useTechIntroductionAnimation()
+    const { ref, scale, opacity } = useTechIntroductionAnimation()
     return (
         <motion.div
             ref={ref}
             style={{
                 scale,
+                opacity,
             }}
         >
             <Card color={'gray'}>
