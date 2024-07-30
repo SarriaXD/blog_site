@@ -9,7 +9,10 @@ export default function RootLayout({
     children: React.ReactNode
 }) {
     return (
-        <html lang="en" className="relative bg-black">
+        <html
+            lang="en"
+            className={`relative bg-black font-sans text-white antialiased`}
+        >
             <head>
                 <meta charSet="UTF-8" />
                 <link rel="icon" type="image/svg+xml" href="/logo.png" />
@@ -23,7 +26,7 @@ export default function RootLayout({
                 />
                 <title>Hi, I'm Qi!</title>
             </head>
-            <body className="min-h-[100vh] w-full font-sans text-white">
+            <body className="min-h-[100vh] w-full">
                 <Header />
                 {children}
                 <Footer />

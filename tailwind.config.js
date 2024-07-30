@@ -9,6 +9,16 @@ export default withMT({
         './app/**/*.{js,ts,jsx,tsx,mdx}',
     ],
     theme: {
+        fontFamily: {
+            sans: [
+                'SF Pro Display',
+                'SF Pro Icons',
+                'Helvetica Neue',
+                'Helvetica',
+                'Arial',
+                'sans-serif',
+            ],
+        },
         extend: {
             keyframes: {
                 ghost: {
