@@ -12,7 +12,7 @@
 // import {
 //     flutterProjectData,
 //     FlutterDataItem,
-// } from '../data/FlutterProjectData.ts'
+// } from '../data/flutterProjectData.ts'
 // import Image, { StaticImageData } from 'next/image'
 // import { useMediaQuery } from '../hooks.ts'
 // import { Typography } from './Material.tsx'
