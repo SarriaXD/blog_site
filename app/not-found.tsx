@@ -6,7 +6,7 @@ import { not_found } from '../public/images'
 const NotFoundImage = () => {
     return (
         <div
-            className="animate-ghost animate-pulse md:h-full"
+            className="animate-ghost md:h-full"
             style={{
                 maskImage:
                     'radial-gradient(circle, black 0%, transparent 70%, transparent 100%)',

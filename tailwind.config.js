@@ -33,7 +33,7 @@ export default withMT({
                 },
             },
             animation: {
-                'animate-ghost': 'ghost 4s linear infinite',
+                ghost: 'ghost 4s linear infinite',
             },
         },
     },
