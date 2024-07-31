@@ -99,7 +99,7 @@ export const Introduction = () => {
 const heroImageWithIntroductionData = [
     {
         image: hero_mobile,
-        alt: 'Hero Section',
+        alt: 'Building Cross-Platform Apps',
         title: 'Building Cross-Platform Apps',
         subtitle: 'Mobile Developer & Innovator',
         content:
@@ -108,7 +108,7 @@ const heroImageWithIntroductionData = [
     },
     {
         image: hero_web,
-        alt: 'Hero Section',
+        alt: 'Building Fast Web Apps',
         title: 'Building Fast Web Apps',
         subtitle: 'Experienced React Developer',
         content:
@@ -117,7 +117,7 @@ const heroImageWithIntroductionData = [
     },
     {
         image: hero_backend,
-        alt: 'Hero Section',
+        alt: 'Building Robust Backend Systems',
         title: 'Building Robust Backend Systems',
         subtitle: 'Backend Developer & Cloud Enthusiast',
         content:
