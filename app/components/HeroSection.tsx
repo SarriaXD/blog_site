@@ -266,7 +266,9 @@ const HeroImageIntroduction = ({
             >
                 {title}
             </Typography>
-            <Typography variant={'h1'}>{subtitle}</Typography>
+            <Typography variant={'h1'} className="text-5xl md:text-6xl">
+                {subtitle}
+            </Typography>
             <Typography
                 variant={'paragraph'}
                 className="pt-4 text-xl font-semibold text-gray-300"
