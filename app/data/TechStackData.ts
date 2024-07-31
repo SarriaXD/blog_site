@@ -71,37 +71,43 @@ export const techIntroductions = [
     {
         images: [android, java, kotlin],
         names: ['Android', 'Java', 'Kotlin'],
+        title: 'Android Development',
         introduction:
-            'The primary technology stack for developing native Android mobile applications, offering robust performance and full access to device features.',
+            'I use Java and Kotlin for native Android development, providing robust performance and full access to device features.',
     },
     {
         images: [jetpackCompose, kotlin],
         names: ['Jetpack Compose', 'Kotlin'],
+        title: 'Jetpack Compose',
         introduction:
-            'A modern UI toolkit for Android development, using Kotlin to create declarative user interfaces. It simplifies UI development and supports multi-platform projects for desktop and web.',
-    },
-    {
-        images: [flutter, dart],
-        names: ['Flutter', 'Dart'],
-        introduction:
-            "Google's cross-platform development framework for building high-performance native interface applications that run on multiple platforms from a single codebase.",
-    },
-    {
-        images: [react, typescript],
-        names: ['React', 'TypeScript'],
-        introduction:
-            'A popular front-end technology combination for building modern, reactive web applications, with TypeScript adding static type checking for enhanced reliability.',
-    },
-    {
-        images: [python],
-        names: ['Python'],
-        introduction:
-            "My primary tool for data analysis and artificial intelligence. Python's rich ecosystem of libraries makes it ideal for processing large datasets, creating machine learning models, and developing AI applications.",
+            'I use Jetpack Compose to create declarative user interfaces for both Android and desktop applications, simplifying UI development and supporting multi-platform projects.',
     },
     {
         images: [springBoot, java, kotlin],
         names: ['Spring Boot', 'Java', 'Kotlin'],
+        title: 'Spring Backend Development',
         introduction:
-            'A framework for rapidly developing and deploying enterprise-grade Java applications, with Kotlin offering a more modern and concise syntax option.',
+            'I use Spring Boot for rapidly developing and deploying enterprise-grade Java applications, with Kotlin offering a more modern and concise syntax option.',
+    },
+    {
+        images: [flutter, dart],
+        names: ['Flutter', 'Dart'],
+        title: 'Flutter Cross-Platform Development',
+        introduction:
+            'I use Flutter for building high-performance native applications that run on both iOS and Android platforms from a single codebase.',
+    },
+    {
+        images: [react, typescript],
+        names: ['React', 'TypeScript'],
+        title: 'Web Development',
+        introduction:
+            'I use TypeScript and React to build modern, reactive web applications, with TypeScript adding static type checking for enhanced reliability.',
+    },
+    {
+        images: [python],
+        names: ['Python'],
+        title: 'Data Science & AI',
+        introduction:
+            'I use Python for data analysis and artificial intelligence development. Python’s rich ecosystem of libraries makes it ideal for processing large datasets, creating machine learning models, and developing AI applications.',
     },
 ]

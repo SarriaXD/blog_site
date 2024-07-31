@@ -71,7 +71,7 @@ const useCarouselAnimation = (index: number, isMobile: boolean) => {
     const ref = useRef(null)
     const { scrollYProgress } = useScroll({
         target: ref,
-        offset: ['start end', `end ${isMobile ? 'end' : '90%'}`],
+        offset: ['start end', isMobile ? 'end 90%' : 'start center'],
     })
     const smoothScrollYProgress = useSpring(scrollYProgress, {
         stiffness: 200,
@@ -171,12 +171,12 @@ const Carousel = ({
                 </motion.ul>
             </div>
             <div className="flex flex-col gap-4 p-6">
-                <Typography variant="h2" className="text-xl">
+                <Typography variant="h2" className="text-xl font-bold">
                     {title}
                 </Typography>
                 <Typography
                     variant="paragraph"
-                    className="font-semibold text-gray-500"
+                    className="font-semibold text-gray-400"
                 >
                     {subtitle}
                 </Typography>
@@ -193,13 +193,13 @@ const useTechTackSectionTitleAnimation = (isMobile: boolean) => {
     const ref = useRef(null)
     const { scrollYProgress } = useScroll({
         target: ref,
-        offset: ['start end', `end ${isMobile ? 'end' : '90%'}`],
+        offset: ['start end', isMobile ? 'end 90%' : 'start center'],
     })
     const smoothScrollYProgress = useSpring(scrollYProgress, {
         stiffness: 200,
         damping: 20,
     })
-    const y = useTransform(smoothScrollYProgress, [0, 1], ['50%', '0%'])
+    const y = useTransform(scrollYProgress, [0, 1], ['50%', '0%'])
     const opacity = useTransform(smoothScrollYProgress, [0, 1], [0, 1])
     return { ref, y, opacity }
 }
@@ -235,12 +235,14 @@ function chunkArray(
     array: {
         images: StaticImageData[]
         names: string[]
+        title: string
         introduction: string
     }[],
     chunkSize: number
 ): {
     images: StaticImageData[]
     names: string[]
+    title: string
     introduction: string
 }[][] {
     const result = []
@@ -253,6 +255,7 @@ function chunkArray(
 interface TechIntroductionItemProps {
     images: StaticImageData[]
     names: string[]
+    title: string
     introduction: string
     isMobile: boolean
     groupNumber: number
@@ -265,13 +268,13 @@ const useTechIntroductionAnimation = (
     const ref = useRef(null)
     const { scrollYProgress } = useScroll({
         target: ref,
-        offset: ['start end', `end ${isMobile ? 'end' : '90%'}`],
+        offset: ['start end', isMobile ? 'end 90%' : 'start 60%'],
     })
     const smoothScrollYProgress = useSpring(scrollYProgress, {
         stiffness: 200,
         damping: 20,
     })
-    let startY = groupNumber % 2 === 0 ? 200 : 400
+    let startY = groupNumber % 2 === 0 ? 150 : 300
     startY = isMobile ? 0 : startY
     const y = useTransform(smoothScrollYProgress, [0, 1], [startY, 0])
     const startScale = isMobile ? 0.8 : 1
@@ -284,6 +287,7 @@ const TechIntroductionItem = ({
     images,
     names,
     introduction,
+    title,
     isMobile,
     groupNumber,
 }: TechIntroductionItemProps) => {
@@ -300,7 +304,7 @@ const TechIntroductionItem = ({
                 y,
             }}
         >
-            <Card color={'gray'}>
+            <Card color="gray">
                 <CardBody className="flex flex-col gap-4">
                     <div className="flex flex-wrap gap-2">
                         {images.map((image, techIndex) => (
@@ -327,8 +331,15 @@ const TechIntroductionItem = ({
                         ))}
                     </div>
                     <Typography
+                        variant="h2"
+                        color="white"
+                        className="text-xl font-bold"
+                    >
+                        {title}
+                    </Typography>
+                    <Typography
                         variant="paragraph"
-                        className="font-semibold text-gray-200"
+                        className="font-semibold text-gray-300"
                     >
                         {introduction}
                     </Typography>
@@ -342,6 +353,7 @@ interface TechIntroductionsProps {
     techIntroductions: {
         images: StaticImageData[]
         names: string[]
+        title: string
         introduction: string
     }[]
     isMobile: boolean
@@ -354,7 +366,7 @@ const TechIntroduction = ({
     const columns = isMobile ? 1 : 2
     const chunkedTechIntroduction = chunkArray(
         techIntroductions,
-        Math.floor(techIntroductions.length / columns)
+        Math.ceil(techIntroductions.length / columns)
     )
     return (
         <div className="flex gap-4">
