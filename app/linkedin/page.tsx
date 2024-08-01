@@ -19,7 +19,9 @@ export default function Page() {
         <main>
             <div className="flex min-h-[100vh] flex-col items-center justify-center gap-16 bg-black">
                 <Spinner className="size-24" />
-                <Typography variant="h2">Redirecting to Linkedin</Typography>
+                <Typography variant="h2" className="text-center">
+                    Redirecting to Linkedin
+                </Typography>
             </div>
         </main>
     )
