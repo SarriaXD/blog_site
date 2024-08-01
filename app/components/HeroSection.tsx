@@ -8,31 +8,10 @@ import { useMediaQuery } from '../hooks.ts'
 import { Typography } from './Material.tsx'
 import { hero_backend, hero_mobile, hero_web } from '../../public/images'
 
-const useIntroductionAnimation = () => {
-    const ref = useRef(null)
-    const { scrollYProgress } = useScroll({
-        target: ref,
-        offset: ['start 96px', 'end 96px'],
-    })
-    const titleOpacity = useTransform(scrollYProgress, [0, 1], [1, 0])
-    const titleY = useTransform(scrollYProgress, [0, 1], [0, -50])
-    const subtitleOpacity = useTransform(scrollYProgress, [0, 1], [1, 0])
-    const subtitleY = useTransform(scrollYProgress, [0, 1], [0, -30])
-    return {
-        ref,
-        titleOpacity,
-        titleY,
-        subtitleOpacity,
-        subtitleY,
-    }
-}
-
-export const Introduction = () => {
-    const { ref, titleOpacity, subtitleOpacity, titleY, subtitleY } =
-        useIntroductionAnimation()
+const Introduction = () => {
     return (
         <div
-            ref={ref}
+            // ref={ref}
             className="flex flex-col gap-4 py-8 text-center md:gap-8 md:py-12 xl:gap-12 xl:py-16"
         >
             <motion.div
@@ -41,10 +20,9 @@ export const Introduction = () => {
                     y: 50,
                 }}
                 animate={{
-                    opacity: [0, 1],
-                    y: [50, 0],
+                    opacity: 1,
+                    y: 0,
                 }}
-                style={{ opacity: titleOpacity, y: titleY }}
                 transition={{
                     type: 'spring',
                     duration: 1,
@@ -74,15 +52,14 @@ export const Introduction = () => {
                     y: 50,
                 }}
                 animate={{
-                    opacity: [0, 1],
-                    y: [50, 0],
+                    opacity: 1,
+                    y: 0,
                 }}
                 transition={{
                     type: 'spring',
                     delay: 0.5,
                     duration: 1,
                 }}
-                style={{ opacity: subtitleOpacity, y: subtitleY }}
             >
                 <Typography
                     variant="h2"
@@ -156,8 +133,8 @@ const HeroImageWithIntroduction = ({
                 y: 50,
             }}
             animate={{
-                opacity: [0, 1],
-                y: [50, 0],
+                opacity: 1,
+                y: 50,
             }}
             transition={{
                 type: 'tween',
