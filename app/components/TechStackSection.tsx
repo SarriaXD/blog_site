@@ -281,7 +281,6 @@ const useTechIntroductionAnimation = (
             setIsInView(false)
         }
     })
-    console.log('isInView', isInView)
     let startY = groupNumber % 2 === 0 ? 200 : 400
     startY = isMobile ? 0 : startY
     const startScale = isMobile ? 0.8 : 1
