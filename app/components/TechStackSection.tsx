@@ -281,15 +281,12 @@ const useTechIntroductionAnimation = (
             setIsInView(false)
         }
     })
-    const startScale = isMobile ? 0.8 : 1
-    const scale = isInView ? 1 : startScale
-
     const opacity = isInView ? 1 : 0
 
     let startY = groupNumber % 2 === 0 ? 200 : 400
     startY = isMobile ? 200 : startY
     const y = isInView ? 0 : startY
-    return { ref, scale, opacity, y }
+    return { ref, opacity, y }
 }
 
 const TechIntroductionItem = ({
@@ -300,7 +297,7 @@ const TechIntroductionItem = ({
     isMobile,
     groupNumber,
 }: TechIntroductionItemProps) => {
-    const { ref, scale, opacity, y } = useTechIntroductionAnimation(
+    const { ref, opacity, y } = useTechIntroductionAnimation(
         isMobile,
         groupNumber
     )
@@ -308,13 +305,12 @@ const TechIntroductionItem = ({
         <motion.div
             ref={ref}
             animate={{
-                scale: scale,
                 opacity: opacity,
                 y: y,
             }}
             transition={{
                 type: 'spring',
-                duration: 1,
+                duration: 1.8,
             }}
         >
             <Card color="gray">
