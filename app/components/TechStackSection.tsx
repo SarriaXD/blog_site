@@ -5,6 +5,7 @@ import {
     motion,
     useAnimationFrame,
     useMotionValue,
+    useMotionValueEvent,
     useScroll,
     useSpring,
     useTransform,
@@ -12,7 +13,7 @@ import {
 } from 'framer-motion'
 import Image, { StaticImageData } from 'next/image'
 import { StaticImageColor } from '../utils.ts'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import {
     frameworkTechData,
     languageTechData,
@@ -265,21 +266,27 @@ const useTechIntroductionAnimation = (
     isMobile: boolean,
     groupNumber: number
 ) => {
+    const [isInView, setIsInView] = useState(false)
     const ref = useRef(null)
     const { scrollYProgress } = useScroll({
         target: ref,
-        offset: ['start end', isMobile ? 'end 90%' : 'start 60%'],
+        // offset: ['start end', isMobile ? 'end 90%' : 'start 60%'],
+        offset: ['center end', 'start start'],
     })
-    const smoothScrollYProgress = useSpring(scrollYProgress, {
-        stiffness: 200,
-        damping: 20,
+    useMotionValueEvent(scrollYProgress, 'change', (progress) => {
+        if (progress > 0.0) {
+            setIsInView(true)
+        }
+        if (progress === 0.0) {
+            setIsInView(false)
+        }
     })
-    let startY = groupNumber % 2 === 0 ? 150 : 300
+    let startY = groupNumber % 2 === 0 ? 200 : 400
     startY = isMobile ? 0 : startY
-    const y = useTransform(smoothScrollYProgress, [0, 1], [startY, 0])
     const startScale = isMobile ? 0.8 : 1
-    const scale = useTransform(smoothScrollYProgress, [0, 1], [startScale, 1])
-    const opacity = useTransform(smoothScrollYProgress, [0, 1], [0.6, 1])
+    const scale = isInView ? 1 : startScale
+    const opacity = isInView ? 1 : 0
+    const y = isInView ? 0 : startY
     return { ref, scale, opacity, y }
 }
 
@@ -298,10 +305,14 @@ const TechIntroductionItem = ({
     return (
         <motion.div
             ref={ref}
-            style={{
-                scale,
-                opacity,
-                y,
+            animate={{
+                scale: scale,
+                opacity: opacity,
+                y: y,
+            }}
+            transition={{
+                type: 'spring',
+                duration: 1,
             }}
         >
             <Card color="gray">
