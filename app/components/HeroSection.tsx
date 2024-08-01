@@ -41,8 +41,8 @@ export const Introduction = () => {
                     y: 50,
                 }}
                 animate={{
-                    opacity: 1,
-                    y: 0,
+                    opacity: [0, 1],
+                    y: [50, 0],
                 }}
                 style={{ opacity: titleOpacity, y: titleY }}
                 transition={{
@@ -74,8 +74,8 @@ export const Introduction = () => {
                     y: 50,
                 }}
                 animate={{
-                    opacity: 1,
-                    y: 0,
+                    opacity: [0, 1],
+                    y: [50, 0],
                 }}
                 transition={{
                     type: 'spring',
@@ -156,8 +156,8 @@ const HeroImageWithIntroduction = ({
                 y: 50,
             }}
             animate={{
-                opacity: 1,
-                y: 0,
+                opacity: [0, 1],
+                y: [50, 0],
             }}
             transition={{
                 type: 'tween',
@@ -184,17 +184,18 @@ const HeroImage = ({ image, color, alt }: HeroImageProps) => {
     const ref = useRef(null)
     const { scrollYProgress } = useScroll({
         target: ref,
-        offset: ['start end', 'start center'],
+        offset: ['start 70%', 'start 25%'],
     })
     const smoothScrollYProgress = useSpring(scrollYProgress, {
         stiffness: 200,
         damping: 20,
     })
-    const y = useTransform(smoothScrollYProgress, [0, 1], ['50%', '0%'])
+
+    const y = useTransform(smoothScrollYProgress, [0, 1], ['10%', '0%'])
     const rotateX = useTransform(
         smoothScrollYProgress,
         [0, 1],
-        ['60deg', '0deg']
+        ['20deg', '0deg']
     )
     const gradientBackground = `linear-gradient(to top, ${color.mainColor}, ${color.secondaryColor}, transparent)`
     return (
@@ -266,7 +267,10 @@ const HeroImageIntroduction = ({
             >
                 {title}
             </Typography>
-            <Typography variant={'h1'} className="text-5xl md:text-6xl">
+            <Typography
+                variant={'h1'}
+                className="text-4xl md:text-5xl xl:text-6xl"
+            >
                 {subtitle}
             </Typography>
             <Typography
