@@ -1,7 +1,7 @@
 import { HeroSection } from './components/HeroSection.tsx'
-// import { ProjectListSection } from './components/ProjectListSection.tsx'
 import { TechStackSection } from './components/TechStackSection.tsx'
 import { getAllNeedColorImageColors } from './utils.ts'
+import { FlutterProjectSection } from './components/FlutterProjectSection.tsx'
 
 export default async function Page() {
     const colorsMap = await getAllNeedColorImageColors()
@@ -9,7 +9,7 @@ export default async function Page() {
         <main>
             <HeroSection colorsMap={colorsMap} />
             <TechStackSection colorsMap={colorsMap} />
-            {/*<ProjectListSection />*/}
+            <FlutterProjectSection />
         </main>
     )
 }
