@@ -15,20 +15,22 @@ import {
     useTransform,
 } from 'framer-motion'
 
-const FlutterProjectMobileTitle = () => {
+const FlutterProjectTitle = () => {
     return (
-        <div
-            className="sticky z-50 flex items-center justify-center py-4"
-            style={{
-                top: 'calc(100vh - 5rem)',
-            }}
-        >
-            <Link href={'/'}>
-                <Button className="flex items-center gap-3 rounded-full bg-gray-900 bg-opacity-80 backdrop-blur">
-                    Find More about This Project
-                    <ArrowRight className="size-8 rounded-full bg-gray-800 p-1 text-white" />
-                </Button>
-            </Link>
+        <div className="absolute top-0 h-full w-full">
+            <div
+                className="sticky z-50 flex items-center justify-center py-4"
+                style={{
+                    top: 'calc(100vh - 5rem)',
+                }}
+            >
+                <Link href={'/'}>
+                    <Button className="flex items-center gap-3 rounded-full bg-gray-900 bg-opacity-80 backdrop-blur">
+                        Find More about This Project
+                        <ArrowRight className="size-8 rounded-full bg-gray-800 p-1 text-white" />
+                    </Button>
+                </Link>
+            </div>
         </div>
     )
 }
@@ -56,7 +58,7 @@ const FlutterProjectImage = ({
             <Image
                 src={iphone_frame}
                 alt="iphone frame"
-                className="relative z-10 h-auto w-auto"
+                className="relative z-10"
             />
         </div>
     )
@@ -122,7 +124,7 @@ const FlutterProjectImageList = () => {
                 />
             </motion.div>
             <motion.div
-                className="z-10"
+                className="z-10 h-auto w-auto"
                 style={{
                     scale: mainImageScale,
                     transformOrigin: 'bottom',
@@ -163,9 +165,9 @@ const FlutterProjectImageList = () => {
     )
 }
 
-const FlutterProjectMobileIntroduction = () => {
+const FlutterProjectIntroduction = () => {
     return (
-        <div className="h-full bg-gray-800">
+        <div>
             <Typography variant={'h1'} className={'text-2xl'}>
                 Flutter Project
             </Typography>
@@ -173,7 +175,8 @@ const FlutterProjectMobileIntroduction = () => {
                 This is a project I did using Flutter. It is a mobile
                 application that helps users to track their daily expenses and
                 income. Users can add transactions, view their history, and see
-                a summary of their financial status.
+                a summary of their financial status. This is a project I did
+                using Flutter.
             </Typography>
         </div>
     )
@@ -181,10 +184,12 @@ const FlutterProjectMobileIntroduction = () => {
 
 const FlutterProject = () => {
     return (
-        <div className="h-full">
-            <FlutterProjectMobileTitle />
-            <FlutterProjectImageList />
-            <FlutterProjectMobileIntroduction />
+        <div className="container sticky top-0 mx-auto h-[100vh]">
+            <FlutterProjectTitle />
+            <div className="flex h-full flex-col items-center justify-center xl:flex-row">
+                <FlutterProjectImageList />
+                <FlutterProjectIntroduction />
+            </div>
             <div className="h-20" />
         </div>
     )
@@ -193,9 +198,7 @@ const FlutterProject = () => {
 export const FlutterProjectSection = () => {
     return (
         <section className="h-[400vh]">
-            <div className="container sticky top-0 mx-auto h-[100vh]">
-                <FlutterProject />
-            </div>
+            <FlutterProject />
         </section>
     )
 }
