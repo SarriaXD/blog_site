@@ -219,7 +219,7 @@ const TechTackSectionTitle = ({ isMobile }: { isMobile: boolean }) => {
             >
                 <Typography
                     variant={'h1'}
-                    className="bg-clip-text text-center text-transparent md:text-6xl lg:text-7xl"
+                    className="bg-clip-text text-center text-transparent md:text-7xl lg:text-8xl"
                     style={{
                         backgroundImage:
                             'linear-gradient(51deg, #F7B500, #6DD400 76%)',

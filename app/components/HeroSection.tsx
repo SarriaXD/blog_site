@@ -10,7 +10,7 @@ import { hero_backend, hero_mobile, hero_web } from '../../public/images'
 
 const Introduction = () => {
     return (
-        <div className="flex flex-col gap-4 py-8 text-center md:gap-8 md:py-12 lg:gap-12 lg:py-16">
+        <div className="mx-auto flex max-w-[460px] flex-col gap-4 py-8 text-center md:w-[519px] md:max-w-full md:gap-8 md:py-12 lg:w-[980px] lg:gap-12 lg:py-16">
             <motion.div
                 initial={{
                     opacity: 0,
@@ -29,7 +29,7 @@ const Introduction = () => {
                 <Typography
                     variant={'h1'}
                     color="white"
-                    className="text-4xl md:text-6xl lg:text-8xl"
+                    className="text-4xl md:text-7xl lg:text-8xl"
                 >
                     <span
                         className="bg-clip-text text-transparent"
@@ -61,7 +61,7 @@ const Introduction = () => {
                 <Typography
                     variant="h2"
                     color="gray"
-                    className="text-4xl md:text-5xl lg:text-6xl"
+                    className="text-2xl md:text-3xl lg:text-4xl"
                 >
                     A full-stack developer.
                 </Typography>
@@ -271,7 +271,7 @@ export const HeroSection = ({ colorsMap }: HeroSectionProps) => {
                         'linear-gradient(180deg,#000000 0%,rgba(0,0,0,0) 100%), radial-gradient(200% 100% at -66% 36%, #0b014a 40%, rgb(0, 73, 184) 80%, rgb(50, 100, 227) 90%, rgb(0, 204, 255) 100%)',
                 }}
             >
-                <div className="mx-auto px-4 pb-32 pt-24 md:max-w-[920px] md:px-8 lg:max-w-[1300px] lg:px-12">
+                <div className="mx-auto px-4 pb-32 pt-24 md:max-w-[908px] md:px-8 lg:max-w-[1120px] lg:px-12">
                     <Introduction />
                     <div className="flex flex-col gap-24">
                         {heroImageWithIntroductionData.map((data, index) => {

@@ -15,6 +15,26 @@ import { useRef, useState } from 'react'
 
 const FlutterProjectTitle = () => {
     return (
+        <div className="mx-auto w-[300px] md:w-[578px] lg:w-[735px]">
+            <Typography
+                variant={'h3'}
+                className="text-4xl text-[#86868b] md:text-7xl lg:text-8xl"
+            >
+                Diver Test App.
+            </Typography>
+            <Typography
+                variant={'h4'}
+                className="text-4xl md:text-7xl lg:text-8xl"
+            >
+                Power by Flutter. <br />
+                Material Design.
+            </Typography>
+        </div>
+    )
+}
+
+const FlutterProjectFindMore = () => {
+    return (
         <div className="absolute top-0 h-full w-full">
             <div
                 className="sticky z-50 flex items-center justify-center py-4"
@@ -59,12 +79,12 @@ const useFlutterProjectImageListAnimation = () => {
     }
 }
 
-const FlutterProjectImageList = () => {
+const FlutterProjectImageGallery = () => {
     const { ref, scale, isInView } = useFlutterProjectImageListAnimation()
     return (
         <div
             ref={ref}
-            className="flex items-center justify-center px-2"
+            className="flex w-[92%] items-center justify-between md:w-full"
             style={{
                 perspective: '2000px',
             }}
@@ -82,8 +102,8 @@ const FlutterProjectImageList = () => {
             >
                 <Image
                     src={flutter_project_1}
+                    quality="100"
                     alt="flutter project image 1"
-                    // className="md:h-auto md:w-[220px] lg:w-[245px]"
                 />
             </motion.div>
             <motion.div
@@ -99,8 +119,8 @@ const FlutterProjectImageList = () => {
             >
                 <Image
                     src={flutter_project_1}
+                    quality="100"
                     alt="flutter project image 1"
-                    // className="md:h-auto md:w-[219px] lg:w-[245px]"
                 />
             </motion.div>
             <motion.div
@@ -116,8 +136,8 @@ const FlutterProjectImageList = () => {
             >
                 <Image
                     src={flutter_project_1}
+                    quality="100"
                     alt="flutter project image 1"
-                    // className="md:h-auto md:w-[220px] lg:w-[245px]"
                 />
             </motion.div>
         </div>
@@ -150,7 +170,6 @@ const FlutterProjectIntroduction = () => {
     return (
         <motion.div
             ref={ref}
-            className="max-w-[735px] px-6"
             animate={{
                 opacity: isInView ? 1 : 0,
                 y: isInView ? 0 : 20,
@@ -159,20 +178,14 @@ const FlutterProjectIntroduction = () => {
                 type: 'spring',
                 duration: 1.2,
             }}
+            className="p-8"
         >
             <Typography variant={'h1'} className={'text-2xl'}>
-                Flutter Project
+                Dynamic Color Theme
             </Typography>
             <Typography variant={'paragraph'} className={'mt-4 font-semibold'}>
-                This is a project I did using Flutter. It is a mobile
-                application that helps users to track their daily expenses and
-                income. Users can add transactions, view their history, and see
-                a summary of their financial status. This is a project I did
-                using Flutter. This is a project I did using Flutter. It is a
-                mobile application that helps users to track their daily
-                expenses and income. Users can add transactions, view their
-                history, and see a summary of their financial status. This is a
-                project I did using Flutter.
+                You can use Dark and Light theme in this app. You can choose the
+                color theme that you like.
             </Typography>
         </motion.div>
     )
@@ -180,10 +193,10 @@ const FlutterProjectIntroduction = () => {
 
 const FlutterProject = () => {
     return (
-        <div className="custom-container sticky top-0 mx-auto h-[100vh]">
-            <FlutterProjectTitle />
-            <div className="flex h-full flex-col items-center justify-center py-20">
-                <FlutterProjectImageList />
+        <div className="sticky top-0 mx-auto h-[100vh] md:w-[692px] lg:w-[900px]">
+            <FlutterProjectFindMore />
+            <div className="mx-auto flex h-full max-w-[530px] flex-col items-center justify-center py-20 md:max-w-full lg:px-[8.33333333%]">
+                <FlutterProjectImageGallery />
                 <FlutterProjectIntroduction />
             </div>
             <div className="h-20" />
@@ -193,11 +206,11 @@ const FlutterProject = () => {
 
 export const FlutterProjectSection = () => {
     return (
-        <section className="h-[400vh]">
-            <Typography variant={'h1'} className={'text-4xl'}>
-                Flutter Project
-            </Typography>
-            <FlutterProject />
+        <section>
+            <div className="mx-auto h-[400vh] bg-[#101010] py-24 md:max-w-[908px] lg:max-w-[1120px]">
+                <FlutterProjectTitle />
+                <FlutterProject />
+            </div>
         </section>
     )
 }
