@@ -211,7 +211,7 @@ const TechTackSectionTitle = ({ isMobile }: { isMobile: boolean }) => {
         <>
             <motion.div
                 ref={ref}
-                className="mb-8 self-center md:px-32 md:py-16 xl:px-48"
+                className="mb-8 self-center md:px-32 md:py-16 lg:px-48"
                 style={{
                     y,
                     opacity,
@@ -219,7 +219,7 @@ const TechTackSectionTitle = ({ isMobile }: { isMobile: boolean }) => {
             >
                 <Typography
                     variant={'h1'}
-                    className="bg-clip-text text-center text-transparent md:text-6xl xl:text-7xl"
+                    className="bg-clip-text text-center text-transparent md:text-6xl lg:text-7xl"
                     style={{
                         backgroundImage:
                             'linear-gradient(51deg, #F7B500, #6DD400 76%)',

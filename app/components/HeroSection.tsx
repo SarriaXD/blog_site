@@ -10,10 +10,7 @@ import { hero_backend, hero_mobile, hero_web } from '../../public/images'
 
 const Introduction = () => {
     return (
-        <div
-            // ref={ref}
-            className="flex flex-col gap-4 py-8 text-center md:gap-8 md:py-12 xl:gap-12 xl:py-16"
-        >
+        <div className="flex flex-col gap-4 py-8 text-center md:gap-8 md:py-12 lg:gap-12 lg:py-16">
             <motion.div
                 initial={{
                     opacity: 0,
@@ -32,7 +29,7 @@ const Introduction = () => {
                 <Typography
                     variant={'h1'}
                     color="white"
-                    className="text-4xl md:text-6xl xl:text-8xl"
+                    className="text-4xl md:text-6xl lg:text-8xl"
                 >
                     <span
                         className="bg-clip-text text-transparent"
@@ -64,7 +61,7 @@ const Introduction = () => {
                 <Typography
                     variant="h2"
                     color="gray"
-                    className="text-4xl md:text-5xl xl:text-6xl"
+                    className="text-4xl md:text-5xl lg:text-6xl"
                 >
                     A full-stack developer.
                 </Typography>
@@ -142,7 +139,7 @@ const HeroImageWithIntroduction = ({
                 delay: 1,
             }}
         >
-            <div className="flex flex-col items-center justify-center gap-2 lg:flex-row lg:gap-32">
+            <div className="flex flex-col items-center justify-center gap-2 md:flex-row md:gap-8 lg:gap-12">
                 {reversed && <HeroImageIntroduction {...introductionProps} />}
                 <HeroImage image={image} color={color} alt={alt} />
                 {!reversed && <HeroImageIntroduction {...introductionProps} />}
@@ -177,7 +174,7 @@ const HeroImage = ({ image, color, alt }: HeroImageProps) => {
     const gradientBackground = `linear-gradient(to top, ${color.mainColor}, ${color.secondaryColor}, transparent)`
     return (
         <div
-            className="flex-1"
+            className="max-w-[460px] flex-1 md:max-w-full"
             style={{
                 perspective: 1200,
             }}
@@ -236,7 +233,7 @@ const HeroImageIntroduction = ({
                 opacity,
                 y,
             }}
-            className="flex flex-1 flex-col p-4"
+            className="flex flex-1 flex-col"
         >
             <Typography
                 variant={'lead'}
@@ -246,7 +243,7 @@ const HeroImageIntroduction = ({
             </Typography>
             <Typography
                 variant={'h1'}
-                className="text-4xl md:text-5xl xl:text-6xl"
+                className="text-4xl md:text-5xl lg:text-6xl"
             >
                 {subtitle}
             </Typography>
@@ -265,7 +262,7 @@ interface HeroSectionProps {
 }
 
 export const HeroSection = ({ colorsMap }: HeroSectionProps) => {
-    const isMobile = useMediaQuery('(max-width: 960px)', true)
+    const isMobile = useMediaQuery('(max-width: 735px)', true)
     return (
         <>
             <section
@@ -274,7 +271,7 @@ export const HeroSection = ({ colorsMap }: HeroSectionProps) => {
                         'linear-gradient(180deg,#000000 0%,rgba(0,0,0,0) 100%), radial-gradient(200% 100% at -66% 36%, #0b014a 40%, rgb(0, 73, 184) 80%, rgb(50, 100, 227) 90%, rgb(0, 204, 255) 100%)',
                 }}
             >
-                <div className="container mx-auto px-4 pb-32 pt-24 md:px-8 xl:px-12">
+                <div className="mx-auto px-4 pb-32 pt-24 md:max-w-[920px] md:px-8 lg:max-w-[1300px] lg:px-12">
                     <Introduction />
                     <div className="flex flex-col gap-24">
                         {heroImageWithIntroductionData.map((data, index) => {

@@ -19,6 +19,10 @@ export default withMT({
                 'sans-serif',
             ],
         },
+        screens: {
+            md: '735px',
+            lg: '1069px',
+        },
         extend: {
             keyframes: {
                 ghost: {
