@@ -61,7 +61,7 @@ const Introduction = () => {
     )
 }
 
-const heroImageWithIntroductionData = [
+const galleryData = [
     {
         image: hero_mobile,
         alt: 'Building Cross-Platform Apps',
@@ -90,7 +90,7 @@ const heroImageWithIntroductionData = [
     },
 ]
 
-interface HeroImageWithIntroductionProps {
+interface ImageGalleryProps {
     color: StaticImageColor
     image: StaticImageData
     alt: string
@@ -100,7 +100,7 @@ interface HeroImageWithIntroductionProps {
     reversed: boolean
 }
 
-const HeroImageWithIntroduction = ({
+const ImageGallery = ({
     color,
     image,
     alt,
@@ -108,7 +108,7 @@ const HeroImageWithIntroduction = ({
     subtitle,
     content,
     reversed,
-}: HeroImageWithIntroductionProps) => {
+}: ImageGalleryProps) => {
     const introductionProps = {
         title,
         subtitle,
@@ -131,21 +131,21 @@ const HeroImageWithIntroduction = ({
             }}
         >
             <div className="flex flex-col items-center justify-center gap-8 md:flex-row md:gap-12 lg:gap-16">
-                {reversed && <HeroImageIntroduction {...introductionProps} />}
-                <HeroImage image={image} color={color} alt={alt} />
-                {!reversed && <HeroImageIntroduction {...introductionProps} />}
+                {reversed && <GalleryIntroduction {...introductionProps} />}
+                <GalleryImage image={image} color={color} alt={alt} />
+                {!reversed && <GalleryIntroduction {...introductionProps} />}
             </div>
         </motion.div>
     )
 }
 
-interface HeroImageProps {
+interface GalleryImageProps {
     image: StaticImageData
     color: StaticImageColor
     alt: string
 }
 
-const HeroImage = ({ image, color, alt }: HeroImageProps) => {
+const GalleryImage = ({ image, color, alt }: GalleryImageProps) => {
     const ref = useRef(null)
     const { scrollYProgress } = useScroll({
         target: ref,
@@ -195,17 +195,17 @@ const HeroImage = ({ image, color, alt }: HeroImageProps) => {
     )
 }
 
-interface HeroImageIntroductionProps {
+interface GalleryIntroductionProps {
     title: string
     subtitle: string
     content: string
 }
 
-const HeroImageIntroduction = ({
+const GalleryIntroduction = ({
     title,
     subtitle,
     content,
-}: HeroImageIntroductionProps) => {
+}: GalleryIntroductionProps) => {
     const ref = useRef(null)
     const { scrollYProgress } = useScroll({
         target: ref,
@@ -254,11 +254,11 @@ export const HeroSection = ({ colorsMap }: HeroSectionProps) => {
                 <div className="mx-auto px-8 pb-32 pt-24 md:max-w-[908px] md:px-8 lg:max-w-[1120px] lg:px-12">
                     <Introduction />
                     <div className="flex flex-col gap-24">
-                        {heroImageWithIntroductionData.map((data, index) => {
+                        {galleryData.map((data, index) => {
                             const preReverse = index % 2 !== 0
                             const reversed = isMobile ? false : preReverse
                             return (
-                                <HeroImageWithIntroduction
+                                <ImageGallery
                                     key={index}
                                     color={colorsMap.get(data.image.src)!}
                                     {...data}

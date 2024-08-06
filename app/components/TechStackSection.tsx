@@ -196,7 +196,7 @@ const useTechTackSectionTitleAnimation = (isMobile: boolean) => {
     return { ref, y, opacity }
 }
 
-const TechTackSectionTitle = ({ isMobile }: { isMobile: boolean }) => {
+const Title = ({ isMobile }: { isMobile: boolean }) => {
     const { ref, y, opacity } = useTechTackSectionTitleAnimation(isMobile)
     return (
         <>
@@ -243,7 +243,7 @@ function chunkArray(
     return result
 }
 
-interface TechIntroductionItemProps {
+interface IntroductionItemProps {
     images: StaticImageData[]
     names: string[]
     title: string
@@ -252,10 +252,7 @@ interface TechIntroductionItemProps {
     groupNumber: number
 }
 
-const useTechIntroductionAnimation = (
-    isMobile: boolean,
-    groupNumber: number
-) => {
+const useIntroductionsAnimation = (isMobile: boolean, groupNumber: number) => {
     const [isInView, setIsInView] = useState(false)
     const ref = useRef(null)
     const { scrollYProgress } = useScroll({
@@ -279,18 +276,15 @@ const useTechIntroductionAnimation = (
     return { ref, opacity, y }
 }
 
-const TechIntroductionItem = ({
+const IntroductionItem = ({
     images,
     names,
     introduction,
     title,
     isMobile,
     groupNumber,
-}: TechIntroductionItemProps) => {
-    const { ref, opacity, y } = useTechIntroductionAnimation(
-        isMobile,
-        groupNumber
-    )
+}: IntroductionItemProps) => {
+    const { ref, opacity, y } = useIntroductionsAnimation(isMobile, groupNumber)
     return (
         <motion.div
             ref={ref}
@@ -339,7 +333,7 @@ const TechIntroductionItem = ({
     )
 }
 
-interface TechIntroductionsProps {
+interface IntroductionsProps {
     techIntroductions: {
         images: StaticImageData[]
         names: string[]
@@ -349,10 +343,7 @@ interface TechIntroductionsProps {
     isMobile: boolean
 }
 
-const TechIntroduction = ({
-    techIntroductions,
-    isMobile,
-}: TechIntroductionsProps) => {
+const Introductions = ({ techIntroductions, isMobile }: IntroductionsProps) => {
     const columns = isMobile ? 1 : 2
     const chunkedTechIntroduction = chunkArray(
         techIntroductions,
@@ -363,7 +354,7 @@ const TechIntroduction = ({
             {chunkedTechIntroduction.map((techIntroduction, groupNumber) => (
                 <div key={groupNumber} className="flex flex-1 flex-col gap-4">
                     {techIntroduction.map((techIntroduction, index) => (
-                        <TechIntroductionItem
+                        <IntroductionItem
                             key={index}
                             {...techIntroduction}
                             isMobile={isMobile}
@@ -382,7 +373,7 @@ export const TechStackSection = ({ colorsMap }: TechStackSectionProps) => {
         <>
             <section className="bg-black px-8 py-16">
                 <div className="mx-auto flex min-h-[100vh] flex-col gap-8 lg:max-w-[1080px]">
-                    <TechTackSectionTitle isMobile={isMobile} />
+                    <Title isMobile={isMobile} />
                     <div className="flex flex-col gap-4 md:flex-row">
                         <Carousel
                             index={0}
@@ -399,7 +390,7 @@ export const TechStackSection = ({ colorsMap }: TechStackSectionProps) => {
                             isMobile={isMobile}
                         />
                     </div>
-                    <TechIntroduction
+                    <Introductions
                         techIntroductions={techIntroductions}
                         isMobile={isMobile}
                     />
