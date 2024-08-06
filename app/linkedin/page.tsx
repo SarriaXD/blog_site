@@ -2,14 +2,13 @@
 
 import { useRouter } from 'next/navigation'
 
-import { Spinner, Typography } from '../components/Material.tsx'
+import { Spinner } from '../components/Material.tsx'
 import { useEffect } from 'react'
 
 export default function Page() {
     const router = useRouter()
     useEffect(() => {
         const redirectAfterOneSecond = async () => {
-            await new Promise((resolve) => setTimeout(resolve, 300))
             router.push('https://www.linkedin.com/in/qi-wang-793a562a7')
         }
         redirectAfterOneSecond().catch()
@@ -19,9 +18,9 @@ export default function Page() {
         <main>
             <div className="flex min-h-[100vh] flex-col items-center justify-center gap-16 bg-black">
                 <Spinner className="size-24" />
-                <Typography variant="h2" className="text-center">
+                <h1 className="text-center text-4xl">
                     Redirecting to Linkedin
-                </Typography>
+                </h1>
             </div>
         </main>
     )
