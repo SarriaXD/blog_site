@@ -13,7 +13,7 @@ import {
 } from 'framer-motion'
 import { useRef, useState } from 'react'
 
-const FlutterProjectTitle = () => {
+const Title = () => {
     return (
         <div className="mx-auto w-[300px] md:w-[578px] lg:w-[735px]">
             <Typography
@@ -33,7 +33,7 @@ const FlutterProjectTitle = () => {
     )
 }
 
-const FlutterProjectFindMore = () => {
+const FindMore = () => {
     return (
         <div className="absolute top-0 h-full w-full">
             <div
@@ -56,7 +56,7 @@ const FlutterProjectFindMore = () => {
     )
 }
 
-const useFlutterProjectImageListAnimation = () => {
+const useFlutterProjectImageGalleryAnimation = () => {
     const ref = useRef(null)
     const [isInView, setIsInView] = useState(false)
     const { scrollYProgress } = useScroll({
@@ -79,8 +79,8 @@ const useFlutterProjectImageListAnimation = () => {
     }
 }
 
-const FlutterProjectImageGallery = () => {
-    const { ref, scale, isInView } = useFlutterProjectImageListAnimation()
+const ImageGallery = () => {
+    const { ref, scale, isInView } = useFlutterProjectImageGalleryAnimation()
     return (
         <div
             ref={ref}
@@ -165,7 +165,7 @@ const useFlutterProjectIntroductionAnimation = () => {
     }
 }
 
-const FlutterProjectIntroduction = () => {
+const Introduction = () => {
     const { ref, isInView } = useFlutterProjectIntroductionAnimation()
     return (
         <motion.div
@@ -201,13 +201,13 @@ const FlutterProjectIntroduction = () => {
     )
 }
 
-const FlutterProject = () => {
+const MainContent = () => {
     return (
         <div className="sticky top-0 mx-auto h-[100vh] min-h-[900px] md:w-[692px] lg:w-[800px]">
-            <FlutterProjectFindMore />
+            <FindMore />
             <div className="mx-auto h-full max-w-[530px] py-20 md:max-w-full">
-                <FlutterProjectImageGallery />
-                <FlutterProjectIntroduction />
+                <ImageGallery />
+                <Introduction />
             </div>
         </div>
     )
@@ -217,8 +217,8 @@ export const FlutterProjectSection = () => {
     return (
         <section>
             <div className="mx-auto h-[400vh] bg-[#101010] py-24 md:max-w-[908px] lg:max-w-[1120px]">
-                <FlutterProjectTitle />
-                <FlutterProject />
+                <Title />
+                <MainContent />
             </div>
         </section>
     )
