@@ -130,7 +130,7 @@ const HeroImageWithIntroduction = ({
                 delay: 1,
             }}
         >
-            <div className="flex flex-col items-center justify-center gap-2 md:flex-row md:gap-8 lg:gap-12">
+            <div className="flex flex-col items-center justify-center gap-8 md:flex-row md:gap-12 lg:gap-16">
                 {reversed && <HeroImageIntroduction {...introductionProps} />}
                 <HeroImage image={image} color={color} alt={alt} />
                 {!reversed && <HeroImageIntroduction {...introductionProps} />}
@@ -226,11 +226,13 @@ const HeroImageIntroduction = ({
             }}
             className="flex flex-1 flex-col"
         >
-            <strong className="font-semibold text-gray-200">{title}</strong>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl">{subtitle}</h1>
-            <p className="pt-4 text-xl font-semibold text-gray-300">
-                {content}
-            </p>
+            <strong className="text-lg text-gray-200 md:text-2xl">
+                {title}
+            </strong>
+            <h1 className="text-2xl font-bold md:text-3xl lg:text-6xl">
+                {subtitle}
+            </h1>
+            <p className="pt-4 text-base text-gray-300 md:text-lg">{content}</p>
         </motion.div>
     )
 }
@@ -249,7 +251,7 @@ export const HeroSection = ({ colorsMap }: HeroSectionProps) => {
                         'linear-gradient(180deg,#000000 0%,rgba(0,0,0,0) 100%), radial-gradient(200% 100% at -66% 36%, #0b014a 40%, rgb(0, 73, 184) 80%, rgb(50, 100, 227) 90%, rgb(0, 204, 255) 100%)',
                 }}
             >
-                <div className="mx-auto px-4 pb-32 pt-24 md:max-w-[908px] md:px-8 lg:max-w-[1120px] lg:px-12">
+                <div className="mx-auto px-8 pb-32 pt-24 md:max-w-[908px] md:px-8 lg:max-w-[1120px] lg:px-12">
                     <Introduction />
                     <div className="flex flex-col gap-24">
                         {heroImageWithIntroductionData.map((data, index) => {

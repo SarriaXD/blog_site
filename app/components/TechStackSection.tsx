@@ -171,7 +171,7 @@ const Carousel = ({
             </div>
             <div className="flex flex-col gap-4 p-6">
                 <h2 className="text-xl font-bold">{title}</h2>
-                <p className="font-semibold text-gray-400">{subtitle}</p>
+                <p className="text-base text-gray-400">{subtitle}</p>
             </div>
         </motion.div>
     )
@@ -209,7 +209,7 @@ const TechTackSectionTitle = ({ isMobile }: { isMobile: boolean }) => {
                 }}
             >
                 <h1
-                    className="bg-clip-text text-center text-transparent md:text-7xl lg:text-8xl"
+                    className="bg-clip-text text-center text-4xl text-transparent md:text-7xl lg:text-8xl"
                     style={{
                         backgroundImage:
                             'linear-gradient(51deg, #F7B500, #6DD400 76%)',
@@ -332,9 +332,7 @@ const TechIntroductionItem = ({
                     <h2 color="white" className="text-xl font-bold">
                         {title}
                     </h2>
-                    <p className="font-semibold text-gray-300">
-                        {introduction}
-                    </p>
+                    <p className="text-base text-gray-300">{introduction}</p>
                 </CardBody>
             </Card>
         </motion.div>
