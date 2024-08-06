@@ -68,7 +68,7 @@ const galleryData = [
         title: 'Building Cross-Platform Apps',
         subtitle: 'Mobile Developer & Innovator',
         content:
-            'I create high-performance apps for iOS and Android using Flutter. For native Android, I leverage Jetpack Compose, ensuring smooth animations and optimal performance.',
+            'Developing fast, cross-platform apps with Flutter. Expertise in native Android using Jetpack Compose for optimized UI and performance.',
         reversed: true,
     },
     {
@@ -77,7 +77,7 @@ const galleryData = [
         title: 'Building Fast Web Apps',
         subtitle: 'Experienced React Developer',
         content:
-            'I create smooth single-page applications with React, focusing on performance and cool animations.',
+            'Crafting high-performance React SPAs with sleek animations. Implementing SSR for faster load times and optimizing for SEO to boost visibility.',
         reversed: false,
     },
     {
@@ -86,7 +86,7 @@ const galleryData = [
         title: 'Building Robust Backend Systems',
         subtitle: 'Backend Developer & Cloud Enthusiast',
         content:
-            'I develop high-performance backend services using Spring Boot, ensuring scalable and reliable applications. With expertise in AWS deployments and CI/CD pipelines, I deliver optimized backend solutions tailored to your needs.',
+            'Delivering high-performance Spring Boot services with AWS expertise. Specializing in scalable backend solutions and efficient CI/CD pipelines.',
     },
 ]
 
@@ -224,10 +224,10 @@ const GalleryIntroduction = ({
                 opacity,
                 y,
             }}
-            className="max-w-[460px] flex-1 flex-col md:max-w-full"
+            className="max-w-[420px] flex-1 flex-col md:max-w-full"
         >
             <strong className="text-lg text-gray-200">{title}</strong>
-            <h1 className="text-2xl font-bold md:text-4xl lg:text-6xl">
+            <h1 className="text-3xl font-bold md:text-4xl lg:text-6xl">
                 {subtitle}
             </h1>
             <p className="pt-4 text-base text-gray-300 md:text-lg">{content}</p>
