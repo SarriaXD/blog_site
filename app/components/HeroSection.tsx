@@ -224,12 +224,10 @@ const GalleryIntroduction = ({
                 opacity,
                 y,
             }}
-            className="flex flex-1 flex-col"
+            className="max-w-[460px] flex-1 flex-col md:max-w-full"
         >
-            <strong className="text-lg text-gray-200 md:text-2xl">
-                {title}
-            </strong>
-            <h1 className="text-2xl font-bold md:text-3xl lg:text-6xl">
+            <strong className="text-lg text-gray-200">{title}</strong>
+            <h1 className="text-2xl font-bold md:text-4xl lg:text-6xl">
                 {subtitle}
             </h1>
             <p className="pt-4 text-base text-gray-300 md:text-lg">{content}</p>
