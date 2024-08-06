@@ -16,24 +16,18 @@ import { useRef, useState } from 'react'
 const Title = () => {
     return (
         <div className="mx-auto w-[300px] md:w-[578px] lg:w-[735px]">
-            <Typography
-                variant={'h3'}
-                className="text-4xl text-[#86868b] md:text-7xl lg:text-8xl"
-            >
+            <br />
+            <h3 className="text-4xl text-[#86868b] md:text-7xl lg:text-8xl">
                 Diver Test App.
-            </Typography>
-            <Typography
-                variant={'h4'}
-                className="text-4xl md:text-7xl lg:text-8xl"
-            >
-                Power by Flutter. <br />
-                Material Design.
-            </Typography>
+            </h3>
+            <h4 className="text-4xl text-[#F5F5F7] md:text-7xl lg:text-8xl">
+                Power by Flutter.
+            </h4>
         </div>
     )
 }
 
-const FindMore = () => {
+const ExploreStickyButton = () => {
     return (
         <div className="absolute top-0 h-full w-full">
             <div
@@ -47,7 +41,7 @@ const FindMore = () => {
                         size="lg"
                         className="flex items-center gap-3 rounded-full bg-gray-900 bg-opacity-80 backdrop-blur"
                     >
-                        Find More about This Project
+                        Explore This Project
                         <ArrowRight className="size-10 rounded-full bg-gray-800 p-2 text-white" />
                     </Button>
                 </Link>
@@ -195,16 +189,37 @@ const Introduction = () => {
                     You can use Dark and Light theme in this app.
                     <br /> You can choose the color theme that you like.
                 </Typography>
-                <div className="my-8 mr-16 h-1 w-auto rounded bg-gray-600 md:my-0 md:mr-0 md:h-auto md:w-1"></div>
+                <div className="my-8 mr-16 h-1 w-auto rounded bg-gray-600 md:my-0 md:mr-0 md:h-auto md:w-1">
+                    <ProgressBar />
+                </div>
             </div>
         </motion.div>
+    )
+}
+
+const ProgressBar = () => {
+    return (
+        <div className="relative h-2 w-full rounded-full bg-gray-800">
+            <motion.div
+                className="absolute left-0 top-0 h-full rounded-full bg-gradient-to-r from-[#ff5f6d] to-[#ffc371]"
+                initial={{
+                    width: '0%',
+                }}
+                animate={{
+                    width: '100%',
+                }}
+                transition={{
+                    duration: 2,
+                }}
+            />
+        </div>
     )
 }
 
 const MainContent = () => {
     return (
         <div className="sticky top-0 mx-auto h-[100vh] min-h-[900px] md:w-[692px] lg:w-[800px]">
-            <FindMore />
+            <ExploreStickyButton />
             <div className="mx-auto h-full max-w-[530px] py-20 md:max-w-full">
                 <ImageGallery />
                 <Introduction />

@@ -9,10 +9,7 @@ export default function RootLayout({
     children: React.ReactNode
 }) {
     return (
-        <html
-            lang="en"
-            className={`relative bg-black font-sans text-white antialiased`}
-        >
+        <html lang="en" className={`relative bg-black text-white antialiased`}>
             <head>
                 <meta charSet="UTF-8" />
                 <link rel="icon" type="image/svg+xml" href="/logo.png" />

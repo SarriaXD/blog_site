@@ -13,6 +13,8 @@ export default withMT({
             sans: [
                 'SF Pro Display',
                 'SF Pro Icons',
+                '-apple-system',
+                'BlinkMacSystemFont',
                 'Helvetica Neue',
                 'Helvetica',
                 'Arial',
