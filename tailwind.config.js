@@ -32,7 +32,7 @@ export default withMT({
                 '19px',
                 {
                     lineHeight: '1.4211026316',
-                    letterSpacing: '.012em',
+                    letterSpacing: '0.012em',
                     fontWeight: '600',
                 },
             ],
@@ -40,7 +40,7 @@ export default withMT({
                 '21px',
                 {
                     lineHeight: '1.381002381',
-                    letterSpacing: '.011em',
+                    letterSpacing: '0.011em',
                     fontWeight: '600',
                 },
             ],
@@ -48,7 +48,7 @@ export default withMT({
                 '28px',
                 {
                     lineHeight: '1.1428571429',
-                    letterSpacing: '.007em',
+                    letterSpacing: '0.007em',
                     fontWeight: '600',
                 },
             ],
@@ -56,7 +56,7 @@ export default withMT({
                 '32px',
                 {
                     lineHeight: '1.125',
-                    letterSpacing: '.004em',
+                    letterSpacing: '0.004em',
                     fontWeight: '600',
                 },
             ],
@@ -72,7 +72,7 @@ export default withMT({
                 '48px',
                 {
                     lineHeight: '1.0834933333',
-                    letterSpacing: '-.0.003em',
+                    letterSpacing: '-0.003em',
                     fontWeight: '600',
                 },
             ],

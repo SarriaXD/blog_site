@@ -37,9 +37,9 @@ const FlutterProjectFindMore = () => {
     return (
         <div className="absolute top-0 h-full w-full">
             <div
-                className="sticky z-50 flex items-center justify-center py-4"
+                className="sticky z-50 mx-8 flex items-center justify-center py-4"
                 style={{
-                    top: 'calc(100vh - 5rem)',
+                    top: 'calc(100vh - 100px)',
                 }}
             >
                 <Link href={'/'}>
@@ -84,7 +84,7 @@ const FlutterProjectImageGallery = () => {
     return (
         <div
             ref={ref}
-            className="flex w-[92%] items-center justify-between md:w-full"
+            className="relative z-10 mx-auto mt-8 flex w-[92%] items-center justify-between md:mt-0 md:w-full"
             style={{
                 perspective: '2000px',
             }}
@@ -148,7 +148,7 @@ const useFlutterProjectIntroductionAnimation = () => {
     const ref = useRef(null)
     const { scrollYProgress } = useScroll({
         target: ref,
-        offset: ['start end', 'end end'],
+        offset: ['start end', 'start 80%'],
     })
     const [isInView, setIsInView] = useState(false)
     useMotionValueEvent(scrollYProgress, 'change', (progress) => {
@@ -172,34 +172,43 @@ const FlutterProjectIntroduction = () => {
             ref={ref}
             animate={{
                 opacity: isInView ? 1 : 0,
-                y: isInView ? 0 : 20,
+                y: isInView ? 0 : 50,
             }}
             transition={{
                 type: 'spring',
+                delay: isInView ? 0.5 : 0,
                 duration: 1.2,
             }}
-            className="p-8"
+            className="relative z-0 p-8"
         >
-            <Typography variant={'h1'} className={'text-2xl'}>
-                Dynamic Color Theme
-            </Typography>
-            <Typography variant={'paragraph'} className={'mt-4 font-semibold'}>
-                You can use Dark and Light theme in this app. You can choose the
-                color theme that you like.
-            </Typography>
+            <div className="flex w-full flex-col items-stretch gap-4 md:flex-row md:justify-around md:gap-8 lg:gap-12">
+                <Typography
+                    variant={'h4'}
+                    className="w-full text-3xl md:w-[45%] md:text-4xl lg:text-5xl"
+                >
+                    Dynamic Color Theme
+                </Typography>
+                <Typography
+                    variant={'paragraph'}
+                    className="w-full text-lg font-semibold text-[#86868b] md:w-[45%] md:text-xl"
+                >
+                    You can use Dark and Light theme in this app.
+                    <br /> You can choose the color theme that you like.
+                </Typography>
+                <div className="my-8 mr-16 h-1 w-auto rounded bg-gray-600 md:my-0 md:mr-0 md:h-auto md:w-1"></div>
+            </div>
         </motion.div>
     )
 }
 
 const FlutterProject = () => {
     return (
-        <div className="sticky top-0 mx-auto h-[100vh] md:w-[692px] lg:w-[900px]">
+        <div className="sticky top-0 mx-auto h-[100vh] min-h-[900px] md:w-[692px] lg:w-[800px]">
             <FlutterProjectFindMore />
-            <div className="mx-auto flex h-full max-w-[530px] flex-col items-center justify-center py-20 md:max-w-full lg:px-[8.33333333%]">
+            <div className="mx-auto h-full max-w-[530px] py-20 md:max-w-full">
                 <FlutterProjectImageGallery />
                 <FlutterProjectIntroduction />
             </div>
-            <div className="h-20" />
         </div>
     )
 }
