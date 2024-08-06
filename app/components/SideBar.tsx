@@ -5,7 +5,6 @@ import {
     List,
     ListItem,
     ListItemSuffix,
-    Typography,
 } from './Material.tsx'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
@@ -31,9 +30,7 @@ const InternalLink = ({ href, text, onClose }: InternalLinkProps) => {
     return (
         <Link href={href} onClick={onClose}>
             <ListItem>
-                <Typography variant="h6" color="white">
-                    {text}
-                </Typography>
+                <h6 color="white">{text}</h6>
             </ListItem>
         </Link>
     )
@@ -103,9 +100,7 @@ const ExternalLink = ({
                 }}
             >
                 <ListItem>
-                    <Typography variant="h6" color="white">
-                        {text}
-                    </Typography>
+                    <h6 color="white">{text}</h6>
                     <ListItemSuffix>
                         <ExternalIcon icon={icon} />
                     </ListItemSuffix>

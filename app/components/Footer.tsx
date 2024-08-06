@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { Typography } from './Material.tsx'
 
 interface SectionProps {
     title: string
@@ -9,29 +8,19 @@ interface SectionProps {
 const Section = ({ title, links }: SectionProps) => {
     return (
         <div>
-            <Typography variant={'h1'} className="mb-4 text-lg font-semibold">
-                {title}
-            </Typography>
+            <h1 className="mb-4 text-lg font-semibold">{title}</h1>
             <ul className="flex flex-col items-start gap-2">
                 {links.map((link) => {
                     return (
                         <li key={link.text}>
                             {link.href ? (
                                 <Link href={link.href}>
-                                    <Typography
-                                        variant={'paragraph'}
-                                        className="text-gray-400 hover:text-gray-200"
-                                    >
+                                    <p className="text-gray-400 hover:text-gray-200">
                                         {link.text}
-                                    </Typography>
+                                    </p>
                                 </Link>
                             ) : (
-                                <Typography
-                                    variant={'paragraph'}
-                                    className="text-gray-400"
-                                >
-                                    {link.text}
-                                </Typography>
+                                <p className="text-gray-400">{link.text}</p>
                             )}
                         </li>
                     )

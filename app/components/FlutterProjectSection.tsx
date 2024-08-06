@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import { flutter_project_1 } from '../../public/images'
-import { Button, Typography } from './Material.tsx'
+import { Button } from './Material.tsx'
 import Link from 'next/link'
 import { ArrowRight } from '../../public/icons'
 import {
@@ -176,19 +176,13 @@ const Introduction = () => {
             className="relative z-0 p-8"
         >
             <div className="flex w-full flex-col items-stretch gap-4 md:flex-row md:justify-around md:gap-8 lg:gap-12">
-                <Typography
-                    variant={'h4'}
-                    className="w-full text-3xl md:w-[45%] md:text-4xl lg:text-5xl"
-                >
+                <h4 className="w-full text-3xl md:w-[45%] md:text-4xl lg:text-5xl">
                     Dynamic Color Theme
-                </Typography>
-                <Typography
-                    variant={'paragraph'}
-                    className="w-full text-lg font-semibold text-[#86868b] md:w-[45%] md:text-xl"
-                >
+                </h4>
+                <p className="w-full text-lg font-semibold text-[#86868b] md:w-[45%] md:text-xl">
                     You can use Dark and Light theme in this app.
                     <br /> You can choose the color theme that you like.
-                </Typography>
+                </p>
                 <div className="my-8 mr-16 h-1 w-auto rounded bg-gray-600 md:my-0 md:mr-0 md:h-auto md:w-1">
                     <ProgressBar />
                 </div>

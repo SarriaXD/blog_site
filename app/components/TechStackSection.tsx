@@ -1,6 +1,6 @@
 'use client'
 
-import { Card, CardBody, Chip, Typography } from './Material.tsx'
+import { Card, CardBody, Chip } from './Material.tsx'
 import {
     motion,
     useAnimationFrame,
@@ -51,9 +51,7 @@ const CarouselItem = ({ color, image, name }: CarouselItemProps) => {
                         ></div>
                     </div>
                 </div>
-                <Typography variant="lead" className="relative z-10 text-sm">
-                    {name}
-                </Typography>
+                <strong className="text-sm relative z-10">{name}</strong>
             </div>
         </li>
     )
@@ -172,15 +170,8 @@ const Carousel = ({
                 </motion.ul>
             </div>
             <div className="flex flex-col gap-4 p-6">
-                <Typography variant="h2" className="text-xl font-bold">
-                    {title}
-                </Typography>
-                <Typography
-                    variant="paragraph"
-                    className="font-semibold text-gray-400"
-                >
-                    {subtitle}
-                </Typography>
+                <h2 className="text-xl font-bold">{title}</h2>
+                <p className="font-semibold text-gray-400">{subtitle}</p>
             </div>
         </motion.div>
     )
@@ -217,8 +208,7 @@ const TechTackSectionTitle = ({ isMobile }: { isMobile: boolean }) => {
                     opacity,
                 }}
             >
-                <Typography
-                    variant={'h1'}
+                <h1
                     className="bg-clip-text text-center text-transparent md:text-7xl lg:text-8xl"
                     style={{
                         backgroundImage:
@@ -226,7 +216,7 @@ const TechTackSectionTitle = ({ isMobile }: { isMobile: boolean }) => {
                     }}
                 >
                     Frameworks & Languages I Master
-                </Typography>
+                </h1>
             </motion.div>
         </>
     )
@@ -339,19 +329,12 @@ const TechIntroductionItem = ({
                             />
                         ))}
                     </div>
-                    <Typography
-                        variant="h2"
-                        color="white"
-                        className="text-xl font-bold"
-                    >
+                    <h2 color="white" className="text-xl font-bold">
                         {title}
-                    </Typography>
-                    <Typography
-                        variant="paragraph"
-                        className="font-semibold text-gray-300"
-                    >
+                    </h2>
+                    <p className="font-semibold text-gray-300">
                         {introduction}
-                    </Typography>
+                    </p>
                 </CardBody>
             </Card>
         </motion.div>

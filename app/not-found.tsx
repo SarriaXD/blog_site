@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { Button, Typography } from './components/Material.tsx'
+import { Button } from './components/Material.tsx'
 import Link from 'next/link'
 import { not_found } from '../public/images'
 
@@ -25,21 +25,18 @@ const NotFoundImage = () => {
 const NotFoundText = () => {
     return (
         <div className="flex flex-shrink-0 flex-col items-center justify-center gap-4 self-center lg:gap-8">
-            <Typography
-                variant={'h1'}
+            <h1
                 color="white"
                 className="text-center text-4xl md:text-5xl lg:text-6xl"
             >
                 Opps!
-            </Typography>
-            <Typography
-                variant={'h2'}
+            </h1>
+            <h2
                 color={'gray'}
-                textGradient={true}
                 className="text-center text-2xl md:text-3xl lg:text-4xl"
             >
                 <span className="text-red-500">404</span> Page not found
-            </Typography>
+            </h2>
             <Link href="/">
                 <Button color="black">Go back to home</Button>
             </Link>

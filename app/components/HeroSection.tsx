@@ -5,7 +5,6 @@ import { useRef } from 'react'
 import Image, { StaticImageData } from 'next/image'
 import { StaticImageColor } from '../utils.ts'
 import { useMediaQuery } from '../hooks.ts'
-import { Typography } from './Material.tsx'
 import { hero_backend, hero_mobile, hero_web } from '../../public/images'
 
 const Introduction = () => {
@@ -26,11 +25,7 @@ const Introduction = () => {
                     delay: 0.3,
                 }}
             >
-                <Typography
-                    variant={'h1'}
-                    color="white"
-                    className="text-4xl md:text-7xl lg:text-8xl"
-                >
+                <h1 color="white" className="text-4xl md:text-7xl lg:text-8xl">
                     <span
                         className="bg-clip-text text-transparent"
                         style={{
@@ -41,7 +36,7 @@ const Introduction = () => {
                         I'm Qi
                     </span>
                     , a software engineer based in Canada.
-                </Typography>
+                </h1>
             </motion.div>
             <motion.div
                 initial={{
@@ -58,13 +53,9 @@ const Introduction = () => {
                     duration: 1,
                 }}
             >
-                <Typography
-                    variant="h2"
-                    color="gray"
-                    className="text-2xl md:text-3xl lg:text-4xl"
-                >
+                <h2 color="gray" className="text-2xl md:text-3xl lg:text-4xl">
                     A full-stack developer.
-                </Typography>
+                </h2>
             </motion.div>
         </div>
     )
@@ -235,24 +226,11 @@ const HeroImageIntroduction = ({
             }}
             className="flex flex-1 flex-col"
         >
-            <Typography
-                variant={'lead'}
-                className="font-semibold text-gray-200"
-            >
-                {title}
-            </Typography>
-            <Typography
-                variant={'h1'}
-                className="text-4xl md:text-5xl lg:text-6xl"
-            >
-                {subtitle}
-            </Typography>
-            <Typography
-                variant={'paragraph'}
-                className="pt-4 text-xl font-semibold text-gray-300"
-            >
+            <strong className="font-semibold text-gray-200">{title}</strong>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl">{subtitle}</h1>
+            <p className="pt-4 text-xl font-semibold text-gray-300">
                 {content}
-            </Typography>
+            </p>
         </motion.div>
     )
 }
