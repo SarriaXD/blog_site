@@ -53,7 +53,7 @@ const Introduction = () => {
                     duration: 1,
                 }}
             >
-                <h2 color="gray" className="text-2xl md:text-3xl lg:text-4xl">
+                <h2 className="text-2xl text-gray-600 md:text-3xl lg:text-4xl">
                     A full-stack developer.
                 </h2>
             </motion.div>

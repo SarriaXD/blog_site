@@ -30,7 +30,7 @@ const InternalLink = ({ href, text, onClose }: InternalLinkProps) => {
     return (
         <Link href={href} onClick={onClose}>
             <ListItem>
-                <h6 color="white">{text}</h6>
+                <span className="text-base text-white">{text}</span>
             </ListItem>
         </Link>
     )
@@ -100,7 +100,7 @@ const ExternalLink = ({
                 }}
             >
                 <ListItem>
-                    <h6 color="white">{text}</h6>
+                    <span className="text-base text-white">{text}</span>
                     <ListItemSuffix>
                         <ExternalIcon icon={icon} />
                     </ListItemSuffix>

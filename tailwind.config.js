@@ -26,7 +26,7 @@ export default withMT({
                 '17px',
                 {
                     lineHeight: '1.4705882353',
-                    fontWeight: 400,
+                    fontWeight: '600',
                     letterSpacing: '0.022em',
                 },
             ],
