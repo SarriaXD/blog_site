@@ -15,13 +15,12 @@ import { useRef, useState } from 'react'
 
 const Title = () => {
     return (
-        <div className="mx-auto w-[300px] md:w-[578px] lg:w-[735px]">
-            <br />
-            <h3 className="text-4xl text-[#86868b] md:text-7xl lg:text-8xl">
-                Diver Test App.
+        <div className="mx-auto max-w-[290px] md:w-[578px] md:max-w-full lg:w-[735px]">
+            <h3 className="text-3xl text-[#86868b] md:text-6xl lg:text-8xl">
+                Driving Test App.
             </h3>
-            <h4 className="text-4xl text-[#F5F5F7] md:text-7xl lg:text-8xl">
-                Power by Flutter.
+            <h4 className="text-3xl text-[#F5F5F7] md:text-6xl lg:text-8xl">
+                Powered by Flutter.
             </h4>
         </div>
     )
@@ -38,7 +37,7 @@ const ExploreStickyButton = () => {
             >
                 <Link href={'/'}>
                     <Button
-                        size="lg"
+                        size="sm"
                         className="flex items-center gap-3 rounded-full bg-gray-900 bg-opacity-80 backdrop-blur"
                     >
                         Explore This Project
