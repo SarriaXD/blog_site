@@ -7,11 +7,13 @@ import Link from 'next/link'
 import { ArrowRight } from '../../public/icons'
 import {
     motion,
+    MotionValue,
     useMotionValueEvent,
     useScroll,
     useTransform,
 } from 'framer-motion'
 import { useRef, useState } from 'react'
+import { useMediaQuery } from '../hooks.ts'
 
 const Title = () => {
     return (
@@ -146,7 +148,11 @@ const useFlutterProjectIntroductionAnimation = () => {
     }
 }
 
-const Introduction = () => {
+interface IntroductionProps {
+    progress: MotionValue<number>
+}
+
+const Introduction = ({ progress }: IntroductionProps) => {
     const { ref, isInView } = useFlutterProjectIntroductionAnimation()
     return (
         <motion.div
@@ -171,50 +177,71 @@ const Introduction = () => {
                     the color theme that you like.
                 </p>
                 <div className="my-8 h-1 rounded bg-gray-600 md:my-0 md:h-auto md:w-1">
-                    <ProgressBar />
+                    <ProgressBar progress={progress} />
                 </div>
             </div>
         </motion.div>
     )
 }
 
-const ProgressBar = () => {
+interface ProgressBarProps {
+    progress: MotionValue<number>
+}
+
+const ProgressBar = ({ progress }: ProgressBarProps) => {
+    const isMobile = useMediaQuery('(max-width: 735px)', true)
+    const percentage = useTransform(progress, [0, 1], ['0%', '100%'])
+    console.log(progress)
     return (
-        <div className="relative h-2 w-full rounded-full bg-gray-800">
-            <motion.div
-                className="absolute left-0 top-0 h-full rounded-full bg-gradient-to-r from-[#ff5f6d] to-[#ffc371]"
-                initial={{
-                    width: '0%',
-                }}
-                animate={{
-                    width: '100%',
-                }}
-                transition={{
-                    duration: 2,
-                }}
-            />
+        <div className="h-full w-full rounded-full bg-gray-800">
+            {isMobile ? (
+                <motion.div
+                    key={'horizontal'}
+                    className="block h-full rounded-full bg-gray-500"
+                    style={{
+                        width: percentage,
+                    }}
+                />
+            ) : (
+                <motion.div
+                    key={'vertical'}
+                    className="block w-full rounded-full bg-gray-500"
+                    style={{
+                        height: percentage,
+                    }}
+                />
+            )}
         </div>
     )
 }
 
-const MainContent = () => {
+interface MainContentProps {
+    progress: MotionValue<number>
+}
+
+const MainContent = ({ progress }: MainContentProps) => {
     return (
         <div className="sticky top-0 mx-auto h-[100vh] min-h-[900px] md:w-[692px] lg:w-[800px]">
             <ExploreStickyButton />
             <div className="mx-auto h-full max-w-[530px] py-20 md:max-w-full">
                 <ImageGallery />
-                <Introduction />
+                <Introduction progress={progress} />
             </div>
         </div>
     )
 }
 
 export const FlutterProjectSection = () => {
+    const ref = useRef(null)
+    const { scrollYProgress: progress } = useScroll({
+        target: ref,
+        offset: ['start start', 'end end'],
+    })
     return (
-        <section>
+        <section ref={ref}>
             <div className="mx-auto h-[400vh] bg-[#101010] py-24 md:max-w-[908px] lg:max-w-[1120px]">
                 <Title />
-                <MainContent />
+                <MainContent progress={progress} />
             </div>
         </section>
     )
