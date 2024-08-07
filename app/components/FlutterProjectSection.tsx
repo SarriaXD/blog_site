@@ -77,7 +77,7 @@ const ImageGallery = () => {
     return (
         <div
             ref={ref}
-            className="relative z-10 mx-auto mt-8 flex w-[92%] items-center justify-between md:mt-0 md:w-full"
+            className="relative z-10 mx-auto mt-8 flex w-[92%] items-center justify-between gap-4 md:mt-0 md:w-full md:gap-6 lg:gap-8"
             style={{
                 perspective: '2000px',
             }}
@@ -93,11 +93,7 @@ const ImageGallery = () => {
                     duration: 1.2,
                 }}
             >
-                <Image
-                    src={flutter_project_1}
-                    quality="100"
-                    alt="flutter project image 1"
-                />
+                <Image src={flutter_project_1} alt="flutter project image 1" />
             </motion.div>
             <motion.div
                 className="z-10"
@@ -110,11 +106,7 @@ const ImageGallery = () => {
                     duration: 1,
                 }}
             >
-                <Image
-                    src={flutter_project_1}
-                    quality="100"
-                    alt="flutter project image 1"
-                />
+                <Image src={flutter_project_1} alt="flutter project image 1" />
             </motion.div>
             <motion.div
                 className="z-0"
@@ -127,11 +119,7 @@ const ImageGallery = () => {
                     duration: 1,
                 }}
             >
-                <Image
-                    src={flutter_project_1}
-                    quality="100"
-                    alt="flutter project image 1"
-                />
+                <Image src={flutter_project_1} alt="flutter project image 1" />
             </motion.div>
         </div>
     )
@@ -174,15 +162,15 @@ const Introduction = () => {
             }}
             className="relative z-0 p-8"
         >
-            <div className="flex w-full flex-col items-stretch gap-4 md:flex-row md:justify-around md:gap-8 lg:gap-12">
-                <h4 className="w-full text-3xl md:w-[45%] md:text-4xl lg:text-5xl">
+            <div className="mx-auto mt-8 flex w-[90%] flex-col items-stretch gap-2 md:w-full md:flex-row md:justify-around">
+                <h4 className="w-full text-3xl md:w-[45%] md:text-4xl">
                     Dynamic Color Theme
                 </h4>
                 <p className="w-full text-lg font-semibold text-[#86868b] md:w-[45%] md:text-xl">
-                    You can use Dark and Light theme in this app.
-                    <br /> You can choose the color theme that you like.
+                    You can use Dark and Light theme in this app. You can choose
+                    the color theme that you like.
                 </p>
-                <div className="my-8 mr-16 h-1 w-auto rounded bg-gray-600 md:my-0 md:mr-0 md:h-auto md:w-1">
+                <div className="my-8 h-1 rounded bg-gray-600 md:my-0 md:h-auto md:w-1">
                     <ProgressBar />
                 </div>
             </div>
