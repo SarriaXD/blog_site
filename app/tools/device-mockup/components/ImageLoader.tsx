@@ -32,21 +32,10 @@ const ImageWithCloseButton = ({
                 const scaledWidth = naturalWidth * scale
                 const scaledHeight = naturalHeight * scale
 
-                const top = (containerHeight - scaledHeight) / 2 - 12
-                const right = (containerWidth - scaledWidth) / 2 - 12
+                const top = (containerHeight - scaledHeight) / 2
+                const right = (containerWidth - scaledWidth) / 2
 
                 setButtonPosition({ top, right })
-
-                console.log(
-                    'scaledWidth',
-                    scaledWidth,
-                    'scaledHeight',
-                    scaledHeight,
-                    'top',
-                    top,
-                    'right',
-                    right
-                )
             }
         }
 
@@ -64,52 +53,47 @@ const ImageWithCloseButton = ({
     }, [image])
 
     return (
-        <div className="size-full p-3">
-            <div ref={containerRef} className="relative size-full">
-                <Image
-                    ref={imageRef}
-                    src={image}
-                    alt="Uploaded image"
-                    fill={true}
-                    className="object-contain"
+        <div ref={containerRef} className="relative size-full">
+            <Image
+                ref={imageRef}
+                src={image}
+                alt="Uploaded image"
+                fill={true}
+                className="object-contain"
+            />
+            {buttonPosition && (
+                <Close
+                    className="absolute mr-2 mt-2 size-6 rounded-full border border-white bg-gray-600 p-[6px] text-white"
+                    style={{
+                        top: `${buttonPosition.top}px`,
+                        right: `${buttonPosition.right}px`,
+                    }}
+                    onClick={onRemove}
                 />
-                {buttonPosition && (
-                    <Close
-                        className="absolute size-6 rounded-full bg-gray-500 p-1 text-white"
-                        style={{
-                            top: `${buttonPosition.top}px`,
-                            right: `${buttonPosition.right}px`,
-                        }}
-                        onClick={onRemove}
-                    />
-                )}
-            </div>
+            )}
         </div>
     )
 }
 
 interface ImageUploaderProps {
+    className?: string | undefined
     onImageLoaded: (image: string) => void
     onImageRemoved: () => void
     onError: (error: string) => void
 }
 
 const ImageUploader = ({
+    className,
     onImageLoaded,
     onImageRemoved,
     onError,
 }: ImageUploaderProps) => {
     const [image, setImage] = useState<string | null>(null)
     const [isDragging, setIsDragging] = useState(false)
-    const dragCounter = useRef(0)
     const [errorMessages, setErrorMessages] = useState<string | null>(null)
 
     const handleFile = useCallback(
         (file: File) => {
-            if (!file.type.startsWith('image/')) {
-                onError('Only images are allowed')
-                return
-            }
             const reader = new FileReader()
             reader.onload = (e: ProgressEvent<FileReader>) => {
                 const image = e.target?.result as string
@@ -118,30 +102,28 @@ const ImageUploader = ({
             }
             reader.readAsDataURL(file)
         },
-        [onError, onImageLoaded]
+        [onImageLoaded]
     )
 
     const onDragEnter = useCallback((e: React.DragEvent<HTMLDivElement>) => {
         e.preventDefault()
         e.stopPropagation()
-        dragCounter.current++
         if (e.dataTransfer.items && e.dataTransfer.items.length > 0) {
-            if (e.dataTransfer.items[0].type.startsWith('image/')) {
-                setIsDragging(true)
-            } else {
-                setErrorMessages('Only images are allowed')
+            if (e.dataTransfer.items.length > 1) {
+                setErrorMessages('Too many items, only one image is allowed!')
             }
+            if (!e.dataTransfer.items[0].type.startsWith('image/')) {
+                setErrorMessages('Only images are allowed!')
+            }
+            setIsDragging(true)
         }
     }, [])
 
     const onDragLeave = useCallback((e: React.DragEvent<HTMLDivElement>) => {
         e.preventDefault()
         e.stopPropagation()
-        dragCounter.current--
-        if (dragCounter.current === 0) {
-            setIsDragging(false)
-            setErrorMessages(null)
-        }
+        setIsDragging(false)
+        setErrorMessages(null)
     }, [])
 
     const onDragOver = useCallback((e: React.DragEvent<HTMLDivElement>) => {
@@ -155,11 +137,20 @@ const ImageUploader = ({
             e.stopPropagation()
             setIsDragging(false)
             setErrorMessages(null)
-            dragCounter.current = 0
-            const file = e.dataTransfer.files[0]
-            handleFile(file)
+            if (e.dataTransfer.items && e.dataTransfer.items.length > 0) {
+                if (e.dataTransfer.items.length > 1) {
+                    onError('Too many items, only one image is allowed!')
+                    return
+                }
+                if (!e.dataTransfer.items[0].type.startsWith('image/')) {
+                    onError('Only images are allowed!')
+                    return
+                }
+                const file = e.dataTransfer.files[0]
+                handleFile(file)
+            }
         },
-        [handleFile]
+        [handleFile, onError]
     )
 
     const onChange = useCallback(
@@ -183,23 +174,26 @@ const ImageUploader = ({
                     ? undefined
                     : () => document.getElementById('fileInput')?.click()
             }
-            className="relative flex aspect-[1] w-full cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-600 md:w-80 lg:w-96"
+            className={`relative aspect-[1] min-w-64 cursor-pointer rounded-xl border-2 border-dashed border-gray-600 ${className}`}
             style={{
                 cursor: image ? 'default' : 'pointer',
             }}
         >
-            {isDragging && (
-                <div className="flex size-full items-center justify-center bg-gray-400">
-                    Release to upload
-                </div>
-            )}
             {errorMessages && (
-                <div className="flex size-full items-center justify-center">
+                <div className="flex size-full items-center justify-center rounded-xl bg-red-200">
                     {errorMessages}
                 </div>
             )}
+            {isDragging && !errorMessages && (
+                <div className="flex size-full items-center justify-center rounded-xl bg-gray-900">
+                    Release to upload
+                </div>
+            )}
             {!image && !isDragging && !errorMessages && (
-                <Add className="size-12 text-gray-600" />
+                <div className="flex size-full flex-col items-center justify-center rounded-xl">
+                    <Add className="size-12 text-gray-600" />
+                    <p className="text-base">Click or Drag to upload image</p>
+                </div>
             )}
             {image && (
                 <ImageWithCloseButton
