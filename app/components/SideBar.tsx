@@ -18,6 +18,7 @@ interface SideBarProps {
 const internalLinks = [
     { href: '/articles', text: 'Articles' },
     { href: 'https://github.com/SarriaXD?tab=repositories', text: 'Projects' },
+    { href: '/tools', text: 'Tools' },
 ]
 
 interface InternalLinkProps {

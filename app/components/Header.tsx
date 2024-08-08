@@ -9,6 +9,7 @@ import { BurgerMenu, Dog, Email, Github, Linkedin } from '../../public/icons'
 const internalLinks = [
     { href: '/articles', text: 'Articles' },
     { href: 'https://github.com/SarriaXD?tab=repositories', text: 'Projects' },
+    { href: '/tools', text: 'Tools' },
 ]
 
 const InternalLink = ({ href, text }: { href: string; text: string }) => {
@@ -62,7 +63,7 @@ export const Header = () => {
                             <Dog className="size-8 text-white" />
                         </IconButton>
                     </Link>
-                    <ul className="hidden gap-6 md:flex md:items-center">
+                    <ul className="hidden md:flex md:items-center md:gap-2 lg:gap-6">
                         {internalLinks.map((link) => (
                             <InternalLink key={link.href} {...link} />
                         ))}
