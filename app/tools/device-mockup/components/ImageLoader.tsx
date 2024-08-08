@@ -83,7 +83,7 @@ interface ImageUploaderProps {
 }
 
 const ImageUploader = ({
-    className,
+    className = '',
     onImageLoaded,
     onImageRemoved,
     onError,
