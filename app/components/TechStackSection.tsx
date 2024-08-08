@@ -169,9 +169,9 @@ const Carousel = ({
                     <CarouseEmptyItem />
                 </motion.ul>
             </div>
-            <div className="flex flex-col gap-4 p-6">
+            <div className="p-6">
                 <h2 className="text-xl font-bold">{title}</h2>
-                <p className="text-base text-gray-400">{subtitle}</p>
+                <p className="mt-1 text-base text-gray-400">{subtitle}</p>
             </div>
         </motion.div>
     )
@@ -323,10 +323,14 @@ const IntroductionItem = ({
                             />
                         ))}
                     </div>
-                    <h2 color="white" className="text-xl font-bold">
-                        {title}
-                    </h2>
-                    <p className="text-base text-gray-300">{introduction}</p>
+                    <div>
+                        <h2 color="white" className="text-xl font-bold">
+                            {title}
+                        </h2>
+                        <p className="mt-1 text-base text-gray-300">
+                            {introduction}
+                        </p>
+                    </div>
                 </CardBody>
             </Card>
         </motion.div>
