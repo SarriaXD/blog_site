@@ -76,14 +76,12 @@ const ImageWithCloseButton = ({
 }
 
 interface ImageUploaderProps {
-    className?: string | undefined
     onImageLoaded: (image: string) => void
     onImageRemoved: () => void
     onError: (error: string) => void
 }
 
 const ImageUploader = ({
-    className = '',
     onImageLoaded,
     onImageRemoved,
     onError,
@@ -174,7 +172,7 @@ const ImageUploader = ({
                     ? undefined
                     : () => document.getElementById('fileInput')?.click()
             }
-            className={`relative aspect-[1] min-w-64 cursor-pointer rounded-xl border-2 border-dashed border-gray-600 ${className}`}
+            className={`relative aspect-[1] w-full cursor-pointer rounded-xl border-2 border-dashed border-gray-600`}
             style={{
                 cursor: image ? 'default' : 'pointer',
             }}
@@ -195,7 +193,7 @@ const ImageUploader = ({
                     <p className="text-base">Click or Drag to upload image</p>
                 </div>
             )}
-            {image && (
+            {image && !isDragging && !errorMessages && (
                 <ImageWithCloseButton
                     image={image}
                     onRemove={() => {

@@ -2,18 +2,27 @@
 
 import ImageUploader from './components/ImageLoader.tsx'
 import { FrameGallery } from './components/FrameGallery.tsx'
+import ImageLoaderOptions from './components/ImageLoaderOptions.tsx'
+import { Button } from '../../components/Material.tsx'
 
 const MainContent = () => {
     return (
         <div className="p-8">
-            <div className="flex flex-col gap-8 md:flex-row">
-                <FrameGallery className="flex-1" />
-                <ImageUploader
-                    className="flex-1"
-                    onError={() => {}}
-                    onImageLoaded={() => {}}
-                    onImageRemoved={() => {}}
-                />
+            <div className="flex flex-col items-center justify-center gap-8 md:flex-row">
+                <div className="w-[300px] md:w-[500px] lg:w-[800px]">
+                    <FrameGallery />
+                </div>
+                <div className="w-[300px] md:w-[500px] lg:w-[800px]">
+                    <ImageUploader
+                        onError={() => {}}
+                        onImageLoaded={() => {}}
+                        onImageRemoved={() => {}}
+                    />
+                    <ImageLoaderOptions />
+                    <div className="flex items-center justify-center">
+                        <Button color="blue-gray">Generate Mockup</Button>
+                    </div>
+                </div>
             </div>
         </div>
     )
@@ -22,13 +31,7 @@ const MainContent = () => {
 export default function Page() {
     return (
         <main>
-            <section
-                className="py-24"
-                style={{
-                    backgroundImage:
-                        'linear-gradient(180deg,#000000 0%,rgba(0,0,0,0) 100%), radial-gradient(200% 100% at -66% 36%,rgb(0, 73, 184) 100%)',
-                }}
-            >
+            <section className="bg-[#1E1E1E] py-24">
                 <div className="mx-auto min-h-[100vh] py-24 md:max-w-[908px] lg:max-w-[1120px]">
                     <MainContent />
                 </div>

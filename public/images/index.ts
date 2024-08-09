@@ -14,6 +14,7 @@ import hero_backend from './hero_backend.png'
 import not_found from './not_found.png'
 import flutter_project_1 from './flutter_project_1.png'
 import iphone_frame from './iphone_frame.png'
+import pixel_frame from './pixel_frame.png'
 
 export {
     android,
@@ -32,4 +33,5 @@ export {
     not_found,
     flutter_project_1,
     iphone_frame,
+    pixel_frame,
 }
