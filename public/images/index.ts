@@ -12,9 +12,14 @@ import hero_mobile from './hero_mobile.png'
 import hero_web from './hero_web.png'
 import hero_backend from './hero_backend.png'
 import not_found from './not_found.png'
-import flutter_project_1 from './flutter_project_1.png'
 import iphone_frame from './iphone_frame.png'
 import pixel_frame from './pixel_frame.png'
+import flutter_firebase_1 from './flutter/flutter_firebase_1.png'
+import flutter_firebase_2 from './flutter/flutter_firebase_2.png'
+import flutter_firebase_3 from './flutter/flutter_firebase_3.png'
+import flutter_test_1 from './flutter/flutter_test_1.png'
+import flutter_test_2 from './flutter/flutter_test_2.png'
+import flutter_test_3 from './flutter/flutter_test_3.png'
 
 export {
     android,
@@ -31,7 +36,12 @@ export {
     hero_web,
     hero_backend,
     not_found,
-    flutter_project_1,
     iphone_frame,
     pixel_frame,
+    flutter_firebase_1,
+    flutter_firebase_2,
+    flutter_firebase_3,
+    flutter_test_1,
+    flutter_test_2,
+    flutter_test_3,
 }

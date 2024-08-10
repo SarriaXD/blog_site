@@ -1,7 +1,6 @@
 'use client'
 
-import Image from 'next/image'
-import { flutter_project_1 } from '../../public/images'
+import Image, { StaticImageData } from 'next/image'
 import { Button } from './Material.tsx'
 import Link from 'next/link'
 import { ArrowRight } from '../../public/icons'
@@ -14,6 +13,7 @@ import {
 } from 'framer-motion'
 import { useRef, useState } from 'react'
 import { useMediaQuery } from '../hooks.ts'
+import { flutterProjectData } from '../data/flutterProjectData.ts'
 
 const useTitleAnimation = () => {
     const ref = useRef(null)
@@ -86,6 +86,7 @@ const ExploreStickyButton = () => {
 
 interface ImageGalleryProps {
     nearTopViewport: boolean
+    images: StaticImageData[]
 }
 
 const useImageGalleryAnimation = () => {
@@ -109,7 +110,7 @@ const useImageGalleryAnimation = () => {
     }
 }
 
-const ImageGallery = ({ nearTopViewport }: ImageGalleryProps) => {
+const ImageGallery = ({ nearTopViewport, images }: ImageGalleryProps) => {
     const { ref, enterViewport } = useImageGalleryAnimation()
     return (
         <motion.div
@@ -138,7 +139,7 @@ const ImageGallery = ({ nearTopViewport }: ImageGalleryProps) => {
                     duration: nearTopViewport ? 1 : 0.5,
                 }}
             >
-                <Image src={flutter_project_1} alt="flutter project image 1" />
+                <Image src={images[0]} alt="flutter project image 1" />
             </motion.div>
             <motion.div
                 className="z-10"
@@ -153,7 +154,7 @@ const ImageGallery = ({ nearTopViewport }: ImageGalleryProps) => {
                     duration: 1,
                 }}
             >
-                <Image src={flutter_project_1} alt="flutter project image 1" />
+                <Image src={images[1]} alt="flutter project image 1" />
             </motion.div>
             <motion.div
                 className="z-0"
@@ -166,7 +167,7 @@ const ImageGallery = ({ nearTopViewport }: ImageGalleryProps) => {
                     duration: nearTopViewport ? 1 : 0.5,
                 }}
             >
-                <Image src={flutter_project_1} alt="flutter project image 1" />
+                <Image src={images[2]} alt="flutter project image 1" />
             </motion.div>
         </motion.div>
     )
@@ -175,9 +176,16 @@ const ImageGallery = ({ nearTopViewport }: ImageGalleryProps) => {
 interface IntroductionProps {
     progress: MotionValue<number>
     enterViewport: boolean
+    title: string
+    description: string
 }
 
-const Introduction = ({ progress, enterViewport }: IntroductionProps) => {
+const Introduction = ({
+    progress,
+    enterViewport,
+    title,
+    description,
+}: IntroductionProps) => {
     return (
         <motion.div
             animate={{
@@ -193,11 +201,10 @@ const Introduction = ({ progress, enterViewport }: IntroductionProps) => {
         >
             <div className="mx-auto mt-8 flex w-[90%] flex-col items-stretch gap-2 md:w-full md:flex-row md:justify-around">
                 <h4 className="w-full text-3xl md:w-[45%] md:text-4xl">
-                    Dynamic Color Theme
+                    {title}
                 </h4>
                 <p className="w-full text-lg font-semibold text-[#86868b] md:w-[45%] md:text-xl">
-                    You can use Dark and Light theme in this app. You can choose
-                    the color theme that you like.
+                    {description}
                 </p>
                 <div className="my-8 h-1 rounded bg-gray-600 md:my-0 md:h-auto md:w-1">
                     <ProgressBar progress={progress} />
@@ -242,9 +249,10 @@ const useMainContentAnimation = () => {
     const [nearTopViewport, setNearTopViewport] = useState(false)
     const { scrollYProgress } = useScroll({
         target: ref,
-        offset: ['start end', 'start start'],
+        offset: ['start end', 'start 10%'],
     })
     useMotionValueEvent(scrollYProgress, 'change', (progress) => {
+        console.log(progress)
         if (progress === 1 && !nearTopViewport) {
             setNearTopViewport(true)
         }
@@ -260,9 +268,17 @@ const useMainContentAnimation = () => {
 
 interface MainContentProps {
     progress: MotionValue<number>
+    images: StaticImageData[]
+    title: string
+    description: string
 }
 
-const MainContent = ({ progress }: MainContentProps) => {
+const MainContent = ({
+    progress,
+    images,
+    title,
+    description,
+}: MainContentProps) => {
     const { ref, nearTopViewport } = useMainContentAnimation()
     return (
         <div
@@ -271,14 +287,33 @@ const MainContent = ({ progress }: MainContentProps) => {
         >
             <ExploreStickyButton />
             <div className="mx-auto h-full max-w-[530px] py-20 md:max-w-full">
-                <ImageGallery nearTopViewport={nearTopViewport} />
+                <ImageGallery
+                    nearTopViewport={nearTopViewport}
+                    images={images}
+                />
                 <Introduction
                     progress={progress}
                     enterViewport={nearTopViewport}
+                    title={title}
+                    description={description}
                 />
             </div>
         </div>
     )
+}
+
+const useData = (progress: MotionValue<number>) => {
+    const [currentValue, setCurrentValue] = useState(flutterProjectData[0])
+    const index = useTransform(
+        progress,
+        [0, 1],
+        [0, flutterProjectData.length - 1]
+    )
+    useMotionValueEvent(index, 'change', (value) => {
+        const roundedIndex = Math.round(value)
+        setCurrentValue(flutterProjectData[roundedIndex])
+    })
+    return currentValue
 }
 
 export const FlutterProjectSection = () => {
@@ -287,11 +322,12 @@ export const FlutterProjectSection = () => {
         target: ref,
         offset: ['start start', 'end end'],
     })
+    const data = useData(progress)
     return (
         <section ref={ref}>
             <div className="mx-auto h-[400vh] bg-[#101010] py-24 md:max-w-[908px] lg:max-w-[1120px]">
                 <Title />
-                <MainContent progress={progress} />
+                <MainContent progress={progress} {...data} />
             </div>
         </section>
     )
