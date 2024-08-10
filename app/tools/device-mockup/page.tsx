@@ -54,7 +54,8 @@ const MainContent = () => {
             formData.append('frame', frameGalleryData[currentFrame].name)
             formData.append('option', options[activeOption].title)
             const response = await fetch(
-                'https://api.sarria.ca/mockup-device',
+                // 'https://api.sarria.ca/mockup-device',
+                'http://192.168.2.18:1234/mockup-device',
                 {
                     method: 'POST',
                     body: formData,

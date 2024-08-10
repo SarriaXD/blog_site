@@ -111,11 +111,12 @@ const ImageUploader = ({
                 return 'Too many items, only one image is allowed!'
             }
             if (!dataTransfer.items[0].type.startsWith('image/')) {
-                return 'Only images are allowed!'
+                return 'Only image is allowed!'
             }
-            // if (dataTransfer.files[0].size > 5 * 1024 * 1024) {
-            //     return 'File size should be less than 5MB!'
-            // }
+            const allowedTypes = ['image/png', 'image/jpeg']
+            if (!allowedTypes.includes(dataTransfer.items[0].type)) {
+                return 'Only PNG and JPEG images are allowed!'
+            }
             return null
         } else {
             return 'No file found!'
@@ -214,7 +215,7 @@ const ImageUploader = ({
             <input
                 id="fileInput"
                 type="file"
-                accept="image/*"
+                accept="image/png, image/jpeg"
                 onChange={onChange}
                 style={{ display: 'none' }}
             />
