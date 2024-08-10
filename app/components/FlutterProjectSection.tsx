@@ -347,11 +347,11 @@ export const FlutterProjectSection = () => {
     const ref = useRef(null)
     const { scrollYProgress: progress } = useScroll({
         target: ref,
-        offset: ['start start', 'end end'],
+        offset: ['start -300px', 'end end'],
     })
     const currentDataIndex = useDataIndex(progress)
     return (
-        <section ref={ref}>
+        <section ref={ref} className="mb-24">
             <div className="mx-auto h-[400vh] bg-[#101010] py-24 md:max-w-[908px] lg:max-w-[1120px]">
                 <Title />
                 <MainContent
