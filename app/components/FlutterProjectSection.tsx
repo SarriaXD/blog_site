@@ -1,6 +1,6 @@
 'use client'
 
-import Image, { StaticImageData } from 'next/image'
+import Image from 'next/image'
 import { Button } from './Material.tsx'
 import Link from 'next/link'
 import { ArrowRight } from '../../public/icons'
@@ -86,7 +86,7 @@ const ExploreStickyButton = () => {
 
 interface ImageGalleryProps {
     nearTopViewport: boolean
-    images: StaticImageData[]
+    currentDataIndex: number
 }
 
 const useImageGalleryAnimation = () => {
@@ -110,12 +110,14 @@ const useImageGalleryAnimation = () => {
     }
 }
 
-const ImageGallery = ({ nearTopViewport, images }: ImageGalleryProps) => {
+const ImageGallery = ({
+    nearTopViewport,
+    currentDataIndex,
+}: ImageGalleryProps) => {
     const { ref, enterViewport } = useImageGalleryAnimation()
     return (
         <motion.div
             ref={ref}
-            className="relative z-10 mx-auto mt-8 flex w-[92%] items-center justify-between gap-4 md:mt-0 md:w-full md:gap-6 lg:gap-8"
             animate={{
                 opacity: enterViewport ? 1 : 0,
                 y: enterViewport ? 0 : 100,
@@ -128,47 +130,77 @@ const ImageGallery = ({ nearTopViewport, images }: ImageGalleryProps) => {
                 duration: 1,
             }}
         >
-            <motion.div
-                className="z-0"
-                animate={{
-                    opacity: nearTopViewport ? 1 : 0,
-                    x: nearTopViewport ? 0 : 100,
-                }}
-                transition={{
-                    type: 'spring',
-                    duration: nearTopViewport ? 1 : 0.5,
-                }}
-            >
-                <Image src={images[0]} alt="flutter project image 1" />
-            </motion.div>
-            <motion.div
-                className="z-10"
-                animate={{
-                    scale: nearTopViewport ? 1 : 2,
-                }}
-                style={{
-                    transformOrigin: 'top',
-                }}
-                transition={{
-                    type: 'spring',
-                    duration: 1,
-                }}
-            >
-                <Image src={images[1]} alt="flutter project image 1" />
-            </motion.div>
-            <motion.div
-                className="z-0"
-                animate={{
-                    opacity: nearTopViewport ? 1 : 0,
-                    x: nearTopViewport ? 0 : -100,
-                }}
-                transition={{
-                    type: 'spring',
-                    duration: nearTopViewport ? 1 : 0.5,
-                }}
-            >
-                <Image src={images[2]} alt="flutter project image 1" />
-            </motion.div>
+            {flutterProjectData.map(({ images }, index) => {
+                return (
+                    <motion.div
+                        key={index}
+                        className="relative z-10 mx-auto mt-8 flex w-[92%] items-center justify-between gap-4 md:mt-0 md:w-full md:gap-6 lg:gap-8"
+                        animate={{
+                            opacity: currentDataIndex === index ? 1 : 0.8,
+                            scale: currentDataIndex === index ? 1 : 0.965,
+                        }}
+                        style={{
+                            display:
+                                index === currentDataIndex ? 'flex' : 'none',
+                        }}
+                        transition={{
+                            type: 'spring',
+                            duration: 0.8,
+                        }}
+                    >
+                        <motion.div
+                            className="z-0"
+                            animate={{
+                                opacity: nearTopViewport ? 1 : 0,
+                                x: nearTopViewport ? 0 : 100,
+                            }}
+                            transition={{
+                                type: 'spring',
+                                duration: nearTopViewport ? 1 : 0.5,
+                            }}
+                        >
+                            <Image
+                                src={images[0]}
+                                alt="flutter project image 1"
+                            />
+                        </motion.div>
+                        <motion.div
+                            className="z-10"
+                            animate={{
+                                scale: nearTopViewport ? 1 : 2,
+                            }}
+                            style={{
+                                transformOrigin: 'top',
+                            }}
+                            transition={{
+                                type: 'spring',
+                                duration: 1,
+                            }}
+                        >
+                            <Image
+                                src={images[1]}
+                                alt="flutter project image 1"
+                            />
+                        </motion.div>
+                        <motion.div
+                            className="z-0"
+                            animate={{
+                                opacity: nearTopViewport ? 1 : 0,
+                                x: nearTopViewport ? 0 : -100,
+                            }}
+                            transition={{
+                                type: 'spring',
+                                duration: nearTopViewport ? 1 : 0.5,
+                            }}
+                        >
+                            <Image
+                                src={images[2]}
+                                alt="flutter project image 1"
+                            />
+                        </motion.div>
+                    </motion.div>
+                )
+            })}
         </motion.div>
     )
 }
@@ -268,17 +300,10 @@ const useMainContentAnimation = () => {
 
 interface MainContentProps {
     progress: MotionValue<number>
-    images: StaticImageData[]
-    title: string
-    description: string
+    currentDataIndex: number
 }
 
-const MainContent = ({
-    progress,
-    images,
-    title,
-    description,
-}: MainContentProps) => {
+const MainContent = ({ progress, currentDataIndex }: MainContentProps) => {
     const { ref, nearTopViewport } = useMainContentAnimation()
     return (
         <div
@@ -289,21 +314,23 @@ const MainContent = ({
             <div className="mx-auto h-full max-w-[530px] py-20 md:max-w-full">
                 <ImageGallery
                     nearTopViewport={nearTopViewport}
-                    images={images}
+                    currentDataIndex={currentDataIndex}
                 />
                 <Introduction
                     progress={progress}
                     enterViewport={nearTopViewport}
-                    title={title}
-                    description={description}
+                    title={flutterProjectData[currentDataIndex].title}
+                    description={
+                        flutterProjectData[currentDataIndex].description
+                    }
                 />
             </div>
         </div>
     )
 }
 
-const useData = (progress: MotionValue<number>) => {
-    const [currentValue, setCurrentValue] = useState(flutterProjectData[0])
+const useDataIndex = (progress: MotionValue<number>) => {
+    const [currentIndex, setCurrentIndex] = useState(0)
     const index = useTransform(
         progress,
         [0, 1],
@@ -311,9 +338,9 @@ const useData = (progress: MotionValue<number>) => {
     )
     useMotionValueEvent(index, 'change', (value) => {
         const roundedIndex = Math.round(value)
-        setCurrentValue(flutterProjectData[roundedIndex])
+        setCurrentIndex(roundedIndex)
     })
-    return currentValue
+    return currentIndex
 }
 
 export const FlutterProjectSection = () => {
@@ -322,12 +349,15 @@ export const FlutterProjectSection = () => {
         target: ref,
         offset: ['start start', 'end end'],
     })
-    const data = useData(progress)
+    const currentDataIndex = useDataIndex(progress)
     return (
         <section ref={ref}>
             <div className="mx-auto h-[400vh] bg-[#101010] py-24 md:max-w-[908px] lg:max-w-[1120px]">
                 <Title />
-                <MainContent progress={progress} {...data} />
+                <MainContent
+                    progress={progress}
+                    currentDataIndex={currentDataIndex}
+                />
             </div>
         </section>
     )
