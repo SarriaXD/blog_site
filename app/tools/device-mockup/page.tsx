@@ -130,21 +130,24 @@ const MainContent = () => {
                     </div>
                 </div>
             </div>
-            <Alert
-                open={errorMessage !== null}
-                color="red"
-                onClose={() => setErrorMessage(null)}
-                animate={{
-                    mount: { y: -50 },
-                    unmount: { y: 100 },
-                }}
-                transition={{
-                    type: 'spring',
-                    duration: 1,
-                }}
-            >
-                {errorMessage}
-            </Alert>
+            <div className="pointer-events-none fixed inset-x-8 top-0 z-50 h-[100vh] md:inset-x-16 lg:inset-x-32">
+                <Alert
+                    open={errorMessage !== null}
+                    color="red"
+                    onClose={() => setErrorMessage(null)}
+                    animate={{
+                        mount: { y: 0 },
+                        unmount: { y: 200 },
+                    }}
+                    transition={{
+                        type: 'spring',
+                        duration: 1,
+                    }}
+                    className="pointer-events-auto absolute bottom-[5%] px-8"
+                >
+                    {errorMessage}
+                </Alert>
+            </div>
         </div>
     )
 }
