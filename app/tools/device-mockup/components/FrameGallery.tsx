@@ -1,21 +1,24 @@
 import React from 'react'
 import Image from 'next/image'
-import { iphone_frame, pixel_frame } from '../../../../public/images'
+import { StaticImport } from 'next/dist/shared/lib/get-img-props'
 
-const data = [
-    {
-        image: iphone_frame,
-        name: 'iPhone 15 pro',
-    },
-    {
-        image: pixel_frame,
-        name: 'Pixel 7',
-    },
-]
+interface FrameGallery {
+    image: StaticImport
+    name: string
+    cornerRadius: number
+}
 
-export function FrameGallery() {
-    const [active, setActive] = React.useState(0)
+interface FrameGalleryProps {
+    data: FrameGallery[]
+    current: number
+    onCurrentChange: (index: number) => void
+}
 
+export function FrameGallery({
+    data,
+    current,
+    onCurrentChange,
+}: FrameGalleryProps) {
     return (
         <div
             className={`grid w-full gap-8 rounded-3xl bg-[#282828] p-4 md:gap-12 md:p-8 lg:gap-16 lg:p-12`}
@@ -23,7 +26,7 @@ export function FrameGallery() {
             <div className="relative aspect-[1]">
                 <Image
                     className="object-contain"
-                    src={data[active].image}
+                    src={data[current].image}
                     sizes={'(max-width: 735px) 100vw, 50vw'}
                     fill={true}
                     priority={true}
@@ -37,7 +40,7 @@ export function FrameGallery() {
                         key={index}
                         style={{
                             border:
-                                active === index
+                                current === index
                                     ? '1px solid #757575'
                                     : '1px solid transparent',
                             borderRadius: '8px',
@@ -45,7 +48,7 @@ export function FrameGallery() {
                     >
                         <div
                             className="relative h-20 w-full md:h-28 lg:h-32"
-                            onClick={() => setActive(index)}
+                            onClick={() => onCurrentChange(index)}
                         >
                             <Image
                                 src={image}

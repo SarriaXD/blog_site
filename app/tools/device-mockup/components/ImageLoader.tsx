@@ -76,7 +76,7 @@ const ImageWithCloseButton = ({
 }
 
 interface ImageUploaderProps {
-    onImageLoaded: (image: string) => void
+    onImageLoaded: (image: File) => void
     onImageRemoved: () => void
     onError: (error: string) => void
 }
@@ -96,25 +96,40 @@ const ImageUploader = ({
             reader.onload = (e: ProgressEvent<FileReader>) => {
                 const image = e.target?.result as string
                 setImage(image)
-                onImageLoaded(image)
+                onImageLoaded(file)
             }
             reader.readAsDataURL(file)
         },
         [onImageLoaded]
     )
 
+    const validateImage = (
+        dataTransfer: DataTransfer
+    ): string | null | undefined => {
+        if (dataTransfer.items && dataTransfer.items.length > 0) {
+            if (dataTransfer.items.length > 1) {
+                return 'Too many items, only one image is allowed!'
+            }
+            if (!dataTransfer.items[0].type.startsWith('image/')) {
+                return 'Only images are allowed!'
+            }
+            // if (dataTransfer.files[0].size > 5 * 1024 * 1024) {
+            //     return 'File size should be less than 5MB!'
+            // }
+            return null
+        } else {
+            return 'No file found!'
+        }
+    }
+
     const onDragEnter = useCallback((e: React.DragEvent<HTMLDivElement>) => {
         e.preventDefault()
         e.stopPropagation()
-        if (e.dataTransfer.items && e.dataTransfer.items.length > 0) {
-            if (e.dataTransfer.items.length > 1) {
-                setErrorMessages('Too many items, only one image is allowed!')
-            }
-            if (!e.dataTransfer.items[0].type.startsWith('image/')) {
-                setErrorMessages('Only images are allowed!')
-            }
-            setIsDragging(true)
+        const error = validateImage(e.dataTransfer)
+        if (error) {
+            setErrorMessages(error)
         }
+        setIsDragging(true)
     }, [])
 
     const onDragLeave = useCallback((e: React.DragEvent<HTMLDivElement>) => {
@@ -135,18 +150,12 @@ const ImageUploader = ({
             e.stopPropagation()
             setIsDragging(false)
             setErrorMessages(null)
-            if (e.dataTransfer.items && e.dataTransfer.items.length > 0) {
-                if (e.dataTransfer.items.length > 1) {
-                    onError('Too many items, only one image is allowed!')
-                    return
-                }
-                if (!e.dataTransfer.items[0].type.startsWith('image/')) {
-                    onError('Only images are allowed!')
-                    return
-                }
-                const file = e.dataTransfer.files[0]
-                handleFile(file)
+            const error = validateImage(e.dataTransfer)
+            if (error) {
+                onError(error)
+                return
             }
+            handleFile(e.dataTransfer.files[0])
         },
         [handleFile, onError]
     )

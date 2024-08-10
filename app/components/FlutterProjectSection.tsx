@@ -245,7 +245,6 @@ const useMainContentAnimation = () => {
         offset: ['start end', 'start start'],
     })
     useMotionValueEvent(scrollYProgress, 'change', (progress) => {
-        console.log('progress', progress)
         if (progress === 1 && !nearTopViewport) {
             setNearTopViewport(true)
         }
