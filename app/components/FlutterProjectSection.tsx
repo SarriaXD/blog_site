@@ -70,7 +70,11 @@ const ExploreStickyButton = () => {
                     top: 'calc(100vh - 100px)',
                 }}
             >
-                <Link href={'/'}>
+                <Link
+                    href={'https://github.com/SarriaXD/manitoba_driving_test'}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
                     <Button
                         size="sm"
                         className="flex items-center gap-3 rounded-full bg-gray-900 bg-opacity-80 backdrop-blur"

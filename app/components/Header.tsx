@@ -7,15 +7,31 @@ import { useState } from 'react'
 import { BurgerMenu, Dog, Email, Github, Linkedin } from '../../public/icons'
 
 const internalLinks = [
-    { href: '/articles', text: 'Articles' },
-    { href: 'https://github.com/SarriaXD?tab=repositories', text: 'Projects' },
-    { href: '/tools', text: 'Tools' },
+    { href: '/articles', text: 'Articles', newTab: false },
+    {
+        href: 'https://github.com/SarriaXD?tab=repositories',
+        text: 'Projects',
+        newTab: true,
+    },
+    { href: '/tools', text: 'Tools', newTab: false },
 ]
 
-const InternalLink = ({ href, text }: { href: string; text: string }) => {
+const InternalLink = ({
+    href,
+    text,
+    newTab,
+}: {
+    href: string
+    text: string
+    newTab: boolean
+}) => {
+    const linkProps = {
+        href,
+        ...(newTab ? { target: '_blank', rel: 'noopener noreferrer' } : {}),
+    }
     return (
         <li>
-            <Link href={href}>
+            <Link {...linkProps}>
                 <Button
                     variant="text"
                     size="lg"
@@ -77,7 +93,11 @@ export const Header = () => {
                             </Link>
                         </li>
                         <li>
-                            <Link href="https://www.linkedin.com/in/qi-wang-793a562a7">
+                            <Link
+                                href="https://www.linkedin.com/in/qi-wang-793a562a7"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
                                 <Tooltip content="Connect with me on LinkedIn">
                                     <IconButton aria-label="View My Linkedin">
                                         <Linkedin className="size-6 text-white" />
@@ -86,7 +106,11 @@ export const Header = () => {
                             </Link>
                         </li>
                         <li>
-                            <Link href="https://github.com/SarriaXD">
+                            <Link
+                                href="https://github.com/SarriaXD"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
                                 <Tooltip content="Check out my GitHub">
                                     <IconButton aria-label="View My Github">
                                         <Github className="size-6 text-white" />

@@ -16,20 +16,30 @@ interface SideBarProps {
 }
 
 const internalLinks = [
-    { href: '/articles', text: 'Articles' },
-    { href: 'https://github.com/SarriaXD?tab=repositories', text: 'Projects' },
-    { href: '/tools', text: 'Tools' },
+    { href: '/articles', text: 'Articles', newTab: false },
+    {
+        href: 'https://github.com/SarriaXD?tab=repositories',
+        text: 'Projects',
+        newTab: true,
+    },
+    { href: '/tools', text: 'Tools', newTab: false },
 ]
 
 interface InternalLinkProps {
     href: string
     text: string
+    newTab: boolean
     onClose: () => void
 }
 
-const InternalLink = ({ href, text, onClose }: InternalLinkProps) => {
+const InternalLink = ({ href, text, newTab, onClose }: InternalLinkProps) => {
+    const linkProps = {
+        href,
+        onClick: onClose,
+        ...(newTab ? { target: '_blank', rel: 'noopener noreferrer' } : {}),
+    }
     return (
-        <Link href={href} onClick={onClose}>
+        <Link {...linkProps}>
             <ListItem>
                 <span className="text-base text-white">{text}</span>
             </ListItem>
@@ -40,21 +50,25 @@ const InternalLink = ({ href, text, onClose }: InternalLinkProps) => {
 const externalLinks: {
     href: string
     icon: 'email' | 'linkedin' | 'github'
+    newTab: boolean
     text: string
 }[] = [
     {
         href: 'mailto:sarria.qi.wang@gmail.com',
         icon: 'email',
+        newTab: false,
         text: 'Email me',
     },
     {
         href: 'https://www.linkedin.com/in/qi-wang-793a562a7',
         icon: 'linkedin',
+        newTab: true,
         text: 'LinkedIn',
     },
     {
         href: 'https://github.com/SarriaXD',
         icon: 'github',
+        newTab: true,
         text: 'GitHub',
     },
 ]
@@ -63,6 +77,7 @@ interface ExternalLinkProps {
     href: string
     icon: 'email' | 'linkedin' | 'github'
     text: string
+    newTab: boolean
     index: number
     open: boolean
     onClose: () => void
@@ -83,12 +98,18 @@ const ExternalLink = ({
     href,
     icon,
     text,
+    newTab,
     index,
     open,
     onClose,
 }: ExternalLinkProps) => {
+    const linkProps = {
+        href,
+        onClick: onClose,
+        ...(newTab ? { target: '_blank', rel: 'noopener noreferrer' } : {}),
+    }
     return (
-        <Link href={href} onClick={onClose}>
+        <Link {...linkProps}>
             <motion.div
                 animate={{
                     x: open ? 0 : '-100%',

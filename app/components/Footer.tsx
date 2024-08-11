@@ -2,19 +2,28 @@ import Link from 'next/link'
 
 interface SectionProps {
     title: string
-    links: { text: string; href?: string }[]
+    texts: {
+        text: string
+        href?: {
+            href: string
+            newTab: boolean
+        }
+    }[]
 }
 
-const Section = ({ title, links }: SectionProps) => {
+const Section = ({ title, texts }: SectionProps) => {
     return (
         <div>
             <h1 className="mb-4 text-lg font-semibold">{title}</h1>
             <ul className="flex flex-col items-start gap-2">
-                {links.map((link) => {
+                {texts.map((link) => {
+                    const newTabProps = link.href?.newTab
+                        ? { target: '_blank', rel: 'noopener noreferrer' }
+                        : {}
                     return (
                         <li key={link.text}>
                             {link.href ? (
-                                <Link href={link.href}>
+                                <Link href={link.href.href} {...newTabProps}>
                                     <p className="text-gray-400 hover:text-gray-200">
                                         {link.text}
                                     </p>
@@ -33,7 +42,7 @@ const Section = ({ title, links }: SectionProps) => {
 const sections = [
     {
         title: 'About Me',
-        links: [
+        texts: [
             { text: 'Qi Wang' },
             { text: '225 Carlton Street' },
             { text: 'Winnipeg, MB R3C 0V3' },
@@ -41,23 +50,47 @@ const sections = [
     },
     {
         title: 'Follow Me',
-        links: [
-            { text: 'Github', href: 'https://github.com/SarriaXD' },
-            { text: 'Twitter', href: 'https://x.com/qi_wang_sarria' },
+        texts: [
+            {
+                text: 'Github',
+                href: {
+                    href: 'https://github.com/SarriaXD',
+                    newTab: true,
+                },
+            },
+            {
+                text: 'Twitter',
+                href: {
+                    href: 'https://x.com/qi_wang_sarria',
+                    newTab: true,
+                },
+            },
             {
                 text: 'LinkedIn',
-                href: 'https://www.linkedin.com/in/qi-wang-793a562a7',
+                href: {
+                    href: 'https://www.linkedin.com/in/qi-wang-793a562a7',
+                    newTab: true,
+                },
             },
         ],
     },
     {
         title: 'Contact Me',
-        links: [
+        texts: [
             {
                 text: 'Email:sarria.qi.wang@gmail.com',
-                href: 'mailto:sarria.qi.wang@gmail.com',
+                href: {
+                    href: 'mailto:sarria.qi.wang@gmail.com',
+                    newTab: false,
+                },
             },
-            { text: 'Phone: (431) 788-6683', href: 'tel:4317886683' },
+            {
+                text: 'Phone: (431) 788-6683',
+                href: {
+                    href: 'tel:4317886683',
+                    newTab: false,
+                },
+            },
         ],
     },
 ]
