@@ -77,7 +77,7 @@ const ExploreStickyButton = () => {
                 >
                     <Button
                         size="sm"
-                        className="flex items-center gap-3 rounded-full bg-gray-900 bg-opacity-80 backdrop-blur"
+                        className="flex items-center gap-3 rounded-full bg-gray-900 bg-opacity-80 capitalize backdrop-blur"
                     >
                         Explore This Project
                         <ArrowRight className="size-10 rounded-full bg-gray-800 p-2 text-white" />
