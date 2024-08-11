@@ -117,7 +117,7 @@ const ImageGallery = ({
     colors,
 }: ImageGalleryProps) => {
     const { ref, enterViewport } = useImageGalleryAnimation()
-    const gradientBackground = `linear-gradient(to bottom, ${colors[currentDataIndex].mainColor}, ${colors[currentDataIndex].secondaryColor}, transparent)`
+    const gradientBackground = `linear-gradient(to bottom, ${colors[currentDataIndex].secondaryColor} 0%, ${colors[currentDataIndex].mainColor} 40%, transparent)`
     return (
         <motion.div
             ref={ref}
@@ -201,7 +201,7 @@ const ImageGallery = ({
                 )
             })}
             <div
-                className="absolute inset-x-0 -bottom-[35%] h-3/4 rounded-b-full blur-3xl"
+                className="absolute inset-x-0 -bottom-[50%] h-3/4 rounded-b-full blur-3xl"
                 style={{
                     background: gradientBackground,
                 }}
