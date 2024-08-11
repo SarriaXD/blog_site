@@ -157,6 +157,7 @@ const ImageGallery = ({
                             <Image
                                 src={images[0]}
                                 alt="flutter project image 1"
+                                priority={true}
                                 sizes={'(max-width: 735px) 33vw, 30vw'}
                             />
                         </motion.div>
@@ -176,6 +177,7 @@ const ImageGallery = ({
                             <Image
                                 src={images[1]}
                                 alt="flutter project image 1"
+                                priority={true}
                                 sizes={'(max-width: 735px) 33vw, 30vw'}
                             />
                         </motion.div>
@@ -193,6 +195,7 @@ const ImageGallery = ({
                             <Image
                                 src={images[2]}
                                 alt="flutter project image 1"
+                                priority={true}
                                 sizes={'(max-width: 735px) 33vw, 30vw'}
                             />
                         </motion.div>

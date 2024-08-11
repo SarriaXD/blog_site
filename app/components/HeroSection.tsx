@@ -127,8 +127,8 @@ const ImageGallery = ({
             }}
             transition={{
                 type: 'tween',
-                duration: 0.6,
-                delay: 0.3,
+                duration: 0.5,
+                delay: 0.5,
             }}
         >
             <div className="flex flex-col items-center justify-center gap-8 md:flex-row md:gap-12 lg:gap-16">
