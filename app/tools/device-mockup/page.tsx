@@ -83,7 +83,7 @@ const MainContent = () => {
         }
     }, [processedImage])
     return (
-        <div className="p-8">
+        <div className="p-8 md:p-16 lg:p-24">
             <div className="flex w-full flex-col items-center justify-center gap-8 md:flex-row">
                 <div className="w-[300px] md:w-[500px] lg:w-[800px]">
                     {processedImage && (
@@ -118,7 +118,7 @@ const MainContent = () => {
                     />
                     <div className="flex items-center justify-center">
                         <Button
-                            color="blue-gray"
+                            color="blue"
                             onClick={handleGenerateMockup}
                             loading={isLoading}
                             disabled={
@@ -155,8 +155,8 @@ const MainContent = () => {
 export default function Page() {
     return (
         <main>
-            <section className="bg-[#1E1E1E] py-24">
-                <div className="mx-auto min-h-[100vh] py-24 md:max-w-[908px] lg:max-w-[1120px]">
+            <section className="bg-black py-32">
+                <div className="mx-auto min-h-[100vh] bg-[#1A1A1A] md:max-w-[908px] md:rounded-3xl lg:max-w-[1120px]">
                     <MainContent />
                 </div>
             </section>

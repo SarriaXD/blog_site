@@ -29,7 +29,7 @@ const ProcessedImage = ({ image }: ProcessedImageProps) => {
                 />
             </div>
             <div className="flex  h-20 w-full items-center justify-center md:h-28 lg:h-32">
-                <Button color="blue-gray" onClick={() => downloadImage(image)}>
+                <Button color="blue" onClick={() => downloadImage(image)}>
                     Download
                 </Button>
             </div>

@@ -198,9 +198,9 @@ const ImageUploader = ({
                 </div>
             )}
             {!image && !isDragging && !errorMessages && (
-                <div className="flex size-full flex-col items-center justify-center rounded-xl">
+                <div className="flex size-full flex-col items-center justify-center rounded-xl text-base">
                     <Add className="size-12 text-gray-600" />
-                    <p className="text-base">Click or Drag to upload image</p>
+                    Click or Drag to upload image
                 </div>
             )}
             {image && !isDragging && !errorMessages && (
