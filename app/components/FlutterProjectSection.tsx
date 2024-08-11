@@ -64,7 +64,7 @@ const Title = () => {
 const ExploreStickyButton = () => {
     return (
         <div className="absolute top-0 z-50 flex h-full w-full items-end justify-center">
-            <div className="sticky bottom-8 mb-24 mt-8 flex items-center">
+            <div className="sticky bottom-8 mb-24 mt-8  flex items-center">
                 <Link
                     href={'https://github.com/SarriaXD/manitoba_driving_test'}
                     target="_blank"
@@ -72,10 +72,12 @@ const ExploreStickyButton = () => {
                 >
                     <Button
                         size="sm"
-                        className="flex items-center gap-3 rounded-full bg-gray-900 bg-opacity-80 capitalize backdrop-blur"
+                        className="flex items-center gap-4 rounded-full bg-gray-800 bg-opacity-80 pl-0 pr-2 capitalize backdrop-blur"
                     >
-                        Explore This Project
-                        <ArrowRight className="size-10 rounded-full bg-gray-800 p-2 text-white" />
+                        <span className="ml-5 text-[14px] text-base md:ml-6 md:text-lg">
+                            Explore This Project
+                        </span>
+                        <ArrowRight className="size-8 rounded-full bg-gray-700 p-1 text-white md:size-10 md:p-2" />
                     </Button>
                 </Link>
             </div>
@@ -308,7 +310,7 @@ const MainContent = ({
     return (
         <div
             ref={ref}
-            className="sticky top-0 mx-auto h-[100vh] min-h-[900px] md:w-[692px] lg:w-[800px]"
+            className="min-h-[900px]: sticky top-0 mx-auto h-[120vh] md:w-[692px] lg:w-[800px]"
         >
             <ExploreStickyButton />
             <div className="mx-auto h-full max-w-[530px] py-24 md:max-w-full">
@@ -354,7 +356,7 @@ export const FlutterProjectSection = ({
     const ref = useRef(null)
     const { scrollYProgress: progress } = useScroll({
         target: ref,
-        offset: ['start -150vh', 'end end'],
+        offset: ['start -150vh', '530vh end'],
     })
     const currentDataIndex = useDataIndex(progress)
     return (
