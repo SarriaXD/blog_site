@@ -12,7 +12,6 @@ import {
     useTransform,
 } from 'framer-motion'
 import { useRef, useState } from 'react'
-import { useMediaQuery } from '../hooks.ts'
 import { flutterProjectData } from '../data/flutterProjectData.ts'
 
 const useTitleAnimation = () => {
@@ -132,20 +131,12 @@ const ImageGallery = ({
         >
             {flutterProjectData.map(({ images }, index) => {
                 return (
-                    <motion.div
+                    <div
                         key={index}
                         className="relative z-10 mx-auto mt-8 flex w-[92%] items-center justify-between gap-4 md:mt-0 md:w-full md:gap-6 lg:gap-8"
-                        animate={{
-                            opacity: currentDataIndex === index ? 1 : 0.8,
-                            scale: currentDataIndex === index ? 1 : 0.965,
-                        }}
                         style={{
                             display:
                                 index === currentDataIndex ? 'flex' : 'none',
-                        }}
-                        transition={{
-                            type: 'spring',
-                            duration: 0.8,
                         }}
                     >
                         <motion.div
@@ -161,6 +152,7 @@ const ImageGallery = ({
                         >
                             <Image
                                 src={images[0]}
+                                priority={true}
                                 alt="flutter project image 1"
                             />
                         </motion.div>
@@ -179,6 +171,7 @@ const ImageGallery = ({
                         >
                             <Image
                                 src={images[1]}
+                                priority={true}
                                 alt="flutter project image 1"
                             />
                         </motion.div>
@@ -195,10 +188,11 @@ const ImageGallery = ({
                         >
                             <Image
                                 src={images[2]}
+                                priority={true}
                                 alt="flutter project image 1"
                             />
                         </motion.div>
-                    </motion.div>
+                    </div>
                 )
             })}
         </motion.div>
@@ -231,14 +225,14 @@ const Introduction = ({
             }}
             className="relative z-0 p-8"
         >
-            <div className="mx-auto mt-8 flex w-[90%] flex-col items-stretch gap-2 md:w-full md:flex-row md:justify-around">
-                <h4 className="w-full text-3xl md:w-[45%] md:text-4xl">
-                    {title}
-                </h4>
-                <p className="w-full text-lg font-semibold text-[#86868b] md:w-[45%] md:text-xl">
-                    {description}
-                </p>
-                <div className="my-8 h-1 rounded bg-gray-600 md:my-0 md:h-auto md:w-1">
+            <div className="mx-auto mt-8 flex w-[90%] justify-around gap-4 md:w-full">
+                <div className="flex max-w-[90%] flex-col gap-2 md:max-w-[95%] md:flex-row md:gap-4">
+                    <h4 className="text-3xl md:w-[45%] md:text-4xl">{title}</h4>
+                    <p className="text-lg font-semibold text-[#86868b] md:w-[45%] md:text-xl">
+                        {description}
+                    </p>
+                </div>
+                <div className="mt-2 h-24 w-1 self-start rounded bg-gray-600 md:mt-0">
                     <ProgressBar progress={progress} />
                 </div>
             </div>
@@ -251,27 +245,16 @@ interface ProgressBarProps {
 }
 
 const ProgressBar = ({ progress }: ProgressBarProps) => {
-    const isMobile = useMediaQuery('(max-width: 735px)', true)
     const percentage = useTransform(progress, [0, 1], ['0%', '100%'])
     return (
         <div className="h-full w-full rounded-full bg-gray-800">
-            {isMobile ? (
-                <motion.div
-                    key={'horizontal'}
-                    className="block h-full rounded-full bg-gray-500"
-                    style={{
-                        width: percentage,
-                    }}
-                />
-            ) : (
-                <motion.div
-                    key={'vertical'}
-                    className="block w-full rounded-full bg-gray-500"
-                    style={{
-                        height: percentage,
-                    }}
-                />
-            )}
+            <motion.div
+                key={'vertical'}
+                className="block w-full rounded-full bg-gray-500"
+                style={{
+                    height: percentage,
+                }}
+            />
         </div>
     )
 }
@@ -310,7 +293,7 @@ const MainContent = ({ progress, currentDataIndex }: MainContentProps) => {
             className="sticky top-0 mx-auto h-[100vh] min-h-[900px] md:w-[692px] lg:w-[800px]"
         >
             <ExploreStickyButton />
-            <div className="mx-auto h-full max-w-[530px] py-20 md:max-w-full">
+            <div className="mx-auto h-full max-w-[530px] py-24 md:max-w-full">
                 <ImageGallery
                     nearTopViewport={nearTopViewport}
                     currentDataIndex={currentDataIndex}
@@ -346,12 +329,12 @@ export const FlutterProjectSection = () => {
     const ref = useRef(null)
     const { scrollYProgress: progress } = useScroll({
         target: ref,
-        offset: ['start -300px', 'end end'],
+        offset: ['start -150vh', 'end end'],
     })
     const currentDataIndex = useDataIndex(progress)
     return (
         <section ref={ref} className="mb-24">
-            <div className="mx-auto h-[400vh] bg-[#101010] py-24 md:max-w-[908px] lg:max-w-[1120px]">
+            <div className="mx-auto h-[550vh] bg-[#101010] pt-24 md:max-w-[908px] lg:max-w-[1120px]">
                 <Title />
                 <MainContent
                     progress={progress}

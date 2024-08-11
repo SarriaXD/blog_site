@@ -20,6 +20,12 @@ import flutter_firebase_3 from './flutter/flutter_firebase_3.png'
 import flutter_test_1 from './flutter/flutter_test_1.png'
 import flutter_test_2 from './flutter/flutter_test_2.png'
 import flutter_test_3 from './flutter/flutter_test_3.png'
+import flutter_dynamic_color_1 from './flutter/flutter_dynamic_color_1.png'
+import flutter_dynamic_color_2 from './flutter/flutter_dynamic_color_2.png'
+import flutter_dynamic_color_3 from './flutter/flutter_dynamic_color_3.png'
+import flutter_history_1 from './flutter/flutter_history_1.png'
+import flutter_history_2 from './flutter/flutter_history_2.png'
+import flutter_history_3 from './flutter/flutter_history_3.png'
 
 export {
     android,
@@ -44,4 +50,10 @@ export {
     flutter_test_1,
     flutter_test_2,
     flutter_test_3,
+    flutter_dynamic_color_1,
+    flutter_dynamic_color_2,
+    flutter_dynamic_color_3,
+    flutter_history_1,
+    flutter_history_2,
+    flutter_history_3,
 }
