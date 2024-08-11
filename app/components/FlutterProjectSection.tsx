@@ -63,13 +63,8 @@ const Title = () => {
 
 const ExploreStickyButton = () => {
     return (
-        <div className="absolute top-0 h-full w-full">
-            <div
-                className="sticky z-50 mx-8 flex items-center justify-center py-4"
-                style={{
-                    top: 'calc(100vh - 100px)',
-                }}
-            >
+        <div className="absolute top-0 z-50 flex h-full w-full items-end justify-center">
+            <div className="sticky bottom-8 mb-24 mt-8 flex items-center">
                 <Link
                     href={'https://github.com/SarriaXD/manitoba_driving_test'}
                     target="_blank"
