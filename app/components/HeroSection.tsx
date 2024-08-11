@@ -22,7 +22,6 @@ const Introduction = () => {
                 transition={{
                     type: 'spring',
                     duration: 1,
-                    delay: 0.3,
                 }}
             >
                 <h1 color="white" className="text-4xl md:text-7xl lg:text-8xl">
@@ -49,7 +48,7 @@ const Introduction = () => {
                 }}
                 transition={{
                     type: 'spring',
-                    delay: 0.5,
+                    delay: 0.2,
                     duration: 1,
                 }}
             >
@@ -98,6 +97,7 @@ interface ImageGalleryProps {
     subtitle: string
     content: string
     reversed: boolean
+    priority: boolean
 }
 
 const ImageGallery = ({
@@ -108,6 +108,7 @@ const ImageGallery = ({
     subtitle,
     content,
     reversed,
+    priority,
 }: ImageGalleryProps) => {
     const introductionProps = {
         title,
@@ -122,17 +123,22 @@ const ImageGallery = ({
             }}
             animate={{
                 opacity: 1,
-                y: 50,
+                y: 0,
             }}
             transition={{
                 type: 'tween',
                 duration: 0.6,
-                delay: 1,
+                delay: 0.3,
             }}
         >
             <div className="flex flex-col items-center justify-center gap-8 md:flex-row md:gap-12 lg:gap-16">
                 {reversed && <GalleryIntroduction {...introductionProps} />}
-                <GalleryImage image={image} color={color} alt={alt} />
+                <GalleryImage
+                    image={image}
+                    color={color}
+                    alt={alt}
+                    priority={priority}
+                />
                 {!reversed && <GalleryIntroduction {...introductionProps} />}
             </div>
         </motion.div>
@@ -143,9 +149,10 @@ interface GalleryImageProps {
     image: StaticImageData
     color: StaticImageColor
     alt: string
+    priority: boolean
 }
 
-const GalleryImage = ({ image, color, alt }: GalleryImageProps) => {
+const GalleryImage = ({ image, color, alt, priority }: GalleryImageProps) => {
     const ref = useRef(null)
     const { scrollYProgress } = useScroll({
         target: ref,
@@ -180,8 +187,9 @@ const GalleryImage = ({ image, color, alt }: GalleryImageProps) => {
             >
                 <Image
                     src={image}
-                    priority={true}
+                    priority={priority}
                     alt={alt}
+                    sizes={'(max-width: 735px) 100vw, 50vw'}
                     className="relative z-10"
                 />
                 <div
@@ -260,6 +268,7 @@ export const HeroSection = ({ colorsMap }: HeroSectionProps) => {
                                     key={index}
                                     color={colorsMap.get(data.image.src)!}
                                     {...data}
+                                    priority={index === 0}
                                     reversed={reversed}
                                 />
                             )
