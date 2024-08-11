@@ -93,7 +93,7 @@ interface ImageGalleryProps {
 
 const useImageGalleryAnimation = () => {
     const ref = useRef(null)
-    const [enterViewport, setEnterViewport] = useState(false)
+    const [enterViewport, setEnterViewport] = useState(true)
     const { scrollYProgress } = useScroll({
         target: ref,
         offset: ['center end', 'end start'],
@@ -241,7 +241,7 @@ const Introduction = ({
             className="relative z-0 p-8"
         >
             <div className="mx-auto mt-8 flex w-[90%] justify-around gap-4 md:w-full">
-                <div className="flex max-w-[90%] flex-col gap-2 md:max-w-[95%] md:flex-row md:gap-4">
+                <div className="flex max-w-[90%] flex-col gap-2 md:max-w-[95%] md:flex-row md:gap-12">
                     <h4 className="text-3xl md:w-[45%] md:text-4xl">{title}</h4>
                     <p className="text-lg font-semibold text-gray-400 md:w-[45%] md:text-xl">
                         {description}
@@ -276,7 +276,7 @@ const ProgressBar = ({ progress }: ProgressBarProps) => {
 
 const useMainContentAnimation = () => {
     const ref = useRef(null)
-    const [nearTopViewport, setNearTopViewport] = useState(false)
+    const [nearTopViewport, setNearTopViewport] = useState(true)
     const { scrollYProgress } = useScroll({
         target: ref,
         offset: ['start end', 'start 10%'],
