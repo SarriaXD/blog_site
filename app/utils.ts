@@ -13,6 +13,10 @@ import {
     hero_mobile,
     hero_web,
     hero_backend,
+    flutter_history_2,
+    flutter_dynamic_color_2,
+    flutter_firebase_2,
+    flutter_test_2,
 } from '../public/images'
 import Vibrant from 'node-vibrant'
 
@@ -36,6 +40,10 @@ export const allNeedColorImages = [
     hero_mobile,
     hero_web,
     hero_backend,
+    flutter_history_2,
+    flutter_dynamic_color_2,
+    flutter_firebase_2,
+    flutter_test_2,
 ]
 
 export const getAllNeedColorImageColors = cache(async () => {

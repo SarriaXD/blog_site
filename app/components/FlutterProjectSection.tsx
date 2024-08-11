@@ -13,6 +13,7 @@ import {
 } from 'framer-motion'
 import { useRef, useState } from 'react'
 import { flutterProjectData } from '../data/flutterProjectData.ts'
+import { StaticImageColor } from '../utils.ts'
 
 const useTitleAnimation = () => {
     const ref = useRef(null)
@@ -86,6 +87,7 @@ const ExploreStickyButton = () => {
 interface ImageGalleryProps {
     nearTopViewport: boolean
     currentDataIndex: number
+    colors: StaticImageColor[]
 }
 
 const useImageGalleryAnimation = () => {
@@ -112,8 +114,10 @@ const useImageGalleryAnimation = () => {
 const ImageGallery = ({
     nearTopViewport,
     currentDataIndex,
+    colors,
 }: ImageGalleryProps) => {
     const { ref, enterViewport } = useImageGalleryAnimation()
+    const gradientBackground = `linear-gradient(to bottom, ${colors[currentDataIndex].mainColor}, ${colors[currentDataIndex].secondaryColor}, transparent)`
     return (
         <motion.div
             ref={ref}
@@ -128,6 +132,7 @@ const ImageGallery = ({
                 type: 'spring',
                 duration: 1,
             }}
+            className="relative"
         >
             {flutterProjectData.map(({ images }, index) => {
                 return (
@@ -195,6 +200,12 @@ const ImageGallery = ({
                     </div>
                 )
             })}
+            <div
+                className="absolute inset-x-0 -bottom-[35%] h-3/4 rounded-b-full blur-3xl"
+                style={{
+                    background: gradientBackground,
+                }}
+            />
         </motion.div>
     )
 }
@@ -228,7 +239,7 @@ const Introduction = ({
             <div className="mx-auto mt-8 flex w-[90%] justify-around gap-4 md:w-full">
                 <div className="flex max-w-[90%] flex-col gap-2 md:max-w-[95%] md:flex-row md:gap-4">
                     <h4 className="text-3xl md:w-[45%] md:text-4xl">{title}</h4>
-                    <p className="text-lg font-semibold text-[#86868b] md:w-[45%] md:text-xl">
+                    <p className="text-lg font-semibold text-gray-400 md:w-[45%] md:text-xl">
                         {description}
                     </p>
                 </div>
@@ -283,9 +294,14 @@ const useMainContentAnimation = () => {
 interface MainContentProps {
     progress: MotionValue<number>
     currentDataIndex: number
+    colors: StaticImageColor[]
 }
 
-const MainContent = ({ progress, currentDataIndex }: MainContentProps) => {
+const MainContent = ({
+    progress,
+    currentDataIndex,
+    colors,
+}: MainContentProps) => {
     const { ref, nearTopViewport } = useMainContentAnimation()
     return (
         <div
@@ -297,6 +313,7 @@ const MainContent = ({ progress, currentDataIndex }: MainContentProps) => {
                 <ImageGallery
                     nearTopViewport={nearTopViewport}
                     currentDataIndex={currentDataIndex}
+                    colors={colors}
                 />
                 <Introduction
                     progress={progress}
@@ -325,7 +342,13 @@ const useDataIndex = (progress: MotionValue<number>) => {
     return currentIndex
 }
 
-export const FlutterProjectSection = () => {
+interface FlutterProjectSectionProps {
+    colors: StaticImageColor[]
+}
+
+export const FlutterProjectSection = ({
+    colors,
+}: FlutterProjectSectionProps) => {
     const ref = useRef(null)
     const { scrollYProgress: progress } = useScroll({
         target: ref,
@@ -339,6 +362,7 @@ export const FlutterProjectSection = () => {
                 <MainContent
                     progress={progress}
                     currentDataIndex={currentDataIndex}
+                    colors={colors}
                 />
             </div>
         </section>
