@@ -1,13 +1,13 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 
 interface FPSCounterProps {
     defaultVisible?: boolean
 }
 
-const FPSCounter = ({ defaultVisible = false }: FPSCounterProps) => {
+const useFPS = (defaultVisible: boolean) => {
     const [fps, setFps] = useState<number>(0)
     const [isVisible, setIsVisible] = useState<boolean>(defaultVisible)
     const searchParams = useSearchParams()
@@ -45,12 +45,24 @@ const FPSCounter = ({ defaultVisible = false }: FPSCounterProps) => {
         return () => cancelAnimationFrame(animationId)
     }, [isVisible])
 
-    if (!isVisible) return null
+    return { isVisible, fps }
+}
 
+const RawFPSCounter = ({ defaultVisible = false }: FPSCounterProps) => {
+    const { isVisible, fps } = useFPS(defaultVisible)
+    if (!isVisible) return null
     return (
         <div className="fixed right-0 top-24 z-50 flex justify-end rounded bg-black bg-opacity-50 p-2 text-white">
             FPS: {fps}
         </div>
+    )
+}
+
+const FPSCounter = ({ defaultVisible = false }: FPSCounterProps) => {
+    return (
+        <Suspense>
+            <RawFPSCounter defaultVisible={defaultVisible} />
+        </Suspense>
     )
 }
 
