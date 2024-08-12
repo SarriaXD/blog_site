@@ -55,7 +55,7 @@ const Title = () => {
 const useThrottledInView = (throttleDelay: number = 300) => {
     const ref = useRef(null)
     const inView = useInView(ref, {
-        margin: '-90% 0px -10% 0px',
+        margin: '-65% 0px -35% 0px',
         once: false,
     })
     const [throttledIsInView, setThrottledIsInView] = useState<boolean>(inView)
@@ -90,7 +90,7 @@ const useThrottledInView = (throttleDelay: number = 300) => {
 }
 
 const ExploreStickyButton = () => {
-    const { ref, throttledIsInView: inView } = useThrottledInView(1000)
+    const { ref, throttledIsInView: inView } = useThrottledInView(700)
     const containerTransition = {
         type: 'tween',
         times: [0, 0.45, 0.65, 1],
