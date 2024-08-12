@@ -56,9 +56,9 @@ export const Header = () => {
               left-0 right-0 top-0
               z-50
               flex items-center justify-between
-              gap-4 bg-[#050C0F]
-              bg-opacity-60 px-4 py-2
-              backdrop-blur
+              gap-4 bg-black
+              bg-opacity-[0.75] px-4 py-2
+              backdrop-blur-[20px]
               will-change-transform
               md:px-12
               "
