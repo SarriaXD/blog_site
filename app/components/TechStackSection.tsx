@@ -4,8 +4,8 @@ import { Card, CardBody, Chip } from './Material.tsx'
 import {
     motion,
     useAnimationFrame,
+    useInView,
     useMotionValue,
-    useMotionValueEvent,
     useScroll,
     useSpring,
     useTransform,
@@ -13,7 +13,7 @@ import {
 } from 'framer-motion'
 import Image, { StaticImageData } from 'next/image'
 import { StaticImageColor } from '../utils.ts'
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 import {
     frameworkTechData,
     languageTechData,
@@ -253,25 +253,15 @@ interface IntroductionItemProps {
 }
 
 const useIntroductionsAnimation = (isMobile: boolean, groupNumber: number) => {
-    const [isInView, setIsInView] = useState(false)
     const ref = useRef(null)
-    const { scrollYProgress } = useScroll({
-        target: ref,
-        // offset: ['start end', isMobile ? 'end 90%' : 'start 60%'],
-        offset: ['center end', 'start start'],
-    })
-    useMotionValueEvent(scrollYProgress, 'change', (progress) => {
-        if (progress > 0.0 && !isInView) {
-            setIsInView(true)
-        }
-        if (progress === 0.0 && isInView) {
-            setIsInView(false)
-        }
+    const isInView = useInView(ref, {
+        once: false,
+        margin: '100% 0% -10% 0%',
     })
     const opacity = isInView ? 1 : 0
 
-    let startY = groupNumber % 2 === 0 ? 200 : 400
-    startY = isMobile ? 200 : startY
+    let startY = groupNumber % 2 === 0 ? 100 : 150
+    startY = isMobile ? 100 : startY
     const y = isInView ? 0 : startY
     return { ref, opacity, y }
 }
@@ -294,7 +284,7 @@ const IntroductionItem = ({
             }}
             transition={{
                 type: 'spring',
-                duration: 1.8,
+                duration: 1,
             }}
         >
             <Card color="gray">

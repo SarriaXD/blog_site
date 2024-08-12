@@ -17,18 +17,9 @@ import { StaticImageColor } from '../utils.ts'
 
 const useTitleAnimation = () => {
     const ref = useRef(null)
-    const [enterViewport, setEnterViewport] = useState(false)
-    const { scrollYProgress } = useScroll({
-        target: ref,
-        offset: ['end end', 'end start'],
-    })
-    useMotionValueEvent(scrollYProgress, 'change', (progress) => {
-        if (progress > 0.0 && !enterViewport) {
-            setEnterViewport(true)
-        }
-        if (progress === 0.0 && enterViewport) {
-            setEnterViewport(false)
-        }
+    const enterViewport = useInView(ref, {
+        once: false,
+        margin: '100% 0% -10% 0%',
     })
     return {
         ref,
@@ -197,18 +188,9 @@ interface ImageGalleryProps {
 
 const useImageGalleryAnimation = () => {
     const ref = useRef(null)
-    const [enterViewport, setEnterViewport] = useState(true)
-    const { scrollYProgress } = useScroll({
-        target: ref,
-        offset: ['center end', 'end start'],
-    })
-    useMotionValueEvent(scrollYProgress, 'change', (progress) => {
-        if (progress > 0.0 && !enterViewport) {
-            setEnterViewport(true)
-        }
-        if (progress === 0.0 && enterViewport) {
-            setEnterViewport(false)
-        }
+    const enterViewport = useInView(ref, {
+        once: false,
+        margin: '100% 0% -10% 0%',
     })
     return {
         ref,
@@ -380,18 +362,9 @@ const ProgressBar = ({ progress }: ProgressBarProps) => {
 
 const useMainContentAnimation = () => {
     const ref = useRef(null)
-    const [nearTopViewport, setNearTopViewport] = useState(true)
-    const { scrollYProgress } = useScroll({
-        target: ref,
-        offset: ['start end', 'start 10%'],
-    })
-    useMotionValueEvent(scrollYProgress, 'change', (progress) => {
-        if (progress === 1 && !nearTopViewport) {
-            setNearTopViewport(true)
-        }
-        if (progress < 1 && nearTopViewport) {
-            setNearTopViewport(false)
-        }
+    const nearTopViewport = useInView(ref, {
+        once: false,
+        margin: '100% 0% -90% 0%',
     })
     return {
         ref,
