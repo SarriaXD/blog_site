@@ -34,6 +34,18 @@ const options = [
     },
 ]
 
+const navigateToProcessedImage = (id: string) => {
+    const section = document.getElementById(id)
+    if (section) {
+        const topOffset =
+            section.getBoundingClientRect().top + window.scrollY - 100
+        window.scrollTo({
+            top: topOffset,
+            behavior: 'smooth',
+        })
+    }
+}
+
 const MainContent = () => {
     const [currentFrame, setCurrentFrame] = useState(0)
     const [activeOption, setActiveOption] = useState(0)
@@ -74,6 +86,11 @@ const MainContent = () => {
             setIsLoading(false)
         }
     }, [image, currentFrame, activeOption])
+    useEffect(() => {
+        if (processedImage) {
+            navigateToProcessedImage('processed-image')
+        }
+    }, [processedImage])
     // revoke object url when component unmounts
     useEffect(() => {
         return () => {

@@ -16,6 +16,7 @@ const downloadImage = (image: string) => {
 const ProcessedImage = ({ image }: ProcessedImageProps) => {
     return (
         <div
+            id="processed-image"
             className={`grid w-full gap-8 rounded-3xl bg-[#282828] p-4 md:gap-12 md:p-8 lg:gap-16 lg:p-12`}
         >
             <div className="relative aspect-[1]">
