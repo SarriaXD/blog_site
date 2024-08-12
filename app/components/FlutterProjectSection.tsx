@@ -471,7 +471,7 @@ export const FlutterProjectSection = ({
     })
     const currentDataIndex = useDataIndex(progress)
     return (
-        <section ref={ref} className="mb-24">
+        <section id="my-flutter-project" ref={ref} className="mb-24">
             <div className="mx-auto h-[550vh] bg-[#101010] pt-24 md:max-w-[908px] lg:max-w-[1120px]">
                 <Title />
                 <MainContent
