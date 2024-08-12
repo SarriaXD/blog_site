@@ -1,6 +1,6 @@
 'use client'
 
-import Image from 'next/image'
+import Image, { StaticImageData } from 'next/image'
 import Link from 'next/link'
 import { ArrowRight } from '../../public/icons'
 import {
@@ -188,6 +188,145 @@ const ExploreStickyButton = () => {
     )
 }
 
+interface NormalImageGalleryProps {
+    images: StaticImageData[]
+    visible: boolean
+}
+
+const NormalImageGallery = ({ images, visible }: NormalImageGalleryProps) => {
+    return (
+        <div
+            className="relative z-10 mx-auto mt-8 flex w-[92%] items-center justify-between gap-4 md:mt-0 md:w-full md:gap-6 lg:gap-8"
+            style={{
+                display: visible ? 'flex' : 'none',
+            }}
+        >
+            {images.map((image, index) => (
+                <div key={index}>
+                    <Image
+                        src={image}
+                        alt="flutter project image 1"
+                        priority={true}
+                        sizes={'(max-width: 735px) 33vw, 30vw'}
+                    />
+                </div>
+            ))}
+        </div>
+    )
+}
+
+interface MotionImageGalleryProps {
+    nearTopViewport: boolean
+    leftImage: StaticImageData
+    centerImage: StaticImageData
+    rightImage: StaticImageData
+    visible: boolean
+}
+
+const MotionImageGallery = ({
+    nearTopViewport,
+    leftImage,
+    centerImage,
+    rightImage,
+    visible,
+}: MotionImageGalleryProps) => {
+    const leftImageContainerVariants = {
+        visible: {
+            rotateY: 0,
+            y: 0,
+        },
+        hidden: {
+            rotateY: 30,
+            y: 10,
+        },
+    }
+    const centerImageContainerVariants = {
+        visible: {
+            scale: 1,
+        },
+        hidden: {
+            scale: 2,
+        },
+    }
+    const rightImageContainerVariants = {
+        visible: {
+            rotateY: 0,
+            y: 0,
+        },
+        hidden: {
+            rotateY: -30,
+            y: 10,
+        },
+    }
+    return (
+        <div
+            className="relative z-10 mx-auto mt-8 flex w-[92%] items-center justify-between gap-4 md:mt-0 md:w-full md:gap-6 lg:gap-8"
+            style={{
+                perspective: '450px',
+                display: visible ? 'flex' : 'none',
+            }}
+        >
+            <motion.div
+                className="z-0"
+                initial="hidden"
+                variants={leftImageContainerVariants}
+                animate={nearTopViewport ? 'visible' : 'hidden'}
+                style={{
+                    transformOrigin: '70%',
+                }}
+                transition={{
+                    type: 'spring',
+                    duration: nearTopViewport ? 1 : 0.5,
+                }}
+            >
+                <Image
+                    src={leftImage}
+                    alt="flutter project image 1"
+                    priority={true}
+                    sizes={'(max-width: 735px) 33vw, 30vw'}
+                />
+            </motion.div>
+            <motion.div
+                className="z-10 origin-top"
+                initial="hidden"
+                variants={centerImageContainerVariants}
+                animate={nearTopViewport ? 'visible' : 'hidden'}
+                transition={{
+                    type: 'spring',
+                    duration: 1,
+                }}
+            >
+                <Image
+                    src={centerImage}
+                    alt="flutter project image 1"
+                    priority={true}
+                    sizes={'(max-width: 735px) 33vw, 30vw'}
+                />
+            </motion.div>
+            <motion.div
+                className="z-0"
+                initial="hidden"
+                variants={rightImageContainerVariants}
+                animate={nearTopViewport ? 'visible' : 'hidden'}
+                style={{
+                    transformOrigin: '30%',
+                }}
+                transition={{
+                    type: 'spring',
+                    duration: nearTopViewport ? 1 : 0.5,
+                }}
+            >
+                <Image
+                    src={rightImage}
+                    alt="flutter project image 1"
+                    priority={true}
+                    sizes={'(max-width: 735px) 33vw, 30vw'}
+                />
+            </motion.div>
+        </div>
+    )
+}
+
 interface ImageGalleryProps {
     nearTopViewport: boolean
     currentDataIndex: number
@@ -213,89 +352,43 @@ const ImageGallery = ({
 }: ImageGalleryProps) => {
     const { ref, enterViewport } = useImageGalleryAnimation()
     const gradientBackground = `linear-gradient(to bottom, ${colors[currentDataIndex].secondaryColor} 0%, ${colors[currentDataIndex].mainColor} 40%, transparent)`
+    const containerVariants = {
+        visible: {
+            opacity: 1,
+            y: 0,
+        },
+        hidden: {
+            opacity: 0,
+            y: 100,
+        },
+    }
     return (
         <motion.div
             ref={ref}
-            animate={{
-                opacity: enterViewport ? 1 : 0,
-                y: enterViewport ? 0 : 100,
-            }}
-            style={{
-                perspective: '2000px',
-            }}
+            variants={containerVariants}
+            animate={enterViewport ? 'visible' : 'hidden'}
+            className="relative"
             transition={{
                 type: 'spring',
                 duration: 1,
             }}
-            className="relative"
         >
             {flutterProjectData.map(({ images }, index) => {
-                return (
-                    <div
+                return index === 0 ? (
+                    <MotionImageGallery
                         key={index}
-                        className="relative z-10 mx-auto mt-8 flex w-[92%] items-center justify-between gap-4 md:mt-0 md:w-full md:gap-6 lg:gap-8"
-                        style={{
-                            display:
-                                index === currentDataIndex ? 'flex' : 'none',
-                        }}
-                    >
-                        <motion.div
-                            className="z-0"
-                            animate={{
-                                opacity: nearTopViewport ? 1 : 0,
-                                x: nearTopViewport ? 0 : 100,
-                            }}
-                            transition={{
-                                type: 'spring',
-                                duration: nearTopViewport ? 1 : 0.5,
-                            }}
-                        >
-                            <Image
-                                src={images[0]}
-                                alt="flutter project image 1"
-                                priority={true}
-                                sizes={'(max-width: 735px) 33vw, 30vw'}
-                            />
-                        </motion.div>
-                        <motion.div
-                            className="z-10"
-                            animate={{
-                                scale: nearTopViewport ? 1 : 2,
-                            }}
-                            style={{
-                                transformOrigin: 'top',
-                            }}
-                            transition={{
-                                type: 'spring',
-                                duration: 1,
-                            }}
-                        >
-                            <Image
-                                src={images[1]}
-                                alt="flutter project image 1"
-                                priority={true}
-                                sizes={'(max-width: 735px) 33vw, 30vw'}
-                            />
-                        </motion.div>
-                        <motion.div
-                            className="z-0"
-                            animate={{
-                                opacity: nearTopViewport ? 1 : 0,
-                                x: nearTopViewport ? 0 : -100,
-                            }}
-                            transition={{
-                                type: 'spring',
-                                duration: nearTopViewport ? 1 : 0.5,
-                            }}
-                        >
-                            <Image
-                                src={images[2]}
-                                alt="flutter project image 1"
-                                priority={true}
-                                sizes={'(max-width: 735px) 33vw, 30vw'}
-                            />
-                        </motion.div>
-                    </div>
+                        nearTopViewport={nearTopViewport}
+                        leftImage={images[0]}
+                        centerImage={images[1]}
+                        rightImage={images[2]}
+                        visible={currentDataIndex === index}
+                    />
+                ) : (
+                    <NormalImageGallery
+                        key={index}
+                        images={images}
+                        visible={currentDataIndex === index}
+                    />
                 )
             })}
             <div
