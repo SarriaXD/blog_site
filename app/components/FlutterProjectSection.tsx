@@ -365,7 +365,7 @@ const ImageGallery = ({
     return (
         <motion.div
             ref={ref}
-            className="relative"
+            className="relative z-10"
             variants={containerVariants}
             animate={enterViewport ? 'visible' : 'hidden'}
             transition={{
