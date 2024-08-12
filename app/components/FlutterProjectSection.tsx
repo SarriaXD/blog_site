@@ -1,17 +1,17 @@
 'use client'
 
 import Image from 'next/image'
-import { Button } from './Material.tsx'
 import Link from 'next/link'
 import { ArrowRight } from '../../public/icons'
 import {
     motion,
     MotionValue,
+    useInView,
     useMotionValueEvent,
     useScroll,
     useTransform,
 } from 'framer-motion'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { flutterProjectData } from '../data/flutterProjectData.ts'
 import { StaticImageColor } from '../utils.ts'
 
@@ -61,24 +61,135 @@ const Title = () => {
     )
 }
 
+const useThrottledInView = (throttleDelay: number = 300) => {
+    const ref = useRef(null)
+    const inView = useInView(ref, {
+        margin: '-200px',
+        once: false,
+    })
+    const [throttledIsInView, setThrottledIsInView] = useState<boolean>(inView)
+    const timeoutRef = useRef<NodeJS.Timeout | null>(null)
+    const lastUpdateTimeRef = useRef<number>(Date.now())
+
+    useEffect(() => {
+        const currentTime = Date.now()
+
+        if (currentTime - lastUpdateTimeRef.current >= throttleDelay) {
+            setThrottledIsInView(inView)
+            lastUpdateTimeRef.current = currentTime
+        } else {
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current)
+            }
+
+            timeoutRef.current = setTimeout(() => {
+                setThrottledIsInView(inView)
+                lastUpdateTimeRef.current = Date.now()
+            }, throttleDelay)
+        }
+
+        return () => {
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current)
+            }
+        }
+    }, [inView, throttleDelay])
+
+    return { ref, throttledIsInView }
+}
+
 const ExploreStickyButton = () => {
+    const { ref, throttledIsInView: inView } = useThrottledInView(800)
+    const containerVariants = {
+        visible: {
+            scale: 1,
+            transition: {
+                when: 'beforeChildren',
+                delayChildren: 0.4,
+            },
+        },
+        hidden: {
+            scale: 0,
+            transition: {
+                when: 'afterChildren',
+            },
+        },
+    }
+    const textContainerVariants = {
+        visible: {
+            width: 'auto',
+            transition: {
+                when: 'beforeChildren',
+            },
+        },
+        hidden: {
+            width: 0,
+            transition: {
+                when: 'afterChildren',
+            },
+        },
+    }
+    const textVariants = {
+        visible: {
+            opacity: 1,
+        },
+        hidden: {
+            opacity: 0,
+        },
+    }
+    const iconVariants = {
+        visible: {
+            opacity: 1,
+        },
+        hidden: {
+            opacity: 0,
+        },
+    }
     return (
-        <div className="absolute top-0 z-50 flex h-full w-full items-end justify-center">
-            <div className="sticky bottom-8 mb-24 mt-8  flex items-center">
+        <div
+            ref={ref}
+            className="absolute top-0 z-50 flex h-full w-full items-end justify-center"
+        >
+            <div className="sticky bottom-8 mb-24 mt-8 flex items-center">
+                {inView && (
+                    <div className="absolute flex h-full w-full items-center justify-center">
+                        <motion.div
+                            className="size-8 rounded-full bg-blue-600 md:size-10"
+                            animate={{
+                                scale: [0, 2.5, 1, 0],
+                                opacity: [0, 1, 1, 0, 0],
+                            }}
+                            transition={{
+                                duration: 1.5,
+                            }}
+                        />
+                    </div>
+                )}
                 <Link
                     href={'https://github.com/SarriaXD/manitoba_driving_test'}
                     target="_blank"
                     rel="noopener noreferrer"
                 >
-                    <Button
-                        size="sm"
-                        className="flex items-center gap-4 rounded-full bg-gray-800 bg-opacity-80 pl-0 pr-2 capitalize backdrop-blur"
+                    <motion.div
+                        className="box-content flex items-center rounded-full bg-gray-800 bg-opacity-70 p-2 capitalize backdrop-blur"
+                        variants={containerVariants}
+                        animate={inView ? 'visible' : 'hidden'}
                     >
-                        <span className="ml-5 text-[14px] text-base md:ml-6 md:text-lg">
-                            Explore This Project
-                        </span>
-                        <ArrowRight className="size-8 rounded-full bg-gray-700 p-1 text-white md:size-10 md:p-2" />
-                    </Button>
+                        <motion.div
+                            className="overflow-hidden"
+                            variants={textContainerVariants}
+                        >
+                            <motion.span
+                                className="mx-2 text-nowrap text-[14px] text-base md:mx-4 md:text-lg"
+                                variants={textVariants}
+                            >
+                                Explore This Project
+                            </motion.span>
+                        </motion.div>
+                        <motion.div variants={iconVariants}>
+                            <ArrowRight className="size-8 rounded-full bg-gray-700 p-1 text-white md:size-10 md:p-2" />
+                        </motion.div>
+                    </motion.div>
                 </Link>
             </div>
         </div>
