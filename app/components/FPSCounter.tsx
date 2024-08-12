@@ -48,7 +48,7 @@ const FPSCounter = ({ defaultVisible = false }: FPSCounterProps) => {
     if (!isVisible) return null
 
     return (
-        <div className="fixed right-0 top-24 flex justify-end rounded bg-black bg-opacity-50 p-2 text-white">
+        <div className="fixed right-0 top-24 z-50 flex justify-end rounded bg-black bg-opacity-50 p-2 text-white">
             FPS: {fps}
         </div>
     )
