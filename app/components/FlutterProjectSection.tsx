@@ -64,7 +64,7 @@ const Title = () => {
 const useThrottledInView = (throttleDelay: number = 300) => {
     const ref = useRef(null)
     const inView = useInView(ref, {
-        margin: '-200px',
+        margin: '-85% 0px -15% 0px',
         once: false,
     })
     const [throttledIsInView, setThrottledIsInView] = useState<boolean>(inView)
@@ -99,17 +99,21 @@ const useThrottledInView = (throttleDelay: number = 300) => {
 }
 
 const ExploreStickyButton = () => {
-    const { ref, throttledIsInView: inView } = useThrottledInView(800)
+    const { ref, throttledIsInView: inView } = useThrottledInView(1000)
     const containerVariants = {
         visible: {
             scale: 1,
+            y: ['50%', 0],
+            borderWidth: ['0px', '16px', '0px'],
+            borderColor: '#0171E3',
+            backgroundColor: ['#424242', '#385073', '#424242'],
             transition: {
                 when: 'beforeChildren',
-                delayChildren: 0.4,
             },
         },
         hidden: {
             scale: 0,
+            transformOrigin: 'center',
             transition: {
                 when: 'afterChildren',
             },
@@ -151,20 +155,6 @@ const ExploreStickyButton = () => {
             className="absolute top-0 z-50 flex h-full w-full items-end justify-center"
         >
             <div className="sticky bottom-8 mb-24 mt-8 flex items-center">
-                {inView && (
-                    <div className="absolute flex h-full w-full items-center justify-center">
-                        <motion.div
-                            className="size-8 rounded-full bg-blue-600 md:size-10"
-                            animate={{
-                                scale: [0, 2.5, 1, 0],
-                                opacity: [0, 1, 1, 0, 0],
-                            }}
-                            transition={{
-                                duration: 1.5,
-                            }}
-                        />
-                    </div>
-                )}
                 <Link
                     href={'https://github.com/SarriaXD/manitoba_driving_test'}
                     target="_blank"
@@ -174,6 +164,9 @@ const ExploreStickyButton = () => {
                         className="box-content flex items-center rounded-full bg-gray-800 bg-opacity-70 p-2 capitalize backdrop-blur"
                         variants={containerVariants}
                         animate={inView ? 'visible' : 'hidden'}
+                        style={{
+                            transformOrigin: inView ? 'bottom' : 'center',
+                        }}
                     >
                         <motion.div
                             className="overflow-hidden"
