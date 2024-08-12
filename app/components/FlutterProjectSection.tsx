@@ -230,6 +230,18 @@ const MotionImageGallery = ({
     rightImage,
     visible,
 }: MotionImageGalleryProps) => {
+    const { ref, enterViewport } = useImageGalleryAnimation()
+    const containerVariants = {
+        visible: {
+            opacity: 1,
+            y: 0,
+        },
+        hidden: {
+            opacity: 0,
+            y: 100,
+        },
+    }
+
     const leftImageContainerVariants = {
         visible: {
             rotateY: 0,
@@ -259,8 +271,15 @@ const MotionImageGallery = ({
         },
     }
     return (
-        <div
+        <motion.div
+            ref={ref}
             className="relative z-10 mx-auto mt-8 flex w-[92%] items-center justify-between gap-4 md:mt-0 md:w-full md:gap-6 lg:gap-8"
+            variants={containerVariants}
+            animate={enterViewport ? 'visible' : 'hidden'}
+            transition={{
+                type: 'spring',
+                duration: 1,
+            }}
             style={{
                 perspective: '450px',
                 display: visible ? 'flex' : 'none',
@@ -323,7 +342,7 @@ const MotionImageGallery = ({
                     sizes={'(max-width: 735px) 33vw, 30vw'}
                 />
             </motion.div>
-        </div>
+        </motion.div>
     )
 }
 
@@ -350,23 +369,9 @@ const ImageGallery = ({
     currentDataIndex,
     colors,
 }: ImageGalleryProps) => {
-    const { ref, enterViewport } = useImageGalleryAnimation()
     const gradientBackground = `linear-gradient(to bottom, ${colors[currentDataIndex].secondaryColor} 0%, ${colors[currentDataIndex].mainColor} 40%, transparent)`
-    const containerVariants = {
-        visible: {
-            opacity: 1,
-            y: 0,
-        },
-        hidden: {
-            opacity: 0,
-            y: 100,
-        },
-    }
     return (
         <motion.div
-            ref={ref}
-            variants={containerVariants}
-            animate={enterViewport ? 'visible' : 'hidden'}
             className="relative"
             transition={{
                 type: 'spring',
@@ -392,7 +397,7 @@ const ImageGallery = ({
                 )
             })}
             <div
-                className="absolute inset-x-0 -bottom-[50%] h-3/4 rounded-b-full blur-3xl"
+                className="absolute inset-x-0 -bottom-[50%] h-3/4 rounded-b-full blur-3xl will-change-transform"
                 style={{
                     background: gradientBackground,
                 }}
