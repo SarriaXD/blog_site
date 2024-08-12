@@ -41,7 +41,7 @@ const CarouselItem = ({ color, image, name }: CarouselItemProps) => {
                         className="relative z-10 object-contain"
                     />
                     {/* background shadow */}
-                    <div className="absolute inset-x-[5%] -bottom-[20%] h-[20%] blur-[6px]">
+                    <div className="absolute inset-x-[5%] -bottom-[20%] h-[20%] blur-[6px] will-change-transform">
                         <div
                             className="h-full w-full rounded-full"
                             style={{

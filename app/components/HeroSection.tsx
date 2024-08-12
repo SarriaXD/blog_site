@@ -193,7 +193,7 @@ const GalleryImage = ({ image, color, alt, priority }: GalleryImageProps) => {
                     className="relative z-10"
                 />
                 <div
-                    className="absolute inset-x-0 -bottom-[15%] h-3/4 rounded-b-full blur-3xl"
+                    className="absolute inset-x-0 -bottom-[15%] h-3/4 rounded-b-full blur-3xl will-change-transform"
                     style={{
                         background: gradientBackground,
                     }}

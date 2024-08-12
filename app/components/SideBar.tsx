@@ -140,7 +140,7 @@ export function SideBar({ open, onClose }: SideBarProps) {
                 onClose={onClose}
                 size={720}
                 overlay={false}
-                className="bg-gray-900 bg-opacity-80 backdrop-blur-md"
+                className="bg-gray-900 bg-opacity-80 backdrop-blur-md will-change-transform"
             >
                 <div className="flex items-center justify-between p-4">
                     <Link href="/">

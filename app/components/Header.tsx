@@ -59,6 +59,7 @@ export const Header = () => {
               gap-4 bg-[#050C0F]
               bg-opacity-60 px-4 py-2
               backdrop-blur
+              will-change-transform
               md:px-12
               "
                 >
