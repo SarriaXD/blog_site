@@ -5,10 +5,10 @@ import {
     List,
     ListItem,
     ListItemSuffix,
-} from './Material.tsx'
+} from '@components/Material.tsx'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { Close, Dog, Email, Github, Linkedin } from '../../public/icons'
+import { Close, Dog, Email, Github, Linkedin } from '@public/icons'
 
 interface SideBarProps {
     open: boolean

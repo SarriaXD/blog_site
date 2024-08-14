@@ -11,7 +11,7 @@ import {
     flutter_test_1,
     flutter_test_2,
     flutter_test_3,
-} from '../../../public/images'
+} from '@public/images'
 
 export const flutterProjectData = [
     {

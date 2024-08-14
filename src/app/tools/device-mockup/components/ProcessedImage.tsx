@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import React from 'react'
-import { Button } from '../../../../components/Material.tsx'
+import { Button } from '@components/Material.tsx'
 
 interface ProcessedImageProps {
     image: string

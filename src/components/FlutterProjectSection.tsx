@@ -2,7 +2,7 @@
 
 import Image, { StaticImageData } from 'next/image'
 import Link from 'next/link'
-import { ArrowRight } from '../../public/icons'
+import { ArrowRight } from '@public/icons'
 import {
     motion,
     MotionValue,
@@ -12,8 +12,8 @@ import {
     useTransform,
 } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
-import { flutterProjectData } from '../app/data/flutterProjectData.ts'
-import { StaticImageColor } from '../utils/utils.ts'
+import { flutterProjectData } from '../data/flutterProjectData.ts'
+import { StaticImageColor } from '@utils/utils.ts'
 
 const useTitleAnimation = () => {
     const ref = useRef(null)

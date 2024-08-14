@@ -17,7 +17,7 @@ import {
     flutter_dynamic_color_2,
     flutter_firebase_2,
     flutter_test_2,
-} from '../../public/images'
+} from '@public/images'
 import Vibrant from 'node-vibrant'
 
 export interface StaticImageColor {

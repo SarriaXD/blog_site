@@ -7,6 +7,13 @@ module.exports = {
     'plugin:react-hooks/recommended',
     'plugin:@next/next/recommended'
   ],
+  settings: {
+    'import/resolver': {
+      typescript: {
+        project: '.',
+      },
+    },
+  },
   ignorePatterns: ['dist', '.eslintrc.cjs'],
   parser: '@typescript-eslint/parser',
   plugins: ['react-refresh'],

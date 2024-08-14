@@ -3,8 +3,8 @@
 import ImageUploader from './components/ImageLoader.tsx'
 import { FrameGallery } from './components/FrameGallery.tsx'
 import ImageLoaderOptions from './components/ImageLoaderOptions.tsx'
-import { Alert, Button } from '../../../components/Material.tsx'
-import { iphone_frame, pixel_frame } from '../../../../public/images'
+import { Alert, Button } from '@components/Material.tsx'
+import { iphone_frame, pixel_frame } from '@public/images'
 import { useCallback, useEffect, useState } from 'react'
 import ProcessedImage from './components/ProcessedImage.tsx'
 

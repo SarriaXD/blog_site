@@ -1,10 +1,10 @@
 'use client'
 
-import { Button, IconButton, Tooltip } from './Material.tsx'
+import { Button, IconButton, Tooltip } from '@components/Material.tsx'
 import Link from 'next/link'
-import { SideBar } from './SideBar.tsx'
+import { SideBar } from '@components/SideBar.tsx'
 import { useState } from 'react'
-import { BurgerMenu, Dog, Email, Github, Linkedin } from '../../public/icons'
+import { BurgerMenu, Dog, Email, Github, Linkedin } from '@public/icons'
 
 const internalLinks = [
     { href: '/articles', text: 'Articles', newTab: false },
