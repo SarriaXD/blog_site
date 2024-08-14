@@ -12,14 +12,14 @@ import {
     wrap,
 } from 'framer-motion'
 import Image, { StaticImageData } from 'next/image'
-import { StaticImageColor } from '../utils.ts'
+import { StaticImageColor } from '../utils/utils.ts'
 import { useRef } from 'react'
 import {
     frameworkTechData,
     languageTechData,
     techIntroductions,
-} from '../data/TechStackData.ts'
-import { useMediaQuery } from '../hooks.ts'
+} from '../app/data/TechStackData.ts'
+import { useMediaQuery } from '../hooks/hooks.ts'
 
 interface CarouselItemProps {
     color: StaticImageColor

@@ -1,8 +1,8 @@
 import React from 'react'
 import './global.css'
-import { Header } from './components/Header.tsx'
-import { Footer } from './components/Footer.tsx'
-import FPSCounter from './components/FPSCounter.tsx'
+import { Header } from '../components/Header.tsx'
+import { Footer } from '../components/Footer.tsx'
+import FPSCounter from '../components/FPSCounter.tsx'
 
 export default function RootLayout({
     children,

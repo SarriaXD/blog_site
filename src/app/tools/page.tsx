@@ -1,6 +1,6 @@
-import { Card, CardBody } from '../components/Material.tsx'
 import Link from 'next/link'
-import { ArrowRight } from '../../public/icons'
+import { ArrowRight } from '../../../public/icons'
+import { Card, CardBody } from '@material-tailwind/react'
 
 const toolsData = [
     {

@@ -3,8 +3,8 @@
 import { motion, useScroll, useSpring, useTransform } from 'framer-motion'
 import { useRef } from 'react'
 import Image, { StaticImageData } from 'next/image'
-import { StaticImageColor } from '../utils.ts'
-import { useMediaQuery } from '../hooks.ts'
+import { StaticImageColor } from '../utils/utils.ts'
+import { useMediaQuery } from '../hooks/hooks.ts'
 import { hero_backend, hero_mobile, hero_web } from '../../public/images'
 
 const Introduction = () => {

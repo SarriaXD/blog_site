@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 
-import { Spinner } from '../components/Material.tsx'
+import { Spinner } from '../../components/Material.tsx'
 import { useEffect } from 'react'
 
 export default function Page() {
