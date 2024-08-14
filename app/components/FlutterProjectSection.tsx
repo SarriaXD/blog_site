@@ -205,8 +205,7 @@ const NormalImageGallery = ({ images, visible }: NormalImageGalleryProps) => {
                 <div key={index}>
                     <Image
                         src={image}
-                        alt="flutter project image 1"
-                        priority={true}
+                        alt="flutter project image"
                         sizes={'(max-width: 735px) 33vw, 30vw'}
                     />
                 </div>
@@ -281,8 +280,7 @@ const MotionImageGallery = ({
             >
                 <Image
                     src={leftImage}
-                    alt="flutter project image 1"
-                    priority={true}
+                    alt="flutter project image"
                     sizes={'(max-width: 735px) 33vw, 30vw'}
                 />
             </motion.div>
@@ -298,8 +296,7 @@ const MotionImageGallery = ({
             >
                 <Image
                     src={centerImage}
-                    alt="flutter project image 1"
-                    priority={true}
+                    alt="flutter project image"
                     sizes={'(max-width: 735px) 33vw, 30vw'}
                 />
             </motion.div>
@@ -318,8 +315,7 @@ const MotionImageGallery = ({
             >
                 <Image
                     src={rightImage}
-                    alt="flutter project image 1"
-                    priority={true}
+                    alt="flutter project image"
                     sizes={'(max-width: 735px) 33vw, 30vw'}
                 />
             </motion.div>

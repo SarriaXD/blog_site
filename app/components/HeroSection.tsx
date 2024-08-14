@@ -12,7 +12,7 @@ const Introduction = () => {
         <div className="mx-auto flex max-w-[460px] flex-col gap-4 py-8 text-center md:w-[519px] md:max-w-full md:gap-8 md:py-12 lg:w-[980px] lg:gap-12 lg:py-16">
             <motion.div
                 initial={{
-                    opacity: 0,
+                    opacity: 0.01,
                     y: 50,
                 }}
                 animate={{
@@ -39,7 +39,7 @@ const Introduction = () => {
             </motion.div>
             <motion.div
                 initial={{
-                    opacity: 0,
+                    opacity: 0.01,
                     y: 50,
                 }}
                 animate={{
@@ -118,7 +118,7 @@ const ImageGallery = ({
     return (
         <motion.div
             initial={{
-                opacity: 0,
+                opacity: 0.01,
                 y: 50,
             }}
             animate={{
