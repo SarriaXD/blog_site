@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react'
 import Image from 'next/image'
-import { Add, Close } from '../../../../public/icons'
+import { Add, Close } from '../../../../../public/icons'
 
 interface ImageWithCloseButtonProps {
     image: string
