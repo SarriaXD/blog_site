@@ -1,7 +1,6 @@
 import React from 'react'
 import '@styles/global.css'
 import { Header } from '@components/Header.tsx'
-import { Footer } from '@components/Footer.tsx'
 import FPSCounter from '@components/FPSCounter.tsx'
 
 export default function RootLayout({
@@ -20,15 +19,14 @@ export default function RootLayout({
                 />
                 <meta
                     name="description"
-                    content="I'm a mobile and full-stack engineer specializing in app and web development. Explore my portfolio, projects, blog, and contact information on my personal website."
+                    content="A chatbot that uses AI to communicate with users."
                 />
-                <title>Hi, I'm Qi!</title>
+                <title>AI Chat</title>
             </head>
             <body className="min-h-[100vh] w-full">
                 <FPSCounter />
                 <Header />
                 {children}
-                <Footer />
             </body>
         </html>
     )

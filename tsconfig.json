@@ -6,7 +6,8 @@
       "@utils/*": ["src/utils/*"],
       "@hooks/*": ["src/hooks/*"],
       "@data/*": ["src/data/*"],
-      "@public/*": ["public/*"]
+      "@public/*": ["public/*"],
+      "@styles/*": ["src/styles/*"],
     },
     "target": "ES2020",
     "useDefineForClassFields": true,

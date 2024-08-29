@@ -8,6 +8,11 @@ const toolsData = [
         description: 'add frames to your screenshots',
         href: '/tools/device-mockup',
     },
+    {
+        title: 'ai chat',
+        description: 'talk to an ai',
+        href: '/tools/ai-chat',
+    },
 ]
 
 interface GridItemProps {

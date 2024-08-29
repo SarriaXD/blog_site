@@ -6,5 +6,16 @@ import Github from './Github.svg'
 import Close from './Close.svg'
 import ArrowRight from './ArrowRight.svg'
 import Add from './Add.svg'
+import Copy from './Copy.svg'
 
-export { BurgerMenu, Linkedin, Dog, Email, Github, Close, ArrowRight, Add }
+export {
+    BurgerMenu,
+    Linkedin,
+    Dog,
+    Email,
+    Github,
+    Close,
+    ArrowRight,
+    Add,
+    Copy,
+}
