@@ -7,6 +7,7 @@ import Close from './Close.svg'
 import ArrowRight from './ArrowRight.svg'
 import Add from './Add.svg'
 import Copy from './Copy.svg'
+import Check from './Check.svg'
 
 export {
     BurgerMenu,
@@ -18,4 +19,5 @@ export {
     ArrowRight,
     Add,
     Copy,
+    Check,
 }

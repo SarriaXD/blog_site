@@ -9,7 +9,7 @@ type Props = {
 
 const CodeBlock = ({ code, language }: Props) => {
     return (
-        <div className="relative">
+        <div className="flex items-start justify-between">
             <SyntaxHighlighter
                 children={code}
                 language={language}

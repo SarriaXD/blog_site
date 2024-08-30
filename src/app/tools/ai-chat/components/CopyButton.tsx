@@ -2,21 +2,31 @@
 
 import * as React from 'react'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
-import { Copy } from '@public/icons'
+import { Check, Copy } from '@public/icons'
+import { useEffect, useState } from 'react'
 
 type Props = {
     code: string
 }
 
 const CopyButton = ({ code }: Props) => {
-    const first2Line = code.split('\n').slice(0, 2)
+    const [copiedCode, setCopiedCode] = useState(false)
+    useEffect(() => {
+        if (copiedCode) {
+            const timeout = setTimeout(() => {
+                setCopiedCode(false)
+            }, 3000)
+            return () => clearTimeout(timeout)
+        }
+    }, [copiedCode])
     return (
-        <button className="absolute right-4 top-2 cursor-pointer">
-            <CopyToClipboard
-                text={code}
-                onCopy={() => alert(`Copied! ${first2Line}....`)}
-            >
-                <Copy className={'size-5'} />
+        <button className="mt-2">
+            <CopyToClipboard text={code} onCopy={() => setCopiedCode(true)}>
+                {copiedCode ? (
+                    <Check className="size-5 rounded border border-green-500 text-green-500" />
+                ) : (
+                    <Copy className="size-5" />
+                )}
             </CopyToClipboard>
         </button>
     )
