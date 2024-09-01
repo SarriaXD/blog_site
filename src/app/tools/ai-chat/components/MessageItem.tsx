@@ -1,15 +1,16 @@
 import MarkdownBlock from './MarkdownBlock.tsx'
+import { Message } from 'ai'
 
 interface MessageProps {
-    role: 'user' | 'assistant' | 'system'
-    content: string
+    message: Message
 }
 
-const MessageItem = ({ role, content }: MessageProps) => {
+const MessageItem = ({ message }: MessageProps) => {
+    const { role, content } = message
     if (role === 'user') {
         return (
             <div className="flex justify-end">
-                <div className="rounded-full bg-[#2F2F2F] px-4 py-2">
+                <div className="rounded-[20px] bg-[#2F2F2F] px-4 py-2">
                     <p className="text-base text-white">{content}</p>
                 </div>
             </div>
@@ -22,11 +23,12 @@ const MessageItem = ({ role, content }: MessageProps) => {
                 </div>
                 <div className="flex-1">
                     <MarkdownBlock markdown={content} />
+                    {/*<p className="text-base text-white">{content}</p>*/}
                 </div>
             </div>
         )
     } else {
-        return <p className="text-center text-lg text-white">{content}</p>
+        return <></>
     }
 }
 

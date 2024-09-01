@@ -1,5 +1,5 @@
-import { Message } from './ChatContent.tsx'
 import MessageItem from './MessageItem.tsx'
+import { Message } from 'ai'
 
 interface MessageListProps {
     messages: Message[]
@@ -8,8 +8,8 @@ interface MessageListProps {
 const MessageList = ({ messages }: MessageListProps) => {
     return (
         <div className="flex flex-col gap-4">
-            {messages.map((message, index) => (
-                <MessageItem key={index} {...message} />
+            {messages.map((message) => (
+                <MessageItem key={message.id} message={message} />
             ))}
         </div>
     )

@@ -1,7 +1,7 @@
 import React from 'react'
 import '@styles/global.css'
-import { Header } from '@components/Header.tsx'
-import FPSCounter from '@components/FPSCounter.tsx'
+// import { Header } from '@components/Header.tsx'
+// import FPSCounter from '@components/FPSCounter.tsx'
 
 export default function RootLayout({
     children,
@@ -24,8 +24,8 @@ export default function RootLayout({
                 <title>AI Chat</title>
             </head>
             <body className="min-h-[100vh] w-full">
-                <FPSCounter />
-                <Header />
+                {/*<FPSCounter />*/}
+                {/*<Header />*/}
                 {children}
             </body>
         </html>

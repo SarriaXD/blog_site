@@ -8,6 +8,8 @@ import ArrowRight from './ArrowRight.svg'
 import Add from './Add.svg'
 import Copy from './Copy.svg'
 import Check from './Check.svg'
+import Record from './Record.svg'
+import ArrowUp from './ArrowUp.svg'
 
 export {
     BurgerMenu,
@@ -20,4 +22,6 @@ export {
     Add,
     Copy,
     Check,
+    Record,
+    ArrowUp,
 }
