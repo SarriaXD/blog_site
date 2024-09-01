@@ -2,6 +2,7 @@ import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import CodeBlock from './CodeBlock.tsx'
 import 'github-markdown-css/github-markdown.css'
+import { memo } from 'react'
 
 interface MarkdownBlockProps {
     markdown: string
@@ -9,8 +10,8 @@ interface MarkdownBlockProps {
 
 const MarkdownBlock = ({ markdown }: MarkdownBlockProps) => {
     return (
-        <Markdown
-            className="markdown-body p-4 md:p-8 xl:p-12"
+        <MessageMarkdownMemoized
+            className="markdown-body !bg-transparent py-2 !font-semibold"
             children={markdown}
             remarkPlugins={[remarkGfm]}
             components={{
@@ -32,5 +33,12 @@ const MarkdownBlock = ({ markdown }: MarkdownBlockProps) => {
         />
     )
 }
+
+export const MessageMarkdownMemoized = memo(
+    Markdown,
+    (prevProps, nextProps) =>
+        prevProps.children === nextProps.children &&
+        prevProps.className === nextProps.className
+)
 
 export default MarkdownBlock
