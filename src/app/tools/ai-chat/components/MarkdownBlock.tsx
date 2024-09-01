@@ -1,5 +1,6 @@
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import remarkMath from 'remark-math'
 import CodeBlock from './CodeBlock.tsx'
 import 'github-markdown-css/github-markdown.css'
 import { memo } from 'react'
@@ -13,7 +14,7 @@ const MarkdownBlock = ({ markdown }: MarkdownBlockProps) => {
         <MessageMarkdownMemoized
             className="markdown-body !bg-transparent py-2 !font-semibold"
             children={markdown}
-            remarkPlugins={[remarkGfm]}
+            remarkPlugins={[remarkGfm, remarkMath]}
             components={{
                 code(props) {
                     const { children, className, ...rest } = props
