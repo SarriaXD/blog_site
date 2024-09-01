@@ -171,12 +171,10 @@ const MainContent = () => {
 
 export default function Page() {
     return (
-        <main>
-            <section className="bg-black py-32">
-                <div className="mx-auto min-h-[100vh] bg-[#1A1A1A] md:max-w-[908px] md:rounded-3xl lg:max-w-[1120px]">
-                    <MainContent />
-                </div>
-            </section>
-        </main>
+        <section className="bg-black py-32">
+            <div className="mx-auto min-h-[100vh] bg-[#1A1A1A] md:max-w-[908px] md:rounded-3xl lg:max-w-[1120px]">
+                <MainContent />
+            </div>
+        </section>
     )
 }

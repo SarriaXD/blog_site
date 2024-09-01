@@ -10,10 +10,10 @@ export default async function Page() {
         ({ images }) => colorsMap.get(images[1].src)!
     )
     return (
-        <main>
+        <>
             <HeroSection colorsMap={colorsMap} />
             <TechStackSection colorsMap={colorsMap} />
             <FlutterProjectSection colors={flutterProjectColors} />
-        </main>
+        </>
     )
 }

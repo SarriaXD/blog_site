@@ -47,13 +47,11 @@ const NotFoundText = () => {
 
 export default function Page() {
     return (
-        <main>
-            <div className="flex min-h-[100vh] items-center bg-black px-8 lg:px-16">
-                <div className="flex flex-col items-center gap-8 md:flex-row lg:gap-32">
-                    <NotFoundImage />
-                    <NotFoundText />
-                </div>
+        <div className="flex min-h-[100vh] items-center bg-black px-8 lg:px-16">
+            <div className="flex flex-col items-center gap-8 md:flex-row lg:gap-32">
+                <NotFoundImage />
+                <NotFoundText />
             </div>
-        </main>
+        </div>
     )
 }

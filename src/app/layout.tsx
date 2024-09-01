@@ -1,8 +1,8 @@
 import React from 'react'
 import '@styles/global.css'
+import FPSCounter from '@components/FPSCounter.tsx'
 import { Header } from '@components/Header.tsx'
 import { Footer } from '@components/Footer.tsx'
-import FPSCounter from '@components/FPSCounter.tsx'
 
 export default function RootLayout({
     children,
@@ -27,7 +27,7 @@ export default function RootLayout({
             <body className="min-h-[100vh] w-full">
                 <FPSCounter />
                 <Header />
-                {children}
+                <main>{children}</main>
                 <Footer />
             </body>
         </html>

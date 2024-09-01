@@ -14,13 +14,9 @@ export default function Page() {
     })
 
     return (
-        <main>
-            <div className="flex min-h-[100vh] flex-col items-center justify-center gap-16 bg-black">
-                <Spinner className="size-24" />
-                <h1 className="text-center text-4xl">
-                    Redirecting to Linkedin
-                </h1>
-            </div>
-        </main>
+        <div className="flex min-h-[100vh] flex-col items-center justify-center gap-16 bg-black">
+            <Spinner className="size-24" />
+            <h1 className="text-center text-4xl">Redirecting to Linkedin</h1>
+        </div>
     )
 }
