@@ -1,5 +1,5 @@
 import SyntaxHighlighter from 'react-syntax-highlighter'
-import CopyButton from './CopyButton'
+import CopyButton from './CopyButton.tsx'
 import { vs2015 } from 'react-syntax-highlighter/dist/cjs/styles/hljs'
 
 type Props = {

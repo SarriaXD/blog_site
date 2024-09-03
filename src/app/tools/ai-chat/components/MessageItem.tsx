@@ -1,11 +1,15 @@
 import MarkdownBlock from './MarkdownBlock.tsx'
 import { Message } from 'ai'
+import ThreeDotsLoading from './ThreeDotsLoading.tsx'
+import { Dog } from '@public/icons'
 
 interface MessageProps {
     message: Message
+    isLoading: boolean
+    isLast: boolean
 }
 
-const MessageItem = ({ message }: MessageProps) => {
+const MessageItem = ({ message, isLoading, isLast }: MessageProps) => {
     const { role, content } = message
     if (role === 'user') {
         return (
@@ -18,12 +22,12 @@ const MessageItem = ({ message }: MessageProps) => {
     } else if (role === 'assistant') {
         return (
             <div className="flex gap-4">
-                <div className="flex size-10 items-center justify-center self-start rounded-full bg-gray-300 text-black">
-                    Bot
+                <div className="self-start rounded-full bg-gray-300 p-2 text-black">
+                    <Dog className="size-6" />
                 </div>
                 <div className="flex-1">
                     <MarkdownBlock markdown={content} />
-                    {/*<p className="text-base text-white">{content}</p>*/}
+                    {isLoading && isLast && ThreeDotsLoading()}
                 </div>
             </div>
         )

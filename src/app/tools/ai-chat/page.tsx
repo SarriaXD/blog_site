@@ -2,8 +2,8 @@ import ChatContent from './components/ChatContent.tsx'
 
 export default function Page() {
     return (
-        <section className="bg-[#02040A] pb-32 pt-24">
+        <div className="min-h-[100vh] w-full bg-[#0D1116]">
             <ChatContent />
-        </section>
+        </div>
     )
 }

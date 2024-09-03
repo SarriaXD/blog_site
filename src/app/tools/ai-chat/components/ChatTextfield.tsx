@@ -10,17 +10,7 @@ interface ChatTextFieldProps {
     onStop: (e: FormEvent) => void
 }
 
-const LoadingThreeDots = () => {
-    return (
-        <div className="mx-auto flex space-x-1">
-            <span className="h-2 w-2 rounded-full bg-white" />
-            <span className="h-2 w-2 rounded-full bg-white" />
-            <span className="h-2 w-2 rounded-full bg-white" />
-        </div>
-    )
-}
-
-const ChatTextField = ({
+const ChatTextfield = ({
     value,
     isLoading,
     onMessageChange,
@@ -29,8 +19,6 @@ const ChatTextField = ({
 }: ChatTextFieldProps) => {
     return (
         <div>
-            {isLoading && <LoadingThreeDots />}
-            <LoadingThreeDots />
             <form
                 className="flex items-center justify-between rounded-full border border-white bg-[#0D1116] p-2"
                 onSubmit={onSubmit}
@@ -68,4 +56,4 @@ const ChatTextField = ({
     )
 }
 
-export default ChatTextField
+export default ChatTextfield
