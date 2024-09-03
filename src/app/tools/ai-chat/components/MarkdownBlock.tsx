@@ -12,7 +12,7 @@ interface MarkdownBlockProps {
 const MarkdownBlock = ({ markdown }: MarkdownBlockProps) => {
     return (
         <MessageMarkdownMemoized
-            className="markdown-body !bg-transparent py-2 !font-semibold"
+            className="markdown-body !bg-transparent py-2 !font-semibold !text-white"
             children={markdown}
             remarkPlugins={[remarkGfm, remarkMath]}
             components={{

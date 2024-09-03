@@ -21,7 +21,7 @@ const MessageItem = ({ message, isLoading, isLast }: MessageProps) => {
         )
     } else if (role === 'assistant') {
         return (
-            <div className="flex gap-4">
+            <div className="flex flex-col gap-4 md:flex-row">
                 <div className="self-start rounded-full bg-gray-300 p-2 text-black">
                     <Dog className="size-6" />
                 </div>

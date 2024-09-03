@@ -18,7 +18,7 @@ const ChatPanel = ({
 }: ChatPanelProps) => {
     return (
         <div className="fixed inset-x-0 bottom-0 w-full">
-            <div className="mx-auto max-w-[800px] sm:px-4">
+            <div className="mx-auto max-w-[800px] px-4">
                 <ChatTextfield
                     value={value}
                     isLoading={isLoading}
