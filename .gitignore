@@ -21,3 +21,5 @@ out
 *.njsproj
 *.sln
 *.sw?
+
+.env.local

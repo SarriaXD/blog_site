@@ -29,6 +29,9 @@ importers:
       node-vibrant:
         specifier: 3.2.1-alpha.1
         version: 3.2.1-alpha.1
+      ollama:
+        specifier: ^0.5.8
+        version: 0.5.8
       ollama-ai-provider:
         specifier: ^0.13.0
         version: 0.13.0(zod@3.23.8)
@@ -56,6 +59,9 @@ importers:
       sharp:
         specifier: ^0.33.4
         version: 0.33.4
+      zod:
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@next/eslint-plugin-next':
         specifier: ^14.2.5
@@ -2596,6 +2602,9 @@ packages:
       zod:
         optional: true
 
+  ollama@0.5.8:
+    resolution: {integrity: sha512-frBGdfSV34i7JybLZUeyCYDx0CMyDiG4On8xOK+cNRWM04HImhoWgIMpF4p7vTkQumadbSxOteR7SZyKqNmOXg==}
+
   omggif@1.0.10:
     resolution: {integrity: sha512-LMJTtvgc/nugXj0Vcrrs68Mn2D1r0zf630VNtqtpI1FEO7e+O9FP4gqs9AcnBaSEeoHIPm28u6qgPR0oyEpGSw==}
 
@@ -3277,6 +3286,9 @@ packages:
     peerDependenciesMeta:
       typescript:
         optional: true
+
+  whatwg-fetch@3.6.20:
+    resolution: {integrity: sha512-EqhiFU6daOA8kpjOWTL0olhVOF3i7OrFzSYiGsEMB8GcXS+RrzauAERX65xMeNWVqxA6HXH2m69Z9LaKKdisfg==}
 
   which@2.0.2:
     resolution: {integrity: sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA==}
@@ -6359,6 +6371,10 @@ snapshots:
     optionalDependencies:
       zod: 3.23.8
 
+  ollama@0.5.8:
+    dependencies:
+      whatwg-fetch: 3.6.20
+
   omggif@1.0.10: {}
 
   once@1.4.0:
@@ -7097,6 +7113,8 @@ snapshots:
       '@vue/shared': 3.4.38
     optionalDependencies:
       typescript: 5.5.3
+
+  whatwg-fetch@3.6.20: {}
 
   which@2.0.2:
     dependencies:

@@ -25,6 +25,7 @@ const ChatContent = () => {
         setInput,
         stop,
     } = useChat({
+        maxToolRoundtrips: 5,
         streamProtocol: 'text',
     })
     const { scrollRef } = useChatScroll(messages, isLoading)
