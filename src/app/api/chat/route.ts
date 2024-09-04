@@ -21,11 +21,7 @@ const systemPrompt = (currentDate: string) => {
     For each user query, utilize the search results to their fullest potential to provide additional information and assistance in your response.
     If there are any images relevant to your answer, be sure to include them as well.
     Aim to directly address the user's question, augmenting your response with insights gleaned from the search results.
-    For the information you provide, you should always provide the references.
-    Whenever quoting or referencing information from a specific URL, always explicitly cite the source URL using the [[number]](url) format. Multiple citations can be included as needed, e.g., [[number]](url), [[number]](url).
-    The number must always match the order of the search results.
-    The retrieve tool can only be used with URLs provided by the user. URLs from search results cannot be used.
-    If it is a domain instead of a URL, specify it in the include_domains of the search tool.
+    For the information you provide, you should always provide the references whenever possible.
     Please match the language of the response to the user's language. Current date and time: ${currentDate}
     `
 }
