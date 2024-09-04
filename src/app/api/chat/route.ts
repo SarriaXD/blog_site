@@ -42,7 +42,7 @@ export async function POST(request: Request) {
                         .describe('The query to search for, string type'),
                 }),
                 execute: async ({ query }) => {
-                    return await tavilySearch(query)
+                    return tavilySearch(query).catch(() => null)
                 },
             }),
             retrieve: tool({
@@ -53,7 +53,7 @@ export async function POST(request: Request) {
                         .describe('The url to retrieve, string type'),
                 }),
                 execute: async ({ url }) => {
-                    return await retrieveSearch(url)
+                    return await retrieveSearch(url).catch(() => null)
                 },
             }),
         },
