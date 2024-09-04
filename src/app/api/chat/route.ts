@@ -7,7 +7,7 @@ import {
 } from 'ai'
 import { createOllama } from 'ollama-ai-provider'
 import { z } from 'zod'
-import tavilySearch from '@utils/search-utils.ts'
+import { retrieveSearch, tavilySearch } from '@utils/search-utils.ts'
 
 const ollama = createOllama({
     baseURL: 'https://api.sarria.ca/ai-chat/api',
@@ -21,6 +21,7 @@ const systemPrompt = (currentDate: string) => {
     For each user query, utilize the search results to their fullest potential to provide additional information and assistance in your response.
     If there are any images relevant to your answer, be sure to include them as well.
     Aim to directly address the user's question, augmenting your response with insights gleaned from the search results.
+    For the information you provide, you should always provide the references.
     Whenever quoting or referencing information from a specific URL, always explicitly cite the source URL using the [[number]](url) format. Multiple citations can be included as needed, e.g., [[number]](url), [[number]](url).
     The number must always match the order of the search results.
     The retrieve tool can only be used with URLs provided by the user. URLs from search results cannot be used.
@@ -46,6 +47,17 @@ export async function POST(request: Request) {
                 }),
                 execute: async ({ query }) => {
                     return await tavilySearch(query)
+                },
+            }),
+            retrieve: tool({
+                description: 'Retrieve content from the web',
+                parameters: z.object({
+                    url: z
+                        .string()
+                        .describe('The url to retrieve, string type'),
+                }),
+                execute: async ({ url }) => {
+                    return await retrieveSearch(url)
                 },
             }),
         },
