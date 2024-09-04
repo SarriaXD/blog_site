@@ -52,7 +52,7 @@ async function tavilySearch(
         body: JSON.stringify({
             api_key: apiKey,
             query,
-            max_results: Math.max(maxResults, 5),
+            max_results: maxResults,
             search_depth: searchDepth,
             include_images: true,
             include_image_descriptions: includeImageDescriptions,

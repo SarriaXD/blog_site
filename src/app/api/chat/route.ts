@@ -25,7 +25,7 @@ const systemPrompt = (currentDate: string) => {
     The number must always match the order of the search results.
     The retrieve tool can only be used with URLs provided by the user. URLs from search results cannot be used.
     If it is a domain instead of a URL, specify it in the include_domains of the search tool.
-    Please match the language of the response to the user's language. Current date and time: ${currentDate}.
+    Please match the language of the response to the user's language. Current date and time: ${currentDate}
     `
 }
 
@@ -69,7 +69,7 @@ export async function POST(request: Request) {
             content: toolResults,
         })
         const secondResult = await streamText({
-            model: ollama('llama3-groq-tool-use'),
+            model: ollama('sam4096/qwen2tools'),
             system: systemPrompt(new Date().toLocaleString()),
             messages: convertedMessages,
         })
