@@ -1,3 +1,5 @@
+import * as process from 'node:process'
+
 interface WeatherData {
     city: string
     value: number
@@ -8,8 +10,8 @@ interface WeatherData {
     }[]
 }
 
-const API_KEY = '370611275e074d09a1c123018240509'
-const API_BASE_URL = 'http://api.weatherapi.com/v1'
+const API_KEY = process.env.WEATHER_API_KEY
+const API_BASE_URL = 'https://api.weatherapi.com/v1'
 
 async function getWeatherData(city: string): Promise<WeatherData> {
     try {
@@ -33,7 +35,7 @@ async function getWeatherData(city: string): Promise<WeatherData> {
             'Saturday',
         ]
 
-        const weatherData: WeatherData = {
+        return {
             city: data.location.name,
             value: Math.round(data.current.temp_c),
             unit: 'celsius',
@@ -42,11 +44,9 @@ async function getWeatherData(city: string): Promise<WeatherData> {
                 value: Math.round(day.day.avgtemp_c),
             })),
         }
-
-        return weatherData
     } catch (error) {
         return {
-            city: 'Unknown',
+            city: 'notfound',
             value: 0,
             unit: 'celsius',
             weeklyForecast: [],

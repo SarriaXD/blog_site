@@ -26,7 +26,6 @@ const ChatContent = () => {
         stop,
     } = useChat({
         maxToolRoundtrips: 5,
-        streamProtocol: 'text',
     })
     const { scrollRef } = useChatScroll(messages, isLoading)
     const handleSubmitWrapper = (e: FormEvent) => {
