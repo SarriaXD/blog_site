@@ -4,6 +4,8 @@ import remarkMath from 'remark-math'
 import CodeBlock from './CodeBlock.tsx'
 import 'github-markdown-css/github-markdown.css'
 import { memo } from 'react'
+import rehypeExternalLinks from 'rehype-external-links'
+import rehypeKatex from 'rehype-katex'
 
 interface MarkdownBlockProps {
     markdown: string
@@ -14,6 +16,10 @@ const MarkdownBlock = ({ markdown }: MarkdownBlockProps) => {
         <MessageMarkdownMemoized
             className="markdown-body !bg-transparent py-2 !font-semibold !text-white"
             children={markdown}
+            rehypePlugins={[
+                [rehypeExternalLinks, { target: '_blank' }],
+                [rehypeKatex],
+            ]}
             remarkPlugins={[remarkGfm, remarkMath]}
             components={{
                 code(props) {
