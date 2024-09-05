@@ -1,24 +1,13 @@
-import {
-    convertToCoreMessages,
-    generateText,
-    streamText,
-    tool,
-    ToolResultPart,
-} from 'ai'
-import { createOllama } from 'ollama-ai-provider'
+import { convertToCoreMessages, streamText, tool } from 'ai'
 import { z } from 'zod'
 import { retrieveSearch, tavilySearch } from '@utils/search-utils.ts'
-
-const ollama = createOllama({
-    baseURL: 'https://api.sarria.ca/ai-chat/api',
-})
+import { openai } from '@ai-sdk/openai'
+import getWeatherData from '@utils/weather-utils.ts'
 
 const systemPrompt = (currentDate: string) => {
-    return `As a professional search expert and chinese language expert.
-    your name is Qi, your first language is Chinese you should answer in Chinese, unless user speak English. 
+    return `As a professional, your name is Qi, a software engineer, you developed this system.
     you possess the ability to search for any information on the web.
-    or any information on the web.
-    For each user query, utilize the search results to their fullest potential to provide additional information and assistance in your response.
+    or any information on the web. For each user query, utilize the search results to their fullest potential to provide additional information and assistance in your response.
     If there are any images relevant to your answer, be sure to include them as well.
     Aim to directly address the user's question, augmenting your response with insights gleaned from the search results.
     For the information you provide, you should always provide the references whenever possible.
@@ -26,13 +15,14 @@ const systemPrompt = (currentDate: string) => {
     `
 }
 
+const model = openai('gpt-4o-mini')
+
 export async function POST(request: Request) {
     const { messages } = await request.json()
-    const convertedMessages = convertToCoreMessages(messages)
-    const firstResult = await generateText({
-        // model: ollama('mistral-nemo'),
-        model: ollama('sam4096/qwen2tools'),
+    const result = await streamText({
+        model: model,
         system: systemPrompt(new Date().toLocaleString()),
+        messages: convertToCoreMessages(messages),
         tools: {
             search: tool({
                 description: 'Search the web for information',
@@ -42,7 +32,7 @@ export async function POST(request: Request) {
                         .describe('The query to search for, string type'),
                 }),
                 execute: async ({ query }) => {
-                    return tavilySearch(query).catch(() => null)
+                    return await tavilySearch(query)
                 },
             }),
             retrieve: tool({
@@ -53,48 +43,23 @@ export async function POST(request: Request) {
                         .describe('The url to retrieve, string type'),
                 }),
                 execute: async ({ url }) => {
-                    return await retrieveSearch(url).catch(() => null)
+                    return await retrieveSearch(url)
                 },
             }),
-        },
-        toolChoice: 'auto', // force the model to call a tool
-        messages: convertedMessages,
-    })
-    if (firstResult.toolResults && firstResult.toolResults.length > 0) {
-        // if we find tool results, we need to make a second call to the model
-        const toolResults: ToolResultPart[] = firstResult.toolResults.map(
-            (toolResult) => {
-                return {
-                    type: 'tool-result',
-                    toolCallId: toolResult.toolCallId,
-                    toolName: toolResult.toolName,
-                    result: toolResult.result,
-                }
-            }
-        )
-        convertedMessages.push({
-            role: 'tool',
-            content: toolResults,
-        })
-        const secondResult = await streamText({
-            model: ollama('sam4096/qwen2tools'),
-            system: systemPrompt(new Date().toLocaleString()),
-            messages: convertedMessages,
-        })
-        return secondResult.toTextStreamResponse()
-    } else {
-        return new Response(streamString(firstResult.text))
-    }
-}
-
-function streamString(str: string): ReadableStream {
-    return new ReadableStream({
-        start(controller: ReadableStreamDefaultController) {
-            const encoder = new TextEncoder()
-            for (const char of str) {
-                controller.enqueue(encoder.encode(char))
-            }
-            controller.close()
+            getWeatherInformation: {
+                description: 'show the weather in a given city to the user',
+                parameters: z.object({
+                    city: z
+                        .string()
+                        .describe(
+                            'The city name only accepts english location name, string type'
+                        ),
+                }),
+                execute: async ({ city }) => {
+                    return await getWeatherData(city)
+                },
+            },
         },
     })
+    return result.toDataStreamResponse()
 }
