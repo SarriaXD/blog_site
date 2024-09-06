@@ -4,49 +4,43 @@ import MessageList from './MessageList.tsx'
 import { useChat } from 'ai/react'
 import { useChatScroll } from '../hooks/useChatScroll.ts'
 import ChatPanel from './ChatPanel.tsx'
-import { FormEvent } from 'react'
-import { Message } from 'ai'
 import EmptyMessagePlaceholder from './EmptyMessagePlaceholder.tsx'
 
-const createPlaceholderMessages = (content: string): Message[] => {
-    return [
-        { id: 'temp_user', role: 'user', content: content },
-        { id: 'temp_assistant', role: 'assistant', content: '' },
-    ]
-}
+export type HandleSubmit = (
+    event?: {
+        preventDefault?: () => void
+    },
+    chatRequestOptions?: {
+        experimental_attachments?: FileList
+    }
+) => void
 
 const ChatContent = () => {
-    const {
-        messages,
-        setMessages,
-        input,
-        isLoading,
-        handleSubmit,
-        setInput,
-        stop,
-    } = useChat({
-        maxToolRoundtrips: 5,
-    })
+    const { messages, input, isLoading, handleSubmit, setInput, stop } =
+        useChat({
+            maxToolRoundtrips: 5,
+        })
     const { scrollRef } = useChatScroll(messages, isLoading)
-    const handleSubmitWrapper = (e: FormEvent) => {
-        handleSubmit(e)
-        const placeholderMessages = createPlaceholderMessages(input)
-        setMessages((prev) => [...prev, ...placeholderMessages])
-    }
     return (
-        <div className="h-full w-full overflow-auto" ref={scrollRef}>
-            <div className="px-8 pb-32 pt-24">
-                {messages.length ? (
-                    <MessageList messages={messages} isLoading={isLoading} />
-                ) : (
-                    <EmptyMessagePlaceholder />
-                )}
-            </div>
-            <div className="h-px w-full" />
+        <div className="size-full overflow-auto" ref={scrollRef}>
+            {messages && messages.length > 0 && (
+                <div className="px-8 pb-32 pt-24">
+                    <div>
+                        <MessageList
+                            messages={messages}
+                            isLoading={isLoading}
+                        />
+                        <div className="h-px w-full" />
+                    </div>
+                </div>
+            )}
+            {(!messages || messages.length === 0) && (
+                <EmptyMessagePlaceholder />
+            )}
             <ChatPanel
                 value={input}
                 isLoading={isLoading}
-                onSubmit={handleSubmitWrapper}
+                onSubmit={handleSubmit}
                 onMessageChange={setInput}
                 onStop={stop}
             />

@@ -1,6 +1,5 @@
 import MarkdownBlock from './MarkdownBlock.tsx'
 import { Message, ToolInvocation } from 'ai'
-import ThreeDotsLoading from './ThreeDotsLoading.tsx'
 import { Dog } from '@public/icons'
 import { WeatherData } from '@utils/weather-utils.ts'
 
@@ -34,16 +33,34 @@ const MessageItem = (props: MessageProps) => {
 }
 
 const UserItem = ({ message }: MessageProps) => {
+    const imageAttachments = message.experimental_attachments?.filter(
+        (attachment) => attachment?.contentType?.startsWith('image/')
+    )
     return (
-        <div className="flex justify-end">
-            <div className="rounded-[20px] bg-[#2F2F2F] px-4 py-2">
-                <p className="text-base text-white">{message.content}</p>
+        <div className="flex flex-col gap-4">
+            <div className="flex justify-end">
+                <div className="rounded-[20px] bg-[#2F2F2F] px-4 py-2 text-base text-white">
+                    {message.content}
+                </div>
             </div>
+            {imageAttachments && (
+                <div className="flex justify-end gap-4">
+                    {imageAttachments.map((attachment, index) => (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                            key={`${message.id}-${index}`}
+                            className={'h-52 w-auto rounded-lg'}
+                            src={attachment.url}
+                            alt={attachment.name || 'user image'}
+                        />
+                    ))}
+                </div>
+            )}
         </div>
     )
 }
 
-const AssistantItem = ({ message, isLoading, isLast }: MessageProps) => {
+const AssistantItem = ({ message }: MessageProps) => {
     return (
         <div className="flex flex-col gap-4 md:flex-row">
             <div className="self-start rounded-full bg-gray-300 p-2 text-black">
@@ -51,7 +68,6 @@ const AssistantItem = ({ message, isLoading, isLast }: MessageProps) => {
             </div>
             <div className="flex-1">
                 <MarkdownBlock markdown={message.content} />
-                {isLoading && isLast && ThreeDotsLoading()}
             </div>
         </div>
     )

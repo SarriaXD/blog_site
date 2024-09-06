@@ -10,6 +10,7 @@ import Copy from './Copy.svg'
 import Check from './Check.svg'
 import Record from './Record.svg'
 import ArrowUp from './ArrowUp.svg'
+import FileUpload from './FileUpload.svg'
 
 export {
     BurgerMenu,
@@ -24,4 +25,5 @@ export {
     Check,
     Record,
     ArrowUp,
+    FileUpload,
 }

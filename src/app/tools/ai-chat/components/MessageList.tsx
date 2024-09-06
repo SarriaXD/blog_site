@@ -1,5 +1,6 @@
 import MessageItem from './MessageItem.tsx'
 import { Message } from 'ai'
+import ThreeDotsLoading from './ThreeDotsLoading.tsx'
 
 interface MessageListProps {
     messages: Message[]
@@ -17,6 +18,11 @@ const MessageList = ({ messages, isLoading }: MessageListProps) => {
                     isLast={index === messages.length - 1}
                 />
             ))}
+            {isLoading && (
+                <div className="ml-14 flex justify-start">
+                    <ThreeDotsLoading />
+                </div>
+            )}
         </div>
     )
 }
