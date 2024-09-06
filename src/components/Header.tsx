@@ -50,22 +50,13 @@ export const Header = () => {
     const [open, setOpen] = useState(false)
     const onClose = () => setOpen(false)
     const path = usePathname()
-    const headerOpacity =
-        path === '/tools/ai-chat' ? 'bg-opacity-0' : 'bg-opacity-[0.75]'
+    const headerBackground =
+        path === '/tools/ai-chat' ? 'bg-[#212121]' : 'bg-black'
     return (
         <>
             <header>
                 <nav
-                    className={`fixed
-              left-0 right-0 top-0
-              z-50
-              flex items-center justify-between
-              gap-4 bg-black
-              ${headerOpacity} px-4 py-2
-              backdrop-blur-[20px]
-              will-change-transform
-              md:px-12
-              `}
+                    className={`fixed left-0 right-0 top-0 z-50 flex items-center justify-between gap-4 ${headerBackground} bg-opacity-[0.75] px-4 py-2 backdrop-blur-[20px] will-change-transform md:px-12`}
                 >
                     <IconButton
                         size="lg"
