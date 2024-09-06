@@ -9,7 +9,7 @@ export const useChatScroll = (messages: Message[], isLoading: boolean) => {
         if (isLoading) {
             scrollRef.current?.scrollIntoView({
                 block: 'end',
-                behavior: 'smooth',
+                behavior: 'instant',
             })
         }
     }, [lastMessageContent, isLoading])
