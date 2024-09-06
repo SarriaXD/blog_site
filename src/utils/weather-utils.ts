@@ -1,19 +1,34 @@
 import * as process from 'node:process'
+import { format, parseISO } from 'date-fns'
+import { toZonedTime } from 'date-fns-tz'
 
-interface WeatherData {
-    city: string
-    value: number
-    unit: string
-    weeklyForecast: {
-        day: string
-        value: number
-    }[]
+export interface WeatherData {
+    location: {
+        name: string
+        localtime: string
+        tz_id: string
+    }
+    current: {
+        temp_c: number
+    }
+    forecast: {
+        forecastday: Array<{
+            date: string
+            day: {
+                maxtemp_c: number
+                mintemp_c: number
+            }
+        }>
+    }
 }
 
 const API_KEY = process.env.WEATHER_API_KEY
 const API_BASE_URL = 'https://api.weatherapi.com/v1'
 
-async function getWeatherData(city: string): Promise<WeatherData> {
+async function getWeatherData(
+    city: string,
+    language: 'en' | 'zh'
+): Promise<WeatherData> {
     try {
         const response = await fetch(
             `${API_BASE_URL}/forecast.json?key=${API_KEY}&q=${city}&days=7`
@@ -23,34 +38,63 @@ async function getWeatherData(city: string): Promise<WeatherData> {
             throw new Error(`HTTP error! status: ${response.status}`)
         }
 
-        const data = await response.json()
+        const data = (await response.json()) as WeatherData
+        const localTime = parseISO(data.location.localtime)
+        const timeZone = data.location.tz_id
 
-        const weekDays = [
-            'Sunday',
-            'Monday',
-            'Tuesday',
-            'Wednesday',
-            'Thursday',
-            'Friday',
-            'Saturday',
-        ]
+        console.log(`查询地点: ${data.location.name}`)
+        console.log(`本地时间: ${format(localTime, 'yyyy-MM-dd HH:mm')}`)
+        console.log(`时区: ${timeZone}`)
 
         return {
-            city: data.location.name,
-            value: Math.round(data.current.temp_c),
-            unit: 'celsius',
-            weeklyForecast: data.forecast.forecastday.map((day: any) => ({
-                day: weekDays[new Date(day.date).getDay()],
-                value: Math.round(day.day.avgtemp_c),
-            })),
+            location: {
+                ...data.location,
+                localtime: format(localTime, 'hh:mm a'),
+            },
+            current: data.current,
+            forecast: {
+                forecastday: data.forecast.forecastday.map((day) => ({
+                    date: formatDate(day.date, timeZone, language),
+                    day: {
+                        maxtemp_c: day.day.maxtemp_c,
+                        mintemp_c: day.day.mintemp_c,
+                    },
+                })),
+            },
         }
     } catch (error) {
         return {
-            city: 'notfound',
-            value: 0,
-            unit: 'celsius',
-            weeklyForecast: [],
+            location: {
+                name: 'notfound',
+                localtime: '',
+                tz_id: '',
+            },
+            current: {
+                temp_c: 0,
+            },
+            forecast: {
+                forecastday: [],
+            },
         }
+    }
+}
+const DayOfWeekEn = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+const DayOfWeekZh = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
+
+const formatDate = (
+    dateString: string,
+    timeZone: string,
+    language: 'en' | 'zh'
+): string => {
+    const date = parseISO(dateString)
+    const localDate = toZonedTime(date, timeZone)
+    if (isNaN(localDate.getTime())) {
+        throw new Error('Invalid date string')
+    }
+    if (language === 'en') {
+        return `${DayOfWeekEn[localDate.getDay()]}`
+    } else {
+        return `${DayOfWeekZh[localDate.getDay()]}`
     }
 }
 

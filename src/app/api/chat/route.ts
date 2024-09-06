@@ -7,7 +7,8 @@ import getWeatherData from '@utils/weather-utils.ts'
 const systemPrompt = (currentDate: string) => {
     return `As a professional, your name is Qi, a software engineer, you developed this system.
     you possess the ability to search for any information on the web.
-    or any information on the web. For each user query, utilize the search results to their fullest potential to provide additional information and assistance in your response.
+    or any information on the web. Before you query, you must translate the query to english. For each user query,
+    utilize the search results to their fullest potential to provide additional information and assistance in your response.
     If there are any images relevant to your answer, be sure to include them as well.
     Aim to directly address the user's question, augmenting your response with insights gleaned from the search results.
     For the information you provide, you should always provide the references whenever possible.
@@ -29,7 +30,9 @@ export async function POST(request: Request) {
                 parameters: z.object({
                     query: z
                         .string()
-                        .describe('The query to search for, string type'),
+                        .describe(
+                            'The query to search for, the query must be english, string type'
+                        ),
                 }),
                 execute: async ({ query }) => {
                     return await tavilySearch(query)
@@ -54,9 +57,17 @@ export async function POST(request: Request) {
                         .describe(
                             'The city name only accepts english location name, string type'
                         ),
+                    language: z
+                        .string()
+                        .describe(
+                            "The language of the user's query, string type"
+                        ),
                 }),
-                execute: async ({ city }) => {
-                    return await getWeatherData(city)
+                execute: async ({ city, language }) => {
+                    if (language !== 'en' && language !== 'zh') {
+                        language = 'en'
+                    }
+                    return await getWeatherData(city, language)
                 },
             },
         },

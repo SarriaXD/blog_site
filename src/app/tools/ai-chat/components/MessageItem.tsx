@@ -2,6 +2,7 @@ import MarkdownBlock from './MarkdownBlock.tsx'
 import { Message, ToolInvocation } from 'ai'
 import ThreeDotsLoading from './ThreeDotsLoading.tsx'
 import { Dog } from '@public/icons'
+import { WeatherData } from '@utils/weather-utils.ts'
 
 interface MessageProps {
     message: Message
@@ -70,34 +71,47 @@ const ToolcallItem = ({ toolInvocation }: ToolcallItemProps) => {
 
 const WeatherInformationItem = ({ toolInvocation }: ToolcallItemProps) => {
     if ('result' in toolInvocation) {
-        const result = toolInvocation.result
-        console.log(result.city)
-        if (result.city === 'notfound') {
+        const result = toolInvocation.result as WeatherData
+        if (result.location.name === 'notfound') {
             return null
         }
         return (
             <div
                 key={toolInvocation.toolCallId}
-                className="flex flex-col gap-2 rounded-lg bg-blue-400 p-4"
+                className="flex flex-col gap-4 rounded-lg bg-blue-700 p-4"
             >
-                <div className="flex flex-row items-center justify-between">
-                    <div className="text-4xl font-medium text-blue-50">
-                        {result.value}°{result.unit === 'celsius' ? 'C' : 'F'}
+                <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-4">
+                        <div className="h-9 w-9 flex-shrink-0 rounded-full bg-amber-400" />
+                        <div className="text-4xl font-medium text-blue-50">
+                            {result.current.temp_c}°C
+                        </div>
                     </div>
-                    <div className="h-9 w-9 flex-shrink-0 rounded-full bg-amber-400" />
+                    <div className="flex flex-col items-end">
+                        <div className="text-lg font-bold">
+                            {result.forecast.forecastday[0].date}
+                        </div>
+                        <div className="text-base">
+                            {result.location.localtime}
+                        </div>
+                    </div>
                 </div>
                 <div className="flex w-full flex-wrap content-start justify-between gap-y-2 text-blue-50">
-                    {toolInvocation.result.weeklyForecast.map(
-                        (forecast: { day: string; value: number }) => (
+                    {result.forecast.forecastday.map((forecast, index) => {
+                        const todayBackground = index === 0 ? 'bg-blue-400' : ''
+                        return (
                             <div
-                                key={forecast.day}
-                                className="flex flex-col items-center"
+                                key={forecast.date}
+                                className={`flex flex-col items-center rounded-lg px-4 py-2 ${todayBackground}`}
                             >
-                                <div className="text-xs">{forecast.day}</div>
-                                <div>{forecast.value}°</div>
+                                <div className="text-xs">{forecast.date}</div>
+                                <div>
+                                    {forecast.day.maxtemp_c}° ~{' '}
+                                    {forecast.day.mintemp_c}°
+                                </div>
                             </div>
                         )
-                    )}
+                    })}
                 </div>
             </div>
         )
