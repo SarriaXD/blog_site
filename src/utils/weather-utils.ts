@@ -42,10 +42,6 @@ async function getWeatherData(
         const localTime = parseISO(data.location.localtime)
         const timeZone = data.location.tz_id
 
-        console.log(`查询地点: ${data.location.name}`)
-        console.log(`本地时间: ${format(localTime, 'yyyy-MM-dd HH:mm')}`)
-        console.log(`时区: ${timeZone}`)
-
         return {
             location: {
                 ...data.location,
