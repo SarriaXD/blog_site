@@ -1,4 +1,4 @@
-import { FormEvent } from 'react'
+import { Dispatch, FormEvent, SetStateAction } from 'react'
 import { ArrowUp, Close, FileUpload, Record } from '@public/icons'
 import { HandleSubmit } from './ChatContent.tsx'
 
@@ -6,7 +6,7 @@ interface ChatTextFieldProps {
     value: string
     isLoading: boolean
     files: FileWithPreview[]
-    setFiles: (files: FileWithPreview[]) => void
+    setFiles: Dispatch<SetStateAction<FileWithPreview[]>>
     onRemoveFile: (name: string) => void
     onOpenFile: () => void
     onMessageChange: (message: string) => void
@@ -51,7 +51,7 @@ interface InnerTextfieldProps {
     value: string
     isLoading: boolean
     files: FileWithPreview[]
-    setFiles: (files: FileWithPreview[]) => void
+    setFiles: Dispatch<SetStateAction<FileWithPreview[]>>
     onMessageChange: (message: string) => void
     onOpenFile: () => void
     onSubmit: HandleSubmit
@@ -83,6 +83,38 @@ const InnerTextfield = ({
                 })
 
                 setFiles([])
+            }}
+            onPaste={(event) => {
+                const items = event.clipboardData?.items
+                if (!items || items.length === 0) {
+                    return
+                }
+                const allowedImageTypes = [
+                    'image/jpeg',
+                    'image/png',
+                    'image/jpg',
+                ]
+                const files: File[] = []
+                for (let i = 0; i < items.length; i++) {
+                    const item = items[i]
+                    if (allowedImageTypes.includes(item.type)) {
+                        const file = item.getAsFile()
+                        if (file) {
+                            files.push(file)
+                        }
+                    }
+                }
+                if (files.length > 0) {
+                    setFiles((before) => {
+                        return [
+                            ...before,
+                            ...files.map((file) => ({
+                                preview: URL.createObjectURL(file),
+                                file,
+                            })),
+                        ]
+                    })
+                }
             }}
         >
             <ImageUploadButton onClick={onOpenFile} />

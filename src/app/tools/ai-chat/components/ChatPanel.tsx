@@ -46,7 +46,7 @@ const ChatPanel = ({
         onDrop,
         noClick: true,
         accept: {
-            'image/*': ['.jpeg', '.png', '.jpg', '.gif'],
+            'image/*': ['.jpeg', '.png', '.jpg'],
         },
     })
 
