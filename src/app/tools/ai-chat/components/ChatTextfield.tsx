@@ -97,6 +97,9 @@ const InnerTextfield = ({
                 const files: File[] = []
                 for (let i = 0; i < items.length; i++) {
                     const item = items[i]
+                    if (item.kind === 'file') {
+                        event.preventDefault()
+                    }
                     if (allowedImageTypes.includes(item.type)) {
                         const file = item.getAsFile()
                         if (file) {
