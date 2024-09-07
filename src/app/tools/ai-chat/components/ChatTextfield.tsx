@@ -35,7 +35,7 @@ const ChatTextfield = ({
     onStop,
 }: ChatTextFieldProps) => {
     return (
-        <div className="flex flex-col gap-4 rounded-[28px] bg-[#2F2F2F] py-2 pl-6 pr-2">
+        <div className="flex flex-col gap-2 rounded-[28px] bg-[#2F2F2F] py-1 pl-3.5 pr-2 md:gap-4 md:py-2 md:pl-6 md:pr-2">
             <ImagesPreview
                 images={filesState.images}
                 onImageRemove={onFileRemove}
@@ -82,7 +82,7 @@ const InnerTextfield = ({
     )
     return (
         <form
-            className="flex items-center gap-4"
+            className="flex items-center gap-2 md:gap-4"
             onSubmit={async (event) => {
                 event.preventDefault()
                 if (isSomeFilesUploading && !value) {
@@ -132,15 +132,16 @@ const InnerTextfield = ({
                     className={`rounded-full p-2 text-[#2F2F2F] ${value && !isSomeFilesUploading ? 'bg-white' : 'bg-[#676767]'}`}
                     disabled={isSomeFilesUploading}
                 >
-                    <ArrowUp className="size-5" />
+                    <ArrowUp className="size-4 md:size-5" />
                 </button>
             )}
             {isLoading && (
                 <button
+                    type={'button'}
                     onClick={onStop}
-                    className="animate-pulse rounded-full bg-[#676767]  p-2 text-white"
+                    className="animate-pulse rounded-full bg-[#676767] p-2 text-white"
                 >
-                    <Record className="size-5 text-white" />
+                    <Record className="size-4 text-white md:size-5" />
                 </button>
             )}
         </form>
@@ -222,7 +223,9 @@ const ImagePreviewItem = ({
 }
 
 const ImageUploadButton = ({ onClick }: { onClick: () => void }) => {
-    return <FileUpload className="size-6 text-white" onClick={onClick} />
+    return (
+        <FileUpload className="size-5 text-white md:size-6" onClick={onClick} />
+    )
 }
 
 export default ChatTextfield

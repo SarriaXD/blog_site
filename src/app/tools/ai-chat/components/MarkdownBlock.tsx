@@ -3,7 +3,7 @@ import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
 import CodeBlock from './CodeBlock.tsx'
 import 'github-markdown-css/github-markdown.css'
-import { memo } from 'react'
+import { ImgHTMLAttributes, memo } from 'react'
 import rehypeExternalLinks from 'rehype-external-links'
 import rehypeKatex from 'rehype-katex'
 
@@ -34,6 +34,16 @@ const MarkdownBlock = ({ markdown }: MarkdownBlockProps) => {
                         <code {...rest} className={className}>
                             {children}
                         </code>
+                    )
+                },
+                img(props: ImgHTMLAttributes<HTMLImageElement>) {
+                    return (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                            {...props}
+                            className="max-w-full !bg-transparent"
+                            alt={'image from ai'}
+                        />
                     )
                 },
             }}
