@@ -3,6 +3,18 @@ import '@styles/global.css'
 import FPSCounter from '@components/FPSCounter.tsx'
 import ToastProvider from '@components/ToastProvider.tsx'
 import { Analytics } from '@vercel/analytics/react'
+import { Metadata } from 'next'
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const metadata: Metadata = {
+    metadataBase: new URL('https://sarria.com'),
+    icons: {
+        icon: '/logo.png',
+    },
+    description:
+        "I'm a mobile and full-stack engineer specializing in app and web development. Explore my portfolio, p",
+    title: "Hi, I'm Qi!",
+}
 
 export default function RootLayout({
     children,
@@ -10,24 +22,8 @@ export default function RootLayout({
     children: React.ReactNode
 }) {
     return (
-        <html
-            lang="en"
-            className={`relative h-full w-full bg-black text-white antialiased`}
-        >
-            <head>
-                <meta charSet="UTF-8" />
-                <link rel="icon" type="image/svg+xml" href="/logo.png" />
-                <meta
-                    name="viewport"
-                    content="width=device-width, initial-scale=1.0"
-                />
-                <meta
-                    name="description"
-                    content="I'm a mobile and full-stack engineer specializing in app and web development. Explore my portfolio, projects, blog, and contact information on my personal website."
-                />
-                <title>Hi, I'm Qi!</title>
-            </head>
-            <body>
+        <html lang="en">
+            <body className="bg-black text-white antialiased">
                 <ToastProvider>
                     <FPSCounter />
                     {children}
