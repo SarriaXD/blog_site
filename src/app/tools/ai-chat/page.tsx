@@ -1,8 +1,12 @@
 import ChatContent from './components/ChatContent.tsx'
+import { Header } from '@components/Header.tsx'
 export default function Page() {
     return (
-        <div className="h-[100vh] w-full bg-[#212121]">
-            <ChatContent />
-        </div>
+        <>
+            <Header />
+            <main className="size-full bg-[#212121]">
+                <ChatContent />
+            </main>
+        </>
     )
 }

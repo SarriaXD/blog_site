@@ -1,7 +1,6 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
 
 interface SectionProps {
     title: string
@@ -99,10 +98,6 @@ const sections = [
 ]
 
 export const Footer = () => {
-    const path = usePathname()
-    if (path === '/tools/ai-chat') {
-        return null
-    }
     return (
         <footer className="border-t border-gray-700 bg-black text-gray-200">
             <div className="container mx-auto flex flex-wrap justify-start gap-16 px-8 py-16 md:justify-end">

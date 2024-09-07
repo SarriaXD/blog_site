@@ -147,7 +147,7 @@ export function SideBar({ open, onClose }: SideBarProps) {
                         exit="exit"
                         variants={sideBarVariants}
                         onClick={onClose}
-                        className="fixed left-0 top-0 z-50 h-[100vh] w-full bg-black bg-opacity-[0.75] backdrop-blur-[20px] will-change-transform"
+                        className="fixed left-0 top-0 z-50 h-screen w-full bg-black bg-opacity-[0.75] backdrop-blur-[20px] will-change-transform"
                     >
                         <div className="flex items-center justify-between p-4">
                             <Link href="/">

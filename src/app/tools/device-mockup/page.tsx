@@ -7,6 +7,8 @@ import { Alert, Button } from '@components/Material.tsx'
 import { iphone_frame, pixel_frame } from '@public/images'
 import { useCallback, useEffect, useState } from 'react'
 import ProcessedImage from './components/ProcessedImage.tsx'
+import { Header } from '@components/Header.tsx'
+import { Footer } from '@components/Footer.tsx'
 
 const frameGalleryData = [
     {
@@ -171,10 +173,14 @@ const MainContent = () => {
 
 export default function Page() {
     return (
-        <section className="bg-black py-32">
-            <div className="mx-auto min-h-[100vh] bg-[#1A1A1A] md:max-w-[908px] md:rounded-3xl lg:max-w-[1120px]">
-                <MainContent />
-            </div>
-        </section>
+        <>
+            <Header />
+            <main className="size-full bg-black py-32">
+                <div className="mx-auto size-full bg-[#1A1A1A] md:max-w-[908px] md:rounded-3xl lg:max-w-[1120px]">
+                    <MainContent />
+                </div>
+            </main>
+            <Footer />
+        </>
     )
 }

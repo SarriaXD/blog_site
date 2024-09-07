@@ -14,9 +14,9 @@ export default function Page() {
     })
 
     return (
-        <div className="flex min-h-[100vh] flex-col items-center justify-center gap-16 bg-black">
+        <main className="flex size-full items-center justify-center">
             <Spinner className="size-24" />
             <h1 className="text-center text-4xl">Redirecting to Linkedin</h1>
-        </div>
+        </main>
     )
 }

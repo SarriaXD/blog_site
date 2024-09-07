@@ -366,7 +366,7 @@ export const TechStackSection = ({ colorsMap }: TechStackSectionProps) => {
     return (
         <>
             <section className="bg-black px-8 py-16">
-                <div className="mx-auto flex min-h-[100vh] flex-col gap-8 lg:max-w-[1080px]">
+                <div className="mx-auto flex min-h-screen flex-col gap-8 lg:max-w-[1080px]">
                     <Title isMobile={isMobile} />
                     <div className="flex flex-col gap-4 md:flex-row">
                         <Carousel
