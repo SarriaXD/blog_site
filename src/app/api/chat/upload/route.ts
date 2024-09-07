@@ -1,5 +1,6 @@
 import { handleUpload, type HandleUploadBody } from '@vercel/blob/client'
 import { NextResponse } from 'next/server'
+import { del } from '@vercel/blob'
 
 export async function POST(request: Request): Promise<NextResponse> {
     const body = (await request.json()) as HandleUploadBody
@@ -17,7 +18,11 @@ export async function POST(request: Request): Promise<NextResponse> {
                 // Otherwise, you're allowing anonymous uploads.
                 console.log('generate client token', pathname)
                 return {
-                    allowedContentTypes: ['image/jpeg', 'image/png'],
+                    allowedContentTypes: [
+                        'image/jpeg',
+                        'image/png',
+                        'image/jpg',
+                    ],
                     tokenPayload: JSON.stringify({
                         // optional, sent to your server on upload completion
                         // you could pass a user id from auth, or a value from clientPayload
@@ -48,4 +53,12 @@ export async function POST(request: Request): Promise<NextResponse> {
             { status: 400 } // The webhook will retry 5 times waiting for a 200
         )
     }
+}
+
+export async function DELETE(request: Request) {
+    const { searchParams } = new URL(request.url)
+    const urlToDelete = searchParams.get('url') as string
+    await del(urlToDelete)
+
+    return new Response()
 }
