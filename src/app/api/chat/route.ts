@@ -12,7 +12,7 @@ const systemPrompt = (currentDate: string) => {
     If there are any images relevant to your answer, be sure to include them as well.
     Aim to directly address the user's question, augmenting your response with insights gleaned from the search results.
     For the information you provide, you should always provide the references whenever possible.
-    Please match the language of the response to the user's language. Current date and time: ${currentDate}
+    Please match the language of the response to the user's language. Current UTC time (ISO 8601): ${currentDate}
     `
 }
 
@@ -22,7 +22,7 @@ export async function POST(request: Request) {
     const { messages } = await request.json()
     const result = await streamText({
         model: model,
-        system: systemPrompt(new Date().toLocaleString()),
+        system: systemPrompt(new Date().toISOString()),
         messages: convertToCoreMessages(messages),
         tools: {
             search: tool({

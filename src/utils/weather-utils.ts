@@ -1,6 +1,5 @@
 import * as process from 'node:process'
-import { format, parseISO } from 'date-fns'
-import { toZonedTime } from 'date-fns-tz'
+import { format } from 'date-fns'
 
 export interface WeatherData {
     location: {
@@ -39,8 +38,7 @@ async function getWeatherData(
         }
 
         const data = (await response.json()) as WeatherData
-        const localTime = parseISO(data.location.localtime)
-        const timeZone = data.location.tz_id
+        const localTime = new Date(data.location.localtime)
 
         return {
             location: {
@@ -50,7 +48,7 @@ async function getWeatherData(
             current: data.current,
             forecast: {
                 forecastday: data.forecast.forecastday.map((day) => ({
-                    date: formatDate(day.date, timeZone, language),
+                    date: formatDate(new Date(day.date), language),
                     day: {
                         maxtemp_c: day.day.maxtemp_c,
                         mintemp_c: day.day.mintemp_c,
@@ -77,20 +75,14 @@ async function getWeatherData(
 const DayOfWeekEn = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 const DayOfWeekZh = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
 
-const formatDate = (
-    dateString: string,
-    timeZone: string,
-    language: 'en' | 'zh'
-): string => {
-    const date = parseISO(dateString)
-    const localDate = toZonedTime(date, timeZone)
-    if (isNaN(localDate.getTime())) {
+const formatDate = (date: Date, language: 'en' | 'zh'): string => {
+    if (isNaN(date.getTime())) {
         throw new Error('Invalid date string')
     }
     if (language === 'en') {
-        return `${DayOfWeekEn[localDate.getDay()]}`
+        return `${DayOfWeekEn[date.getUTCDay()]}`
     } else {
-        return `${DayOfWeekZh[localDate.getDay()]}`
+        return `${DayOfWeekZh[date.getUTCDay()]}`
     }
 }
 
