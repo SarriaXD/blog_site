@@ -41,8 +41,9 @@ const MarkdownBlock = ({ markdown }: MarkdownBlockProps) => {
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
                             {...props}
-                            className="max-w-full !bg-transparent"
-                            alt={'image from ai'}
+                            style={{
+                                backgroundColor: 'transparent',
+                            }}
                         />
                     )
                 },
