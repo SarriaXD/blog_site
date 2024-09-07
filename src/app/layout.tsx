@@ -4,6 +4,7 @@ import FPSCounter from '@components/FPSCounter.tsx'
 import { Header } from '@components/Header.tsx'
 import { Footer } from '@components/Footer.tsx'
 import ToastProvider from '@components/ToastProvider.tsx'
+import { Analytics } from '@vercel/analytics/react'
 
 export default function RootLayout({
     children,
@@ -32,6 +33,7 @@ export default function RootLayout({
                     <main>{children}</main>
                     <Footer />
                 </ToastProvider>
+                <Analytics />
             </body>
         </html>
     )
