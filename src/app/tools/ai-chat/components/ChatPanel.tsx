@@ -1,4 +1,4 @@
-import { FormEvent, useCallback, useState } from 'react'
+import { FormEvent, useCallback, useEffect, useState } from 'react'
 import ChatTextfield, { FilesState } from './ChatTextfield.tsx'
 import { HandleSubmit } from './ChatContent.tsx'
 import { useDropzone } from 'react-dropzone'
@@ -161,6 +161,22 @@ const ChatPanel = ({
             })
         } catch (e) {
             console.log('Error removing file from server', e)
+        }
+    }, [])
+
+    useEffect(() => {
+        return () => {
+            const deleteFilesFromServer = async () => {
+                const deletePromises = filesState.images.map((image) =>
+                    fetch(`/api/chat/upload?url=${image.url}`, {
+                        method: 'DELETE',
+                    })
+                )
+                await Promise.all(deletePromises)
+            }
+            deleteFilesFromServer().catch((e) => {
+                console.log('Error deleting files from server', e)
+            })
         }
     }, [])
 
