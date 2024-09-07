@@ -102,7 +102,10 @@ const WeatherInformationItem = ({ toolInvocation }: ToolcallItemProps) => {
             >
                 <div className="flex items-start justify-between">
                     <div className="flex items-center gap-4">
-                        <div className="h-9 w-9 flex-shrink-0 rounded-full bg-amber-400" />
+                        <WeatherIcon
+                            localtime={new Date(result.location.localtime)}
+                            weatherCondition={result.current.condition.text}
+                        />
                         <div className="text-4xl font-medium text-blue-50">
                             {result.current.temp_c}°C
                         </div>
@@ -138,6 +141,29 @@ const WeatherInformationItem = ({ toolInvocation }: ToolcallItemProps) => {
     } else {
         return <WeatherSkeleton />
     }
+}
+
+const WeatherIcon = ({
+    localtime,
+    weatherCondition,
+}: {
+    localtime: Date
+    weatherCondition: string
+}) => {
+    let weatherIcon = ''
+    if (localtime.getUTCHours() < 6 || localtime.getUTCHours() > 18) {
+        weatherIcon = '🌙'
+    } else {
+        weatherIcon = '☀️'
+    }
+    if (weatherCondition.includes('rain')) {
+        weatherIcon = '🌧️'
+    } else if (weatherCondition.includes('cloud')) {
+        weatherIcon = '☁️'
+    } else if (weatherCondition.includes('snow')) {
+        weatherIcon = '❄️'
+    }
+    return <div className="text-4xl">{weatherIcon}</div>
 }
 
 const WeatherSkeleton = () => {

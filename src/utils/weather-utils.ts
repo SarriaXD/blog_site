@@ -9,6 +9,10 @@ export interface WeatherData {
     }
     current: {
         temp_c: number
+        condition: {
+            text: string
+            icon: string
+        }
     }
     forecast: {
         forecastday: Array<{
@@ -65,6 +69,10 @@ async function getWeatherData(
             },
             current: {
                 temp_c: 0,
+                condition: {
+                    text: '',
+                    icon: '',
+                },
             },
             forecast: {
                 forecastday: [],
