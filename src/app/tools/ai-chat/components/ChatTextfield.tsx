@@ -14,8 +14,8 @@ interface ChatTextFieldProps {
 }
 
 export interface FilesState {
-    isUploading: boolean
     images: {
+        isUploading: boolean
         url: string
         previewUrl: string
         name: string
@@ -37,7 +37,7 @@ const ChatTextfield = ({
     return (
         <div className="flex flex-col gap-4 rounded-[28px] bg-[#2F2F2F] py-2 pl-6 pr-2">
             <ImagesPreview
-                filesState={filesState}
+                images={filesState.images}
                 onImageRemove={onFileRemove}
             />
             <InnerTextfield
@@ -77,13 +77,15 @@ const InnerTextfield = ({
     onSubmit,
     onStop,
 }: InnerTextfieldProps) => {
-    const { isUploading } = filesState
+    const isSomeFilesUploading = filesState.images.some(
+        (image) => image.isUploading
+    )
     return (
         <form
             className="flex items-center gap-4"
             onSubmit={async (event) => {
                 event.preventDefault()
-                if (isUploading && !value) {
+                if (isSomeFilesUploading && !value) {
                     return
                 }
                 onSubmit(event)
@@ -127,8 +129,8 @@ const InnerTextfield = ({
             {!isLoading && (
                 <button
                     type="submit"
-                    className={`rounded-full p-2 text-[#2F2F2F] ${value && !isUploading ? 'bg-white' : 'bg-[#676767]'}`}
-                    disabled={isUploading}
+                    className={`rounded-full p-2 text-[#2F2F2F] ${value && !isSomeFilesUploading ? 'bg-white' : 'bg-[#676767]'}`}
+                    disabled={isSomeFilesUploading}
                 >
                     <ArrowUp className="size-5" />
                 </button>
@@ -146,14 +148,19 @@ const InnerTextfield = ({
 }
 
 const ImagesPreview = ({
-    filesState,
+    images,
     onImageRemove,
 }: {
-    filesState: FilesState
+    images: {
+        isUploading: boolean
+        url: string
+        previewUrl: string
+        name: string
+        contentType: string
+    }[]
     onImageRemove: (name: string, url: string) => void
 }) => {
-    const { images, isUploading } = filesState
-    if (filesState.images.length === 0 && !isUploading) {
+    if (images.length === 0) {
         return null
     }
     return (
@@ -164,14 +171,10 @@ const ImagesPreview = ({
                     previewUrl={file.previewUrl}
                     url={file.url}
                     name={file.name}
+                    isUploading={file.isUploading}
                     onImageRemove={onImageRemove}
                 />
             ))}
-            {isUploading && (
-                <div className="flex size-24 items-center justify-center bg-black bg-opacity-50">
-                    <div className="h-12 w-12 animate-spin rounded-full border-b-4 border-l-2 border-r-2 border-t-4 border-white" />
-                </div>
-            )}
         </div>
     )
 }
@@ -180,6 +183,7 @@ interface ImagePreviewItemProps {
     previewUrl: string
     url: string
     name: string
+    isUploading: boolean
     onImageRemove: (name: string, url: string) => void
 }
 
@@ -187,26 +191,29 @@ const ImagePreviewItem = ({
     previewUrl,
     url,
     name,
+    isUploading,
     onImageRemove,
 }: ImagePreviewItemProps) => {
     return (
-        <div
-            key={name}
-            className="relative size-24 rounded-lg border-2 border-[#676767]"
-        >
+        <div key={name} className="relative size-24">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
                 src={previewUrl}
-                className="h-full w-full object-cover"
+                className="size-full rounded-2xl border-[3px] border-[#676767] object-cover"
                 alt={name}
                 onLoad={() => {
                     URL.revokeObjectURL(previewUrl)
                 }}
             />
+            {isUploading && (
+                <div className="absolute inset-0 flex items-center justify-center rounded-2xl bg-[#212121] bg-opacity-50">
+                    <div className="h-12 w-12 animate-spin rounded-full border-b-4 border-l-2 border-r-2 border-t-4 border-[#676767]" />
+                </div>
+            )}
             <button
                 onClick={() => onImageRemove(name, url)}
                 type={'button'}
-                className="absolute right-0 top-0 size-4 -translate-y-1 translate-x-1 rounded-full bg-[#676767] p-1"
+                className="absolute right-0 top-0 size-5 -translate-y-1 translate-x-1 rounded-full bg-[#676767] p-[5px]"
             >
                 <Close className="size-full text-[#2F2F2F]" />
             </button>

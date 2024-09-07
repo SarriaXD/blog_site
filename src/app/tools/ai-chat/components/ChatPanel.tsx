@@ -1,4 +1,4 @@
-import { FormEvent, useCallback, useEffect, useState } from 'react'
+import { FormEvent, useCallback, useState } from 'react'
 import ChatTextfield, { FilesState } from './ChatTextfield.tsx'
 import { HandleSubmit } from './ChatContent.tsx'
 import { useDropzone } from 'react-dropzone'
@@ -32,20 +32,12 @@ const ChatPanel = ({
     onStop,
 }: ChatPanelProps) => {
     const [filesState, setFilesState] = useState<FilesState>({
-        isUploading: false,
         images: [],
     })
 
     const onFilesLoad = useCallback(
         async (acceptedFiles: File[]) => {
             try {
-                // update loading state
-                setFilesState((before) => {
-                    return {
-                        ...before,
-                        isUploading: true,
-                    }
-                })
                 // check if the file type is valid, currently only images are allowed
                 const allowedContentTypes = [
                     'image/jpeg',
@@ -86,7 +78,24 @@ const ChatPanel = ({
                     )
                     return
                 }
-                // upload files
+                // update the preview url for images for better user experience
+                setFilesState((before) => {
+                    return {
+                        images: [
+                            ...before.images,
+                            ...filteredFiles.map((file) => {
+                                return {
+                                    url: '',
+                                    isUploading: true,
+                                    previewUrl: URL.createObjectURL(file),
+                                    name: file.name,
+                                    contentType: file.type,
+                                }
+                            }),
+                        ],
+                    }
+                })
+                // upload files to server
                 const uploadPromises = filteredFiles.map((file) =>
                     upload(file.name, file, {
                         access: 'public',
@@ -94,27 +103,35 @@ const ChatPanel = ({
                     })
                 )
                 const results = await Promise.all(uploadPromises)
-                const images = results.map((result, index) => {
-                    return {
-                        url: result.url,
-                        previewUrl: URL.createObjectURL(filteredFiles[index]),
-                        name: filteredFiles[index].name,
-                        contentType: filteredFiles[index].type,
-                    }
-                })
+                // update the url of the uploaded files for the previous images with '' url
                 setFilesState((before) => {
+                    const images = before.images.map((image) => {
+                        const index = filteredFiles.findIndex(
+                            (originalFile) => originalFile.name === image.name
+                        )
+                        if (index === -1) {
+                            return image
+                        } else {
+                            return {
+                                ...image,
+                                url: results[index].url,
+                                isUploading: false,
+                            }
+                        }
+                    })
                     return {
                         ...before,
-                        images: [...before.images, ...images],
+                        images: [...images],
                     }
                 })
             } catch (e) {
                 toast('Error uploading files', toastErrorOptions)
-            } finally {
+                // clean up the files that are not uploaded
                 setFilesState((before) => {
                     return {
-                        ...before,
-                        isUploading: false,
+                        images: before.images.filter(
+                            (image) => !image.isUploading && image.url !== ''
+                        ),
                     }
                 })
             }
@@ -125,7 +142,11 @@ const ChatPanel = ({
     const onSubmitWithImages = useCallback(
         (event: FormEvent) => {
             try {
-                if (filesState.isUploading) {
+                // check if some files are still uploading
+                const isSomeFilesUploading = filesState.images.some(
+                    (image) => image.isUploading
+                )
+                if (isSomeFilesUploading) {
                     toast('Files are still uploading', toastErrorOptions)
                     return
                 }
@@ -143,7 +164,7 @@ const ChatPanel = ({
                 })
             }
         },
-        [filesState.images, filesState.isUploading, onSubmit]
+        [filesState.images, onSubmit]
     )
 
     const onFileRemove = useCallback(async (name: string, url: string) => {
@@ -161,22 +182,6 @@ const ChatPanel = ({
             })
         } catch (e) {
             console.log('Error removing file from server', e)
-        }
-    }, [])
-
-    useEffect(() => {
-        return () => {
-            const deleteFilesFromServer = async () => {
-                const deletePromises = filesState.images.map((image) =>
-                    fetch(`/api/chat/upload?url=${image.url}`, {
-                        method: 'DELETE',
-                    })
-                )
-                await Promise.all(deletePromises)
-            }
-            deleteFilesFromServer().catch((e) => {
-                console.log('Error deleting files from server', e)
-            })
         }
     }, [])
 
