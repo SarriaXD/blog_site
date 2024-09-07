@@ -46,13 +46,17 @@ const UserItem = ({ message }: MessageProps) => {
             {imageAttachments && (
                 <div className="flex justify-end gap-4">
                     {imageAttachments.map((attachment, index) => (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
+                        <div
                             key={`${message.id}-${index}`}
-                            className={'h-52 w-auto rounded-lg'}
-                            src={attachment.url}
-                            alt={attachment.name || 'user image'}
-                        />
+                            className="relative h-80 overflow-hidden rounded-lg"
+                        >
+                            {/* eslint-disable-next-line @next/next/no-img-element*/}
+                            <img
+                                src={attachment.url}
+                                alt={attachment.name || 'user image'}
+                                className={'h-full w-auto'}
+                            />
+                        </div>
                     ))}
                 </div>
             )}
