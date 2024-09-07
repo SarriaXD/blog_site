@@ -23,3 +23,5 @@ out
 *.sw?
 
 .env.local
+.vercel
+.env*.local

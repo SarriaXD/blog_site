@@ -1,13 +1,14 @@
-import { Dispatch, FormEvent, SetStateAction } from 'react'
+import React, { Dispatch, FormEvent, SetStateAction, useState } from 'react'
 import { ArrowUp, Close, FileUpload, Record } from '@public/icons'
 import { HandleSubmit } from './ChatContent.tsx'
+import { upload } from '@vercel/blob/client'
+import { toast } from 'react-toastify'
 
 interface ChatTextFieldProps {
     value: string
     isLoading: boolean
     files: FileWithPreview[]
     setFiles: Dispatch<SetStateAction<FileWithPreview[]>>
-    onRemoveFile: (name: string) => void
     onOpenFile: () => void
     onMessageChange: (message: string) => void
     onSubmit: HandleSubmit
@@ -24,20 +25,26 @@ const ChatTextfield = ({
     isLoading,
     files,
     setFiles,
-    onRemoveFile,
     onOpenFile,
     onMessageChange,
     onSubmit,
     onStop,
 }: ChatTextFieldProps) => {
+    const [isUploading, setIsUploading] = useState(false)
     return (
         <div className="flex flex-col gap-4 rounded-[28px] bg-[#2F2F2F] py-2 pl-6 pr-2">
-            <ImagesPreview files={files} onRemoveFile={onRemoveFile} />
+            <ImagesPreview
+                isUploading={isUploading}
+                files={files}
+                setFiles={setFiles}
+            />
             <InnerTextfield
                 value={value}
                 isLoading={isLoading}
+                isUploading={isUploading}
                 files={files}
                 setFiles={setFiles}
+                setIsUploading={setIsUploading}
                 onOpenFile={onOpenFile}
                 onMessageChange={onMessageChange}
                 onSubmit={onSubmit}
@@ -50,8 +57,10 @@ const ChatTextfield = ({
 interface InnerTextfieldProps {
     value: string
     isLoading: boolean
+    isUploading: boolean
     files: FileWithPreview[]
     setFiles: Dispatch<SetStateAction<FileWithPreview[]>>
+    setIsUploading: Dispatch<SetStateAction<boolean>>
     onMessageChange: (message: string) => void
     onOpenFile: () => void
     onSubmit: HandleSubmit
@@ -61,8 +70,10 @@ interface InnerTextfieldProps {
 const InnerTextfield = ({
     value,
     isLoading,
+    isUploading,
     files,
     setFiles,
+    setIsUploading,
     onMessageChange,
     onOpenFile,
     onSubmit,
@@ -71,18 +82,40 @@ const InnerTextfield = ({
     return (
         <form
             className="flex items-center gap-4"
-            onSubmit={(event) => {
+            onSubmit={async (event) => {
                 event.preventDefault()
+                if (isUploading) {
+                    return
+                }
                 if (!value && files.length === 0) {
                     return
                 }
-                const dataTransfer = new DataTransfer()
-                files.forEach((file) => dataTransfer.items.add(file.file))
-                onSubmit(event, {
-                    experimental_attachments: dataTransfer.files,
-                })
-
-                setFiles([])
+                try {
+                    setIsUploading(true)
+                    const uploadPromises = files.map(({ file }) => {
+                        return upload(file.name, file, {
+                            access: 'public',
+                            handleUploadUrl: '/api/chat/upload',
+                        })
+                    })
+                    const results = await Promise.all(uploadPromises)
+                    const attachments = results.map((result, index) => ({
+                        url: result.url,
+                        name: files[index].file.name,
+                        contentType: files[index].file.type,
+                    }))
+                    onSubmit(event, {
+                        experimental_attachments: attachments,
+                    })
+                } catch (e) {
+                    toast('Error uploading files', {
+                        type: 'error',
+                        isLoading: false,
+                    })
+                } finally {
+                    setFiles([])
+                    setIsUploading(false)
+                }
             }}
             onPaste={(event) => {
                 const items = event.clipboardData?.items
@@ -131,8 +164,8 @@ const InnerTextfield = ({
             {!isLoading && (
                 <button
                     type="submit"
-                    className={`rounded-full p-2 text-[#2F2F2F] ${value ? 'bg-white' : 'bg-[#676767]'}`}
-                    disabled={isLoading}
+                    className={`rounded-full p-2 text-[#2F2F2F] ${value && !isUploading ? 'bg-white' : 'bg-[#676767]'}`}
+                    disabled={isUploading}
                 >
                     <ArrowUp className="size-5" />
                 </button>
@@ -151,13 +184,20 @@ const InnerTextfield = ({
 
 const ImagesPreview = ({
     files,
-    onRemoveFile,
+    isUploading,
+    setFiles,
 }: {
     files: FileWithPreview[]
-    onRemoveFile: (name: string) => void
+    isUploading: boolean
+    setFiles: Dispatch<SetStateAction<FileWithPreview[]>>
 }) => {
     if (files.length === 0) {
         return null
+    }
+    const onRemoveFile = (name: string) => {
+        setFiles((before) => {
+            return before.filter((file) => file.file.name !== name)
+        })
     }
     return (
         <div className="mt-2 flex gap-4">
@@ -172,6 +212,11 @@ const ImagesPreview = ({
                         }}
                         alt={file.file.name}
                     />
+                    {isUploading && (
+                        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                            <div className="h-12 w-12 animate-spin rounded-full border-b-4 border-l-2 border-r-2 border-t-4 border-white" />
+                        </div>
+                    )}
                     <button
                         onClick={() => onRemoveFile(file.file.name)}
                         type={'button'}

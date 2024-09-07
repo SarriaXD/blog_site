@@ -11,6 +11,7 @@ import Check from './Check.svg'
 import Record from './Record.svg'
 import ArrowUp from './ArrowUp.svg'
 import FileUpload from './FileUpload.svg'
+import Warn from './Warn.svg'
 
 export {
     BurgerMenu,
@@ -26,4 +27,5 @@ export {
     Record,
     ArrowUp,
     FileUpload,
+    Warn,
 }

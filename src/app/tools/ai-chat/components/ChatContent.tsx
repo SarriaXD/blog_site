@@ -11,7 +11,11 @@ export type HandleSubmit = (
         preventDefault?: () => void
     },
     chatRequestOptions?: {
-        experimental_attachments?: FileList
+        experimental_attachments?: Array<{
+            url: string
+            name: string
+            contentType: string
+        }>
     }
 ) => void
 

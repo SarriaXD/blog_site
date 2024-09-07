@@ -50,12 +50,6 @@ const ChatPanel = ({
         },
     })
 
-    const onRemoveFile = (name: string) => {
-        setFiles((before) => {
-            return before.filter((file) => file.file.name !== name)
-        })
-    }
-
     return (
         <div className="fixed inset-x-0 bottom-0 w-full">
             <div
@@ -70,7 +64,6 @@ const ChatPanel = ({
                         isLoading={isLoading}
                         files={files}
                         setFiles={setFiles}
-                        onRemoveFile={onRemoveFile}
                         onOpenFile={open}
                         onMessageChange={onMessageChange}
                         onSubmit={onSubmit}
