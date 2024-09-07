@@ -9,6 +9,7 @@ import useChatFiles from '../hooks/useChatFiles.ts'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Add } from '@public/icons'
 import React from 'react'
+import useSlowerUpdatedMessages from '../hooks/useSlowerUpdatedMessages.ts'
 
 export type HandleSubmit = (
     event?: {
@@ -61,10 +62,17 @@ const DragZoneOverlay = ({ isDragActive }: { isDragActive: boolean }) => {
 }
 
 const ChatContent = () => {
-    const { messages, input, isLoading, handleSubmit, setInput, stop } =
-        useChat({
-            maxToolRoundtrips: 5,
-        })
+    const {
+        messages: fasterMessages,
+        input,
+        isLoading,
+        handleSubmit,
+        setInput,
+        stop,
+    } = useChat({
+        maxToolRoundtrips: 5,
+    })
+    const messages = useSlowerUpdatedMessages(fasterMessages)
     const {
         getRootProps,
         getInputProps,
