@@ -151,7 +151,7 @@ const WeatherIcon = ({
     localtime: Date
     weatherCondition: string
 }) => {
-    let weatherIcon = ''
+    let weatherIcon: string
     if (localtime.getUTCHours() < 6 || localtime.getUTCHours() > 18) {
         weatherIcon = '🌙'
     } else {
@@ -190,8 +190,8 @@ const SearchItem = ({ toolInvocation }: ToolcallItemProps) => {
     if ('result' in toolInvocation) {
         const result = toolInvocation.result as SearchResults
         return (
-            <p className="pl-12 text-lg font-bold italic text-white">
-                Search {result.results.length} sites
+            <p className="pl-12 text-base font-bold italic text-gray-600">
+                Searched {result.results.length} sites
             </p>
         )
     } else {

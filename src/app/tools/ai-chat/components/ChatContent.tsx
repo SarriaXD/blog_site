@@ -6,6 +6,7 @@ import { useChatScroll } from '../hooks/useChatScroll.ts'
 import ChatPanel from './ChatPanel.tsx'
 import EmptyMessagePlaceholder from './EmptyMessagePlaceholder.tsx'
 import useChatFiles from '../hooks/useChatFiles.ts'
+import { useThrottle } from '@uidotdev/usehooks'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Add } from '@public/icons'
 import React from 'react'
@@ -61,12 +62,18 @@ const DragZoneOverlay = ({ isDragActive }: { isDragActive: boolean }) => {
 }
 
 const ChatContent = () => {
-    const { messages, input, isLoading, handleSubmit, setInput, stop } =
-        useChat({
-            maxToolRoundtrips: 5,
-        })
+    const {
+        messages: fasterMessages,
+        input,
+        isLoading,
+        handleSubmit,
+        setInput,
+        stop,
+    } = useChat({
+        maxToolRoundtrips: 5,
+    })
 
-    // const messages = useThrottle(fasterMessages, 16.67)
+    const messages = useThrottle(fasterMessages, 16.67)
 
     const {
         getRootProps,
