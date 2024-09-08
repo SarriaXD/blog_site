@@ -1,4 +1,5 @@
 import React, { FormEvent } from 'react'
+import { motion } from 'framer-motion'
 import { ArrowUp, Close, FileUpload, Record } from '@public/icons'
 
 interface ChatTextFieldProps {
@@ -35,8 +36,8 @@ const ChatTextfield = ({
     onStop,
 }: ChatTextFieldProps) => {
     return (
-        <div className="flex flex-col gap-2 rounded-[28px] bg-[#2F2F2F] py-1 pl-3.5 pr-2 md:gap-4 md:py-2 md:pl-6 md:pr-2">
-            <ImagesPreview
+        <div className="flex flex-col rounded-[28px] bg-[#2F2F2F] py-1 pl-3.5 pr-2 md:py-2 md:pl-6 md:pr-2">
+            <FilesPreview
                 images={filesState.images}
                 onImageRemove={onFileRemove}
             />
@@ -148,10 +149,7 @@ const InnerTextfield = ({
     )
 }
 
-const ImagesPreview = ({
-    images,
-    onImageRemove,
-}: {
+interface FilesPreviewProps {
     images: {
         isUploading: boolean
         url: string
@@ -160,23 +158,30 @@ const ImagesPreview = ({
         contentType: string
     }[]
     onImageRemove: (name: string, url: string) => void
-}) => {
-    if (images.length === 0) {
-        return null
-    }
+}
+
+const FilesPreview = ({ images, onImageRemove }: FilesPreviewProps) => {
+    const hasFiles = images.length > 0
     return (
-        <div className="mt-2 flex gap-4">
-            {images.map((file) => (
-                <ImagePreviewItem
-                    key={file.name}
-                    previewUrl={file.previewUrl}
-                    url={file.url}
-                    name={file.name}
-                    isUploading={file.isUploading}
-                    onImageRemove={onImageRemove}
-                />
-            ))}
-        </div>
+        <motion.div
+            animate={{
+                height: hasFiles ? 'auto' : 0,
+                margin: hasFiles ? '12px' : '0',
+            }}
+        >
+            <div className="flex gap-4">
+                {images.map((file) => (
+                    <ImagePreviewItem
+                        key={file.name}
+                        previewUrl={file.previewUrl}
+                        url={file.url}
+                        name={file.name}
+                        isUploading={file.isUploading}
+                        onImageRemove={onImageRemove}
+                    />
+                ))}
+            </div>
+        </motion.div>
     )
 }
 
