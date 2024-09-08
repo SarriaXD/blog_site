@@ -35,8 +35,6 @@ export async function POST(request: Request) {
                         ),
                 }),
                 execute: async ({ query }) => {
-                    // await 10 seconds to simulate the time it takes to retrieve the content
-                    await new Promise((resolve) => setTimeout(resolve, 10000))
                     return await tavilySearch(query)
                 },
             }),
