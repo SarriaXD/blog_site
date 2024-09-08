@@ -2,6 +2,7 @@ import MarkdownBlock from './MarkdownBlock.tsx'
 import { Message, ToolInvocation } from 'ai'
 import { Dog } from '@public/icons'
 import { WeatherData } from '@utils/weather-utils.ts'
+import { SearchResults } from '@utils/search-utils.ts'
 
 interface MessageProps {
     message: Message
@@ -187,13 +188,15 @@ const WeatherSkeleton = () => {
 
 const SearchItem = ({ toolInvocation }: ToolcallItemProps) => {
     if ('result' in toolInvocation) {
-        return null
+        const result = toolInvocation.result as SearchResults
+        return (
+            <p className="pl-12 text-lg font-bold italic text-white">
+                Search {result.results.length} sites
+            </p>
+        )
     } else {
         return (
-            <div
-                key={toolInvocation.toolCallId}
-                className="flex justify-start pl-10"
-            >
+            <div className="flex justify-start pl-10">
                 <div className="rounded-[20px] bg-[#2F2F2F] px-4 py-2">
                     <p className="animate-pulse text-lg font-bold italic text-white">
                         Searching {toolInvocation.args.query}
