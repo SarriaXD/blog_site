@@ -6,10 +6,10 @@ import { useChatScroll } from '../hooks/useChatScroll.ts'
 import ChatPanel from './ChatPanel.tsx'
 import EmptyMessagePlaceholder from './EmptyMessagePlaceholder.tsx'
 import useChatFiles from '../hooks/useChatFiles.ts'
+import { useThrottle } from '@uidotdev/usehooks'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Add } from '@public/icons'
 import React from 'react'
-import useSlowerUpdatedMessages from '../hooks/useSlowerUpdatedMessages.ts'
 
 export type HandleSubmit = (
     event?: {
@@ -72,7 +72,9 @@ const ChatContent = () => {
     } = useChat({
         maxToolRoundtrips: 5,
     })
-    const messages = useSlowerUpdatedMessages(fasterMessages)
+
+    const messages = useThrottle(fasterMessages, 16.67)
+
     const {
         getRootProps,
         getInputProps,
@@ -85,6 +87,7 @@ const ChatContent = () => {
     } = useChatFiles(handleSubmit)
 
     const { scrollRef } = useChatScroll(messages, isLoading)
+
     return (
         <div
             {...getRootProps({
