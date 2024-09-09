@@ -41,7 +41,7 @@ const MarkdownBlock = ({ markdown }: MarkdownBlockProps) => {
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
                             {...props}
-                            className="mt-2 rounded-lg bg-transparent"
+                            className="my-2 rounded-lg bg-transparent"
                         />
                     )
                 },
