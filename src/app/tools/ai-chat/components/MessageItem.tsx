@@ -19,6 +19,7 @@ const MessageItem = (props: MessageProps) => {
         if (message.toolInvocations && message.toolInvocations.length > 0) {
             return (
                 <div>
+                    {JSON.stringify(message)}
                     {message.toolInvocations.map((toolInvocation) => (
                         <ToolcallItem
                             key={toolInvocation.toolCallId}
@@ -72,6 +73,7 @@ const AssistantItem = ({ message }: MessageProps) => {
                 <Dog className="size-6" />
             </div>
             <div className="flex-1">
+                {JSON.stringify(message)}
                 <MarkdownBlock markdown={message.content} />
             </div>
         </div>
