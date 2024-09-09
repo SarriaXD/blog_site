@@ -1,6 +1,6 @@
 import React, { FormEvent } from 'react'
-import { motion } from 'framer-motion'
-import { ArrowUp, Close, FileUpload, Record } from '@public/icons'
+import { ArrowUp, FileUpload, Record } from '@public/icons'
+import FilesPreviewGallery from './preview/FilesPreviewGallery.tsx'
 
 interface ChatTextFieldProps {
     value: string
@@ -22,6 +22,12 @@ export interface FilesState {
         name: string
         contentType: string
     }[]
+    pdfs: {
+        isUploading: boolean
+        url: string
+        name: string
+        contentType: string
+    }[]
 }
 
 const ChatTextfield = ({
@@ -37,9 +43,11 @@ const ChatTextfield = ({
 }: ChatTextFieldProps) => {
     return (
         <div className="flex flex-col rounded-[28px] bg-[#2F2F2F] py-1 pl-3.5 pr-2 md:py-2 md:pl-6 md:pr-2">
-            <FilesPreview
+            <FilesPreviewGallery
                 images={filesState.images}
+                pdfs={filesState.pdfs}
                 onImageRemove={onFileRemove}
+                onPDFRemove={onFileRemove}
             />
             <InnerTextfield
                 value={value}
@@ -100,6 +108,7 @@ const InnerTextfield = ({
                     'image/jpeg',
                     'image/png',
                     'image/jpg',
+                    'application/pdf',
                 ]
                 const files: File[] = []
                 for (let i = 0; i < items.length; i++) {
@@ -119,7 +128,7 @@ const InnerTextfield = ({
                 }
             }}
         >
-            <ImageUploadButton onClick={onOpenFile} />
+            <FileUploadButton onClick={onOpenFile} />
             <input
                 type="text"
                 value={value}
@@ -149,85 +158,7 @@ const InnerTextfield = ({
     )
 }
 
-interface FilesPreviewProps {
-    images: {
-        isUploading: boolean
-        url: string
-        previewUrl: string
-        name: string
-        contentType: string
-    }[]
-    onImageRemove: (name: string, url: string) => void
-}
-
-const FilesPreview = ({ images, onImageRemove }: FilesPreviewProps) => {
-    const hasFiles = images.length > 0
-    return (
-        <motion.div
-            animate={{
-                height: hasFiles ? 'auto' : 0,
-                margin: hasFiles ? '12px' : '0',
-            }}
-        >
-            <div className="flex gap-4">
-                {images.map((file) => (
-                    <ImagePreviewItem
-                        key={file.name}
-                        previewUrl={file.previewUrl}
-                        url={file.url}
-                        name={file.name}
-                        isUploading={file.isUploading}
-                        onImageRemove={onImageRemove}
-                    />
-                ))}
-            </div>
-        </motion.div>
-    )
-}
-
-interface ImagePreviewItemProps {
-    previewUrl: string
-    url: string
-    name: string
-    isUploading: boolean
-    onImageRemove: (name: string, url: string) => void
-}
-
-const ImagePreviewItem = ({
-    previewUrl,
-    url,
-    name,
-    isUploading,
-    onImageRemove,
-}: ImagePreviewItemProps) => {
-    return (
-        <div key={name} className="relative size-24">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-                src={previewUrl}
-                className="size-full rounded-2xl border-[3px] border-[#676767] object-cover"
-                alt={name}
-                onLoad={() => {
-                    URL.revokeObjectURL(previewUrl)
-                }}
-            />
-            {isUploading && (
-                <div className="absolute inset-0 flex items-center justify-center rounded-2xl bg-[#212121] bg-opacity-50">
-                    <div className="h-12 w-12 animate-spin rounded-full border-b-4 border-l-2 border-r-2 border-t-4 border-[#676767]" />
-                </div>
-            )}
-            <button
-                onClick={() => onImageRemove(name, url)}
-                type={'button'}
-                className="absolute right-0 top-0 size-5 -translate-y-1 translate-x-1 rounded-full bg-[#676767] p-[5px]"
-            >
-                <Close className="size-full text-[#2F2F2F]" />
-            </button>
-        </div>
-    )
-}
-
-const ImageUploadButton = ({ onClick }: { onClick: () => void }) => {
+const FileUploadButton = ({ onClick }: { onClick: () => void }) => {
     return (
         <FileUpload className="size-5 text-white md:size-6" onClick={onClick} />
     )

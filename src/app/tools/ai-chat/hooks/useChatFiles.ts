@@ -9,16 +9,18 @@ import { upload } from '@vercel/blob/client'
 const useChatFiles = (onSubmit: HandleSubmit) => {
     const [filesState, setFilesState] = useState<FilesState>({
         images: [],
+        pdfs: [],
     })
 
     const onFilesLoad = useCallback(
         async (acceptedFiles: File[]) => {
             try {
-                // check if the file type is valid, currently only images are allowed
+                // check if the file type is valid, currently only images and PDFs are allowed
                 const allowedContentTypes = [
                     'image/jpeg',
                     'image/png',
                     'image/jpg',
+                    // 'application/pdf',
                 ]
                 if (
                     acceptedFiles.some(
@@ -59,98 +61,152 @@ const useChatFiles = (onSubmit: HandleSubmit) => {
                     return {
                         images: [
                             ...before.images,
-                            ...filteredFiles.map((file) => {
-                                return {
-                                    url: '',
-                                    isUploading: true,
-                                    previewUrl: URL.createObjectURL(file),
-                                    name: file.name,
-                                    contentType: file.type,
-                                }
-                            }),
+                            ...filteredFiles
+                                .filter((file) =>
+                                    file.type.startsWith('image/')
+                                )
+                                .map((file) => {
+                                    return {
+                                        url: '',
+                                        isUploading: true,
+                                        previewUrl: URL.createObjectURL(file),
+                                        name: file.name,
+                                        contentType: file.type,
+                                    }
+                                }),
+                        ],
+                        pdfs: [
+                            ...before.pdfs,
+                            ...filteredFiles
+                                .filter(
+                                    (file) => file.type === 'application/pdf'
+                                )
+                                .map((file) => {
+                                    return {
+                                        url: '',
+                                        isUploading: true,
+                                        name: file.name,
+                                        contentType: file.type,
+                                    }
+                                }),
                         ],
                     }
                 })
-                // upload files to server
-                const uploadPromises = filteredFiles.map((file) =>
-                    upload(file.name, file, {
-                        access: 'public',
-                        handleUploadUrl: '/api/chat/upload',
-                    })
-                )
-                const results = await Promise.all(uploadPromises)
+                // upload images to server
+                const imagesPromises = filteredFiles
+                    .filter((file) => file.type.startsWith('image/'))
+                    .map((file) =>
+                        upload(file.name, file, {
+                            access: 'public',
+                            handleUploadUrl: '/api/chat/upload',
+                        })
+                    )
+                // upload the pdfs to server
+                const pdfsPromises = filteredFiles
+                    .filter((file) => file.type === 'application/pdf')
+                    .map((file) =>
+                        upload(file.name, file, {
+                            access: 'public',
+                            handleUploadUrl: '/api/chat/upload',
+                        })
+                    )
+                const results = await Promise.all([
+                    ...imagesPromises,
+                    ...pdfsPromises,
+                ])
                 // update the url of the uploaded files for the previous images with '' url
                 setFilesState((before) => {
                     const images = before.images.map((image) => {
-                        const index = filteredFiles.findIndex(
-                            (originalFile) => originalFile.name === image.name
+                        const result = results.find(
+                            (result) => result.pathname === image.name
                         )
-                        if (index === -1) {
-                            return image
-                        } else {
+                        if (result) {
                             return {
                                 ...image,
-                                url: results[index].url,
+                                url: result.url,
                                 isUploading: false,
                             }
+                        } else {
+                            return image
+                        }
+                    })
+                    const pdfs = before.pdfs.map((pdf) => {
+                        const result = results.find(
+                            (result) => result.pathname === pdf.name
+                        )
+                        if (result) {
+                            return {
+                                ...pdf,
+                                url: result.url,
+                                isUploading: false,
+                            }
+                        } else {
+                            return pdf
                         }
                     })
                     return {
-                        ...before,
                         images: [...images],
+                        pdfs: [...pdfs],
                     }
                 })
             } catch (e) {
-                toast('Error uploading files', toastErrorOptions)
+                toast(`Error uploading files ${e}`, toastErrorOptions)
+
                 // clean up the files that are not uploaded
                 setFilesState((before) => {
                     return {
                         images: before.images.filter(
                             (image) => !image.isUploading && image.url !== ''
                         ),
+                        pdfs: before.pdfs.filter(
+                            (pdf) => !pdf.isUploading && pdf.url !== ''
+                        ),
                     }
                 })
             }
         },
-        [filesState.images]
+        [filesState]
     )
 
-    const onSubmitWithImages = useCallback(
+    const onSubmitWithFiles = useCallback(
         (event: FormEvent) => {
             try {
                 // check if some files are still uploading
-                const isSomeFilesUploading = filesState.images.some(
-                    (image) => image.isUploading
-                )
+                const isSomeFilesUploading =
+                    filesState.images.some((image) => image.isUploading) ||
+                    filesState.pdfs.some((pdf) => pdf.isUploading)
                 if (isSomeFilesUploading) {
                     toast('Files are still uploading', toastErrorOptions)
                     return
                 }
                 onSubmit(event, {
-                    experimental_attachments: filesState.images,
+                    experimental_attachments: [
+                        ...filesState.images,
+                        ...filesState.pdfs,
+                    ],
                 })
             } catch (e) {
                 toast("Can' sent message right now", toastErrorOptions)
             } finally {
-                setFilesState((before) => {
+                setFilesState(() => {
                     return {
-                        ...before,
                         images: [],
+                        pdfs: [],
                     }
                 })
             }
         },
-        [filesState.images, onSubmit]
+        [filesState, onSubmit]
     )
 
     const onFileRemove = useCallback(async (name: string, url: string) => {
         try {
             setFilesState((before) => {
                 return {
-                    ...before,
                     images: before.images.filter(
                         (image) => image.name !== name
                     ),
+                    pdfs: before.pdfs.filter((pdf) => pdf.name !== name),
                 }
             })
             await fetch(`/api/chat/upload?url=${url}`, {
@@ -174,7 +230,7 @@ const useChatFiles = (onSubmit: HandleSubmit) => {
         open,
         onFilesLoad,
         onFileRemove,
-        onSubmitWithImages,
+        onSubmitWithImages: onSubmitWithFiles,
     }
 }
 
