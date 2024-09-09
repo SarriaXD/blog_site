@@ -3,6 +3,7 @@ import { Message, ToolInvocation } from 'ai'
 import { Dog } from '@public/icons'
 import { WeatherData } from '@utils/weather-utils.ts'
 import { SearchResults } from '@utils/search-utils.ts'
+import { useEffect, useState } from 'react'
 
 interface MessageProps {
     message: Message
@@ -19,7 +20,6 @@ const MessageItem = (props: MessageProps) => {
         if (message.toolInvocations && message.toolInvocations.length > 0) {
             return (
                 <div>
-                    {JSON.stringify(message)}
                     {message.toolInvocations.map((toolInvocation) => (
                         <ToolcallItem
                             key={toolInvocation.toolCallId}
@@ -73,7 +73,6 @@ const AssistantItem = ({ message }: MessageProps) => {
                 <Dog className="size-6" />
             </div>
             <div className="flex-1">
-                {JSON.stringify(message)}
                 <MarkdownBlock markdown={message.content} />
             </div>
         </div>
@@ -85,10 +84,27 @@ interface ToolcallItemProps {
 }
 
 const ToolcallItem = ({ toolInvocation }: ToolcallItemProps) => {
+    const [noResult, setNoResult] = useState('')
+
+    useEffect(() => {
+        if (!('result' in toolInvocation)) {
+            setNoResult(JSON.stringify(toolInvocation))
+        }
+    }, [toolInvocation])
     if (toolInvocation.toolName == 'getWeatherInformation') {
-        return <WeatherInformationItem toolInvocation={toolInvocation} />
+        return (
+            <div>
+                {noResult}
+                <WeatherInformationItem toolInvocation={toolInvocation} />
+            </div>
+        )
     } else if (toolInvocation.toolName == 'search') {
-        return <SearchItem toolInvocation={toolInvocation} />
+        return (
+            <div>
+                {noResult}
+                <SearchItem toolInvocation={toolInvocation} />
+            </div>
+        )
     }
 }
 
