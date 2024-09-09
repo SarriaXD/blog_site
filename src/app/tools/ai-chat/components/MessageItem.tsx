@@ -40,9 +40,9 @@ const UserItem = ({ message }: MessageProps) => {
     return (
         <div className="flex flex-col gap-4">
             <div className="flex justify-end">
-                <div className="rounded-[20px] bg-[#2F2F2F] px-4 py-2 text-base text-white">
+                <p className="break-all rounded-[20px] bg-[#2F2F2F] px-4 py-2 text-base text-white">
                     {message.content}
-                </div>
+                </p>
             </div>
             {imageAttachments && (
                 <div className="flex justify-end gap-4">
@@ -87,6 +87,28 @@ const ToolcallItem = ({ toolInvocation }: ToolcallItemProps) => {
         return <WeatherInformationItem toolInvocation={toolInvocation} />
     } else if (toolInvocation.toolName == 'search') {
         return <SearchItem toolInvocation={toolInvocation} />
+    } else if (toolInvocation.toolName == 'retrieve') {
+        return <RetrieveItem toolInvocation={toolInvocation} />
+    }
+}
+
+const RetrieveItem = ({ toolInvocation }: ToolcallItemProps) => {
+    if ('result' in toolInvocation) {
+        return (
+            <p className="pl-12 text-base font-bold italic text-gray-600">
+                Here is the summary of the site:
+            </p>
+        )
+    } else {
+        return (
+            <div className="flex justify-start pl-10">
+                <div className="rounded-[20px] bg-[#2F2F2F] px-4 py-2">
+                    <p className="animate-pulse text-lg font-bold italic text-white">
+                        Searching {toolInvocation.args.url}
+                    </p>
+                </div>
+            </div>
+        )
     }
 }
 
@@ -191,7 +213,7 @@ const SearchItem = ({ toolInvocation }: ToolcallItemProps) => {
         const result = toolInvocation.result as SearchResults
         return (
             <p className="pl-12 text-base font-bold italic text-gray-600">
-                Searched {result.results.length} sites
+                {result.results.length} results were found.
             </p>
         )
     } else {
