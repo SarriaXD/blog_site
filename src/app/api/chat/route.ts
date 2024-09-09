@@ -24,7 +24,7 @@ export async function POST(request: Request) {
         model: model,
         system: systemPrompt(new Date().toISOString()),
         messages: convertToCoreMessages(messages),
-        maxToolRoundtrips: 1,
+        maxToolRoundtrips: 5,
         tools: {
             search: tool({
                 description: 'Search the web for information',
