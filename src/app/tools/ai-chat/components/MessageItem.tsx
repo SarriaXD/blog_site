@@ -3,7 +3,6 @@ import { Message, ToolInvocation } from 'ai'
 import { Dog } from '@public/icons'
 import { WeatherData } from '@utils/weather-utils.ts'
 import { SearchResults } from '@utils/search-utils.ts'
-import { useEffect, useState } from 'react'
 
 interface MessageProps {
     message: Message
@@ -84,27 +83,10 @@ interface ToolcallItemProps {
 }
 
 const ToolcallItem = ({ toolInvocation }: ToolcallItemProps) => {
-    const [noResult, setNoResult] = useState('')
-
-    useEffect(() => {
-        if (!('result' in toolInvocation)) {
-            setNoResult(JSON.stringify(toolInvocation))
-        }
-    }, [toolInvocation])
     if (toolInvocation.toolName == 'getWeatherInformation') {
-        return (
-            <div>
-                {noResult}
-                <WeatherInformationItem toolInvocation={toolInvocation} />
-            </div>
-        )
+        return <WeatherInformationItem toolInvocation={toolInvocation} />
     } else if (toolInvocation.toolName == 'search') {
-        return (
-            <div>
-                {noResult}
-                <SearchItem toolInvocation={toolInvocation} />
-            </div>
-        )
+        return <SearchItem toolInvocation={toolInvocation} />
     }
 }
 

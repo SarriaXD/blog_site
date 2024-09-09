@@ -69,9 +69,7 @@ const ChatContent = () => {
         handleSubmit,
         setInput,
         stop,
-    } = useChat({
-        maxToolRoundtrips: 5,
-    })
+    } = useChat()
 
     const messages = useThrottle(fasterMessages, 16.67)
 
