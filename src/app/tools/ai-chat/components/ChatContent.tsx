@@ -69,9 +69,7 @@ const ChatContent = () => {
         handleSubmit,
         setInput,
         stop,
-    } = useChat({
-        api: 'https://api.sarria.ca/api/chat',
-    })
+    } = useChat()
 
     const messages = useThrottle(fasterMessages, 16.67)
 
