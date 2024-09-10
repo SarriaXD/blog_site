@@ -103,7 +103,7 @@ const RetrieveItem = ({ toolInvocation }: ToolcallItemProps) => {
         return (
             <div className="flex justify-start pl-10">
                 <div className="rounded-[20px] bg-[#2F2F2F] px-4 py-2">
-                    <p className="animate-pulse text-lg font-bold italic text-white">
+                    <p className="animate-pulse break-all text-lg font-bold italic text-white">
                         Searching {toolInvocation.args.url}
                     </p>
                 </div>
