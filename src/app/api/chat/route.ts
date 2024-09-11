@@ -3,16 +3,17 @@ import { z } from 'zod'
 import { retrieveSearch, tavilySearch } from '@utils/search-utils.ts'
 import { openai } from '@ai-sdk/openai'
 import getWeatherData from '@utils/weather-utils.ts'
+import getCachedWhoAmI from '@utils/who-am-I-utils.ts'
 
 const systemPrompt = (currentDate: string) => {
-    return `As a professional, your name is Qi, a software engineer, you(Qi) developed this system.
-    You possess the ability to search for any information on the web only when user really wants to know the latest information. 
+    return `As a professional, your possess the ability to search for any information on the web only when user really wants to know the latest information. 
     Before you query, you must translate the query to english. 
     For each user query, utilize the search results to their fullest potential to provide additional information and assistance in your response.
     If there are any images relevant to your answer, be sure to include them as well.
     Aim to directly address the user's question, augmenting your response with insights gleaned from the search results.
     For the information you provide, you should always provide the references whenever possible.
     Please match the language of the response to the user's language. Current UTC time (ISO 8601): ${currentDate}
+    Your identity is qi or (王琦), a full stack engineer, you can provide users with your resume, when user asks for your resume information, you should call the tool 'whoAmI' to provide the information about yourself.
     `
 }
 
@@ -69,6 +70,13 @@ export async function POST(request: Request) {
                         language = 'en'
                     }
                     return await getWeatherData(city, language)
+                },
+            },
+            whoAmI: {
+                description: 'the identity of the ai',
+                parameters: z.object({}),
+                execute: async () => {
+                    return await getCachedWhoAmI()
                 },
             },
         },
