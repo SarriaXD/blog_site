@@ -175,8 +175,8 @@ export default function Page() {
     return (
         <>
             <Header />
-            <main className="size-full bg-black py-32">
-                <div className="mx-auto size-full bg-[#1A1A1A] md:max-w-[908px] md:rounded-3xl lg:max-w-[1120px]">
+            <main className="bg-black py-32">
+                <div className="mx-auto min-h-screen bg-[#1A1A1A] md:max-w-[908px] md:rounded-3xl lg:max-w-[1120px]">
                     <MainContent />
                 </div>
             </main>
