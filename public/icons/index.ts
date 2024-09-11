@@ -8,9 +8,6 @@ import ArrowRight from './ArrowRight.svg'
 import Add from './Add.svg'
 import Copy from './Copy.svg'
 import Check from './Check.svg'
-import Record from './Record.svg'
-import ArrowUp from './ArrowUp.svg'
-import FileUpload from './FileUpload.svg'
 import Warn from './Warn.svg'
 
 export {
@@ -24,8 +21,5 @@ export {
     Add,
     Copy,
     Check,
-    Record,
-    ArrowUp,
-    FileUpload,
     Warn,
 }
