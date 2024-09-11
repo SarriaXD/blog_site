@@ -13,7 +13,7 @@ const toolsData = [
     {
         title: 'ai chat',
         description: 'talk to an ai',
-        href: 'https://ai-chatbot.sarria.ca',
+        href: 'https://chat.sarria.ca',
     },
 ]
 
