@@ -1,14 +1,9 @@
 import React, { useEffect } from 'react'
-import {
-    IconButton,
-    List,
-    ListItem,
-    ListItemSuffix,
-} from '@components/Material.tsx'
+import { IconButton, List, ListItem, ListItemSuffix } from './material.tsx'
 import Link from 'next/link'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Close, Dog, Email, Github, Linkedin } from '@public/icons'
-import { useMediaQuery } from '@hooks/hooks.ts'
+import { useMediaQuery } from '../lib/hooks/hooks.ts'
 
 const itemVariants = {
     initial: { x: '-100%' },
@@ -131,7 +126,7 @@ interface SideBarProps {
     onClose: () => void
 }
 
-export function SideBar({ open, onClose }: SideBarProps) {
+export function Sidebar({ open, onClose }: SideBarProps) {
     const isMobile = useMediaQuery('(max-width: 735px)')
     useEffect(() => {
         if (!isMobile) onClose()
@@ -150,7 +145,7 @@ export function SideBar({ open, onClose }: SideBarProps) {
                         className="fixed left-0 top-0 z-50 h-screen w-full bg-black bg-opacity-[0.75] backdrop-blur-[20px] will-change-transform"
                     >
                         <div className="flex items-center justify-between p-4">
-                            <Link href="/">
+                            <Link href="/public">
                                 <IconButton
                                     size="lg"
                                     aria-label="Back To Home"

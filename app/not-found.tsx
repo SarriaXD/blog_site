@@ -1,10 +1,9 @@
 import Image from 'next/image'
+import { Button } from './ui/material.tsx'
 import Link from 'next/link'
-import { Button } from '@components/Material.tsx'
 import { not_found } from '@public/images'
-import React from 'react'
-import { Header } from '@components/Header.tsx'
-import { Footer } from '@components/Footer.tsx'
+import { Header } from './ui/header.tsx'
+import { Footer } from './ui/footer.tsx'
 
 const NotFoundImage = () => {
     return (
@@ -19,7 +18,7 @@ const NotFoundImage = () => {
                 src={not_found}
                 priority={true}
                 placeholder="blur"
-                alt="under development image"
+                alt="404 not fount image"
             />
         </div>
     )
@@ -27,7 +26,7 @@ const NotFoundImage = () => {
 
 const NotFoundText = () => {
     return (
-        <div className="flex flex-col items-center justify-center gap-4 self-center lg:gap-8">
+        <div className="flex flex-shrink-0 flex-col items-center justify-center gap-4 self-center lg:gap-8">
             <h1
                 color="white"
                 className="text-center text-4xl md:text-5xl lg:text-6xl"
@@ -38,7 +37,7 @@ const NotFoundText = () => {
                 color={'gray'}
                 className="text-center text-2xl md:text-3xl lg:text-4xl"
             >
-                This Page is under development
+                <span className="text-red-500">404</span> Page not found
             </h2>
             <Link href="/">
                 <Button color="black">Go back to home</Button>
@@ -47,7 +46,7 @@ const NotFoundText = () => {
     )
 }
 
-export default function Page() {
+export default function NotFound() {
     return (
         <>
             <Header />

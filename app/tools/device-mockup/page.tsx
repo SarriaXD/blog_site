@@ -1,6 +1,6 @@
-import { Header } from '@components/Header.tsx'
-import MainContent from '../components/MainContent.tsx'
-import { Footer } from '@components/Footer.tsx'
+import { Header } from '../../ui/header.tsx'
+import MainContent from '../../ui/tools/main-content.tsx'
+import { Footer } from '../../ui/footer.tsx'
 
 export default function Page() {
     return (

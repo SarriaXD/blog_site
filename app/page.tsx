@@ -1,10 +1,10 @@
-import { HeroSection } from './components/HeroSection.tsx'
-import { TechStackSection } from './components/TechStackSection.tsx'
-import { getAllNeedColorImageColors } from '@utils/utils.ts'
-import { FlutterProjectSection } from './components/FlutterProjectSection.tsx'
-import { flutterProjectData } from '@data/flutterProjectData.ts'
-import { Header } from '@components/Header.tsx'
-import { Footer } from '@components/Footer.tsx'
+import { HeroSection } from './ui/home/hero-section.tsx'
+import { TechStackSection } from './ui/home/tech-stack-section.tsx'
+import { getAllNeedColorImageColors } from './lib/utils/utils.ts'
+import { FlutterProjectSection } from './ui/home/flutter-project-section.tsx'
+import { flutterProjectData } from './lib/data/flutterProjectData.ts'
+import { Header } from './ui/header.tsx'
+import { Footer } from './ui/footer.tsx'
 
 export default async function Page() {
     const colorsMap = await getAllNeedColorImageColors()

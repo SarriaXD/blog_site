@@ -1,12 +1,12 @@
 'use client'
 
-import ImageUploader from './ImageLoader.tsx'
-import { FrameGallery } from './FrameGallery.tsx'
-import ImageLoaderOptions from './ImageLoaderOptions.tsx'
-import { Alert, Button } from '@components/Material.tsx'
+import ImageUploader from './image-loader.tsx'
+import { FrameGallery } from './frame-gallery.tsx'
+import ImageLoaderOptions from './image-loader-options.tsx'
+import { Alert, Button } from '../material.tsx'
 import { iphone_frame, pixel_frame } from '@public/images'
 import { useCallback, useEffect, useState } from 'react'
-import ProcessedImage from './ProcessedImage.tsx'
+import ProcessedImage from './processed-image.tsx'
 
 const frameGalleryData = [
     {

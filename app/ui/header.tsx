@@ -1,8 +1,8 @@
 'use client'
 
-import { Button, IconButton, Tooltip } from '@components/Material.tsx'
+import { Button, IconButton, Tooltip } from './material.tsx'
 import Link from 'next/link'
-import { SideBar } from '@components/SideBar.tsx'
+import { Sidebar } from './sidebar.tsx'
 import { useState } from 'react'
 import { BurgerMenu, Dog, Email, Github, Linkedin } from '@public/icons'
 
@@ -62,7 +62,7 @@ export const Header = () => {
                     >
                         <BurgerMenu className="size-6 text-white" />
                     </IconButton>
-                    <Link href="/">
+                    <Link href="/public">
                         <IconButton
                             size="lg"
                             aria-label="Back To Home"
@@ -113,7 +113,7 @@ export const Header = () => {
                     </ul>
                 </nav>
             </header>
-            <SideBar open={open} onClose={onClose} />
+            <Sidebar open={open} onClose={onClose} />
         </>
     )
 }
