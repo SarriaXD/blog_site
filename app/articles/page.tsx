@@ -1,8 +1,8 @@
 import React from 'react'
-import { Header } from '../ui/header.tsx'
-import { Footer } from '../ui/footer.tsx'
-import NotFoundText from '../ui/articles/not-found-text.tsx'
-import NotFoundImage from '../ui/articles/not-found-image.tsx'
+import { Header } from '@ui/header.tsx'
+import { Footer } from '@ui/footer.tsx'
+import NotFoundText from '@ui/articles/not-found-text.tsx'
+import NotFoundImage from '@ui/articles/not-found-image.tsx'
 
 export default function Page() {
     return (

@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { ArrowRight } from '@public/icons'
-import { Card, CardBody } from '../material.tsx'
+import { Card, CardBody } from '@ui/material.tsx'
 
 const toolsData = [
     {

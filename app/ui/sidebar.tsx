@@ -3,7 +3,7 @@ import { IconButton, List, ListItem, ListItemSuffix } from './material.tsx'
 import Link from 'next/link'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Close, Dog, Email, Github, Linkedin } from '@public/icons'
-import { useMediaQuery } from '../lib/hooks/hooks.ts'
+import { useMediaQuery } from '@lib/hooks/hooks.ts'
 
 const itemVariants = {
     initial: { x: '-100%' },

@@ -1,6 +1,6 @@
 'use client'
 
-import { Card, CardBody, Chip } from '../material.tsx'
+import { Card, CardBody, Chip } from '@ui/material.tsx'
 import {
     motion,
     useAnimationFrame,
@@ -12,14 +12,14 @@ import {
     wrap,
 } from 'framer-motion'
 import Image, { StaticImageData } from 'next/image'
-import { StaticImageColor } from '../../lib/utils/utils.ts'
+import { StaticImageColor } from '@lib/utils/utils.ts'
 import { useRef } from 'react'
 import {
     frameworkTechData,
     languageTechData,
     techIntroductions,
-} from '../../lib/data/TechStackData.ts'
-import { useMediaQuery } from '../../lib/hooks/hooks.ts'
+} from '@lib/data/TechStackData.ts'
+import { useMediaQuery } from '@lib/hooks/hooks.ts'
 
 interface CarouselItemProps {
     color: StaticImageColor

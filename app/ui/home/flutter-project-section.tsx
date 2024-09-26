@@ -12,8 +12,8 @@ import {
     useTransform,
 } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
-import { flutterProjectData } from '../../lib/data/flutterProjectData.ts'
-import { StaticImageColor } from '../../lib/utils/utils.ts'
+import { flutterProjectData } from '@lib/data/flutterProjectData.ts'
+import { StaticImageColor } from '@lib/utils/utils.ts'
 
 const useTitleAnimation = () => {
     const ref = useRef(null)
