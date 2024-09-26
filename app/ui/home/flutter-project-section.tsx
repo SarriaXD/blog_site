@@ -19,7 +19,7 @@ const useTitleAnimation = () => {
     const ref = useRef(null)
     const enterViewport = useInView(ref, {
         once: false,
-        margin: '100% 0% -10% 0%',
+        margin: '100% 0% -20% 0%',
     })
     return {
         ref,

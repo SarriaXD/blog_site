@@ -62,7 +62,7 @@ export const Header = () => {
                     >
                         <BurgerMenu className="size-6 text-white" />
                     </IconButton>
-                    <Link href="/public">
+                    <Link href="/">
                         <IconButton
                             size="lg"
                             aria-label="Back To Home"
