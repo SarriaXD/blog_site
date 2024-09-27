@@ -204,6 +204,17 @@ const searchMessages: Message[] = [
     },
     {
         id: '2',
+        role: 'tools',
+        content: '',
+        toolResults: {
+            toolName: 'search',
+            result: {
+                length: 1,
+            },
+        },
+    },
+    {
+        id: '3',
         role: 'assistant',
         content:
             'Here are the latest news updates from Winnipeg:\n' +

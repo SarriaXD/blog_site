@@ -2,9 +2,19 @@ import { Message } from '@ui/home/chatbot-section/message-item/message-item.tsx'
 
 const ToolcallItem = (message: Message) => {
     if (message.toolResults?.toolName == 'getWeatherInformation') {
-        return <WeatherInformationItem {...message.toolResults.result} />
+        return (
+            <WeatherInformationItem
+                {...(message.toolResults.result as WeatherData)}
+            />
+        )
     } else if (message.toolResults?.toolName == 'search') {
-        return <SearchItem {...message.toolResults.result} />
+        return (
+            <SearchItem
+                {...(message.toolResults.result as {
+                    length: number
+                })}
+            />
+        )
     }
 }
 
