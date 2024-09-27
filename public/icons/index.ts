@@ -11,6 +11,7 @@ import Check from './Check.svg'
 import Warn from './Warn.svg'
 import Pen from './Pen.svg'
 import Book from './Book.svg'
+import FileUpload from './FileUpload.svg'
 
 export {
     BurgerMenu,
@@ -26,4 +27,5 @@ export {
     Warn,
     Pen,
     Book,
+    FileUpload,
 }
