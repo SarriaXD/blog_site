@@ -2,112 +2,7 @@ import { Book, Pen } from '@public/icons'
 import { MotionValue, useInView } from 'framer-motion'
 import { useRef, useState } from 'react'
 import { TypeAnimation } from 'react-type-animation'
-
-const sampleChatHistories = [
-    {
-        groupedName: 'Yesterday',
-        histories: [
-            {
-                chatId: 'chat004',
-                title: 'Curated Book Recommendations Based on Personal Reading Preferences',
-            },
-            {
-                chatId: 'chat005',
-                title: 'Comprehensive Tutorial on React Hooks and State Management',
-            },
-            {
-                chatId: 'chat006',
-                title: 'Effective Time Management Strategies for Increased Productivity',
-            },
-        ],
-    },
-    {
-        groupedName: '2 Days Ago',
-        histories: [
-            {
-                chatId: 'chat007',
-                title: 'Personalized Workout Routine Planning for Fitness Goals',
-            },
-            {
-                chatId: 'chat008',
-                title: 'Efficient Data Analysis Techniques Using Python and Pandas',
-            },
-        ],
-    },
-    {
-        groupedName: 'Last Week',
-        histories: [
-            {
-                chatId: 'chat009',
-                title: 'Customized Travel Itinerary Planning for European Vacation',
-            },
-            {
-                chatId: 'chat010',
-                title: 'Introduction to Machine Learning and Neural Networks',
-            },
-            {
-                chatId: 'chat011',
-                title: 'Implementing Effective Productivity Techniques in Daily Routine',
-            },
-        ],
-    },
-    {
-        groupedName: '2 Weeks Ago',
-        histories: [
-            {
-                chatId: 'chat012',
-                title: 'Comprehensive Notes from Advanced Guitar Lessons on Jazz Theory',
-            },
-            {
-                chatId: 'chat013',
-                title: 'Personalized Movie Recommendations Based on Viewing History',
-            },
-        ],
-    },
-    {
-        groupedName: 'Last Month',
-        histories: [
-            {
-                chatId: 'chat014',
-                title: 'Creative and Cost-Effective Home Renovation Ideas for Modern Living',
-            },
-            {
-                chatId: 'chat015',
-                title: 'Tailored Career Advice for Transitioning to the Tech Industry',
-            },
-            {
-                chatId: 'chat016',
-                title: 'Personalized Fitness Training Plan for Weight Loss',
-            },
-        ],
-    },
-    {
-        groupedName: '2 Months Ago',
-        histories: [
-            {
-                chatId: 'chat017',
-                title: 'Sustainable Gardening Tips for Urban Spaces and Small Yards',
-            },
-            {
-                chatId: 'chat018',
-                title: 'Long-Term Financial Planning Strategies for Early Retirement',
-            },
-        ],
-    },
-    {
-        groupedName: '3 Months Ago',
-        histories: [
-            {
-                chatId: 'chat019',
-                title: 'Effective Language Learning Strategies for Multilingual Proficiency',
-            },
-            {
-                chatId: 'chat020',
-                title: 'Collection of Healthy and Delicious Recipes for a Balanced Diet',
-            },
-        ],
-    },
-]
+import { sampleChatHistories } from '@lib/data/ai-chatbot-data.ts'
 
 const useItems = (value: MotionValue<number>) => {
     const items = [
@@ -116,7 +11,7 @@ const useItems = (value: MotionValue<number>) => {
             histories: [
                 {
                     chatId: 'chat000',
-                    title: 'How about the weather in Winnipeg today?',
+                    title: 'Table of Dishes and Drinks',
                 },
                 {
                     chatId: 'chat001',
@@ -137,7 +32,7 @@ const useItems = (value: MotionValue<number>) => {
             histories: [
                 {
                     chatId: 'chat000',
-                    title: 'Help me search the latest news in Winnipeg',
+                    title: 'Latest CBC News in Winnipeg',
                 },
                 {
                     chatId: 'chat001',
@@ -158,7 +53,7 @@ const useItems = (value: MotionValue<number>) => {
             histories: [
                 {
                     chatId: 'chat000',
-                    title: 'Who are you?',
+                    title: 'Weather and Forecast in Winnipeg',
                 },
                 {
                     chatId: 'chat001',
@@ -226,9 +121,9 @@ const TypeAnimationWrapper = ({ title }: { title: string }) => {
             {inView ? (
                 <TypeAnimation
                     key={title}
-                    sequence={[title, 600]}
+                    sequence={[title]}
                     wrapper="span"
-                    speed={50}
+                    speed={75}
                     omitDeletionAnimation={true}
                     cursor={false}
                 />
@@ -293,7 +188,7 @@ const ChatSidebar = ({ progress }: { progress: MotionValue<number> }) => {
                     <Pen className="size-full transform text-gray-400 transition-all duration-200 hover:shadow-lg active:scale-95" />
                 </div>
             </div>
-            <div className={'flex-1 overflow-scroll'}>
+            <div className={'flex-1 overflow-hidden'}>
                 <div className="p-2">
                     <div className="mb-4">
                         <ul>

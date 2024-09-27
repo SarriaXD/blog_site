@@ -10,8 +10,8 @@ const Chatbot = ({ progress }: { progress: MotionValue<number> }) => {
             <ChatSidebar progress={progress} />
             <div className="flex h-full flex-1 flex-col overflow-hidden">
                 <ChatHeader />
-                <div className="flex-1">
-                    <ChatList />
+                <div className="flex-1 overflow-hidden">
+                    <ChatList progress={progress} />
                 </div>
                 <ChatTextfield />
             </div>

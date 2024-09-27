@@ -23,34 +23,11 @@ const ChatbotTitle = () => {
             <motion.h3
                 animate={{
                     opacity: enterViewport ? 1 : 0,
-                    y: enterViewport ? 0 : 50,
-                }}
-                transition={{
-                    type: 'spring',
-                    duration: 1,
-                }}
-                className="text-3xl text-[#86868b] md:text-6xl lg:text-8xl"
-            >
-                <span
-                    className="bg-clip-text text-transparent"
-                    style={{
-                        backgroundImage:
-                            'linear-gradient(90deg, #e8867c, #f5af19, #f12711)',
-                    }}
-                >
-                    Ask
-                </span>{' '}
-                me anything.
-            </motion.h3>
-            <motion.h4
-                animate={{
-                    opacity: enterViewport ? 1 : 0,
                     y: enterViewport ? 0 : 100,
                 }}
                 transition={{
                     type: 'spring',
-                    delay: enterViewport ? 0.3 : 0,
-                    duration: 1,
+                    duration: 1.5,
                 }}
                 className="text-center text-3xl text-[#F5F5F7] md:text-6xl lg:text-8xl"
             >
@@ -65,6 +42,29 @@ const ChatbotTitle = () => {
                     Chatbot
                 </span>
                 {' I built is here to help you.'}
+            </motion.h3>
+            <motion.h4
+                animate={{
+                    opacity: enterViewport ? 1 : 0,
+                    y: enterViewport ? 0 : 100,
+                }}
+                transition={{
+                    type: 'spring',
+                    delay: enterViewport ? 0.3 : 0,
+                    duration: 1.5,
+                }}
+                className="text-3xl text-[#86868b] md:text-6xl lg:text-8xl"
+            >
+                <span
+                    className="bg-clip-text text-transparent"
+                    style={{
+                        backgroundImage:
+                            'linear-gradient(90deg, #e8867c, #f5af19, #f12711)',
+                    }}
+                >
+                    Ask
+                </span>{' '}
+                me anything.
             </motion.h4>
         </div>
     )

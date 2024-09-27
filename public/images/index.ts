@@ -26,6 +26,7 @@ import flutter_dynamic_color_3 from './flutter/flutter_dynamic_color_3.png'
 import flutter_history_1 from './flutter/flutter_history_1.png'
 import flutter_history_2 from './flutter/flutter_history_2.png'
 import flutter_history_3 from './flutter/flutter_history_3.png'
+import food from './food.jpg'
 
 export {
     android,
@@ -56,4 +57,5 @@ export {
     flutter_history_1,
     flutter_history_2,
     flutter_history_3,
+    food,
 }
