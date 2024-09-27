@@ -3,9 +3,10 @@ import {
     searchMessages,
     weatherMessages,
 } from '@lib/data/ai-chatbot-data.ts'
-import { MotionValue } from 'framer-motion'
+import { MotionValue, useTransform } from 'framer-motion'
 import { useMemo, useState } from 'react'
 import MessageItem from '@ui/home/chatbot-section/message-item/message-item.tsx'
+import { motion } from 'framer-motion'
 
 interface ChatListProps {
     progress: MotionValue<number>
@@ -29,13 +30,21 @@ const useMessages = (progress: MotionValue<number>) => {
 }
 
 const ChatList = ({ progress }: ChatListProps) => {
+    const translateZ = useTransform(progress, [0, 0.1], [200, 0])
+    const translateX = useTransform(progress, [0, 0.1], [-60, 0])
     const messages = useMessages(progress)
     return (
-        <div className="mx-auto flex max-w-[800px] flex-col gap-4 px-4">
+        <motion.div
+            className="mx-auto flex size-full max-w-[800px] flex-col gap-4 overflow-hidden rounded-xl bg-gray-900 px-4 opacity-90"
+            style={{
+                translateZ,
+                translateX,
+            }}
+        >
             {messages.map((message) => (
                 <MessageItem key={message.id} {...message} />
             ))}
-        </div>
+        </motion.div>
     )
 }
 
