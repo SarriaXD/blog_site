@@ -18,7 +18,7 @@ import {
     frameworkTechData,
     languageTechData,
     techIntroductions,
-} from '@lib/data/TechStackData.ts'
+} from '@lib/data/tech-stack-data.ts'
 import { useMediaQuery } from '@lib/hooks/hooks.ts'
 
 interface CarouselItemProps {
