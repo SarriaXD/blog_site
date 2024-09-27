@@ -31,7 +31,7 @@ const useMessages = (progress: MotionValue<number>) => {
 
 const ChatList = ({ progress }: ChatListProps) => {
     const translateZ = useTransform(progress, [0, 0.1], [200, 0])
-    const translateX = useTransform(progress, [0, 0.1], [-60, 0])
+    const translateX = useTransform(progress, [0, 0.1], [-70, 0])
     const messages = useMessages(progress)
     return (
         <motion.div
