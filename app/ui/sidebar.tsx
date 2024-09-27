@@ -145,7 +145,7 @@ export function Sidebar({ open, onClose }: SideBarProps) {
                         className="fixed left-0 top-0 z-50 h-screen w-full bg-black bg-opacity-[0.75] backdrop-blur-[20px] will-change-transform"
                     >
                         <div className="flex items-center justify-between p-4">
-                            <Link href="/public">
+                            <Link href="/">
                                 <IconButton
                                     size="lg"
                                     aria-label="Back To Home"

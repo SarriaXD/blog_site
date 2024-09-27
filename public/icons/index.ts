@@ -9,6 +9,8 @@ import Add from './Add.svg'
 import Copy from './Copy.svg'
 import Check from './Check.svg'
 import Warn from './Warn.svg'
+import Pen from './Pen.svg'
+import Book from './Book.svg'
 
 export {
     BurgerMenu,
@@ -22,4 +24,6 @@ export {
     Copy,
     Check,
     Warn,
+    Pen,
+    Book,
 }
