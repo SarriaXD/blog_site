@@ -48,7 +48,6 @@ const FilePreview = ({
     name: string
     extension: string
 }) => {
-    console.log('name', name, 'extension', extension)
     return (
         <div className="relative flex size-24 items-center justify-center rounded-xl bg-white">
             <span className="overflow-hidden text-ellipsis whitespace-nowrap px-2 text-center text-[14px] font-extrabold tracking-tighter text-blue-600">
