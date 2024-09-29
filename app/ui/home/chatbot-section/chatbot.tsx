@@ -12,20 +12,8 @@ const Chatbot = ({ progress }: { progress: MotionValue<number> }) => {
         setInView(latest > 0 && latest < 1)
     })
     return (
-        <motion.div
+        <div
             className="size-full"
-            initial={{
-                opacity: 0,
-                translateY: '50%',
-            }}
-            whileInView={{
-                opacity: 1,
-                translateY: 0,
-            }}
-            transition={{
-                type: 'tween',
-                duration: 0.5,
-            }}
             style={{
                 perspective: '800px',
             }}
@@ -64,7 +52,7 @@ const Chatbot = ({ progress }: { progress: MotionValue<number> }) => {
                 >
                     <ChatHeader />
                     <motion.div
-                        className="min-h-0 flex-1"
+                        className="flex-1 overflow-hidden"
                         animate={{
                             translateZ: inView ? 0 : 120,
                         }}
@@ -78,7 +66,7 @@ const Chatbot = ({ progress }: { progress: MotionValue<number> }) => {
                     <ChatTextfield />
                 </div>
             </motion.div>
-        </motion.div>
+        </div>
     )
 }
 

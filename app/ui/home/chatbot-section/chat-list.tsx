@@ -31,7 +31,7 @@ const useMessages = (progress: MotionValue<number>) => {
 const ChatList = ({ progress }: ChatListProps) => {
     const messages = useMessages(progress)
     return (
-        <div className="mx-auto flex size-full max-w-[800px] flex-col gap-4 overflow-hidden px-4">
+        <div className="flex max-w-[800px] flex-col gap-4 px-4">
             {messages.map((message) => (
                 <MessageItem key={message.id} {...message} />
             ))}
