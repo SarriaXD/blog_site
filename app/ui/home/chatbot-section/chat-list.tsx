@@ -38,6 +38,10 @@ const ChatList = ({ progress }: ChatListProps) => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
+                transition={{
+                    type: 'tween',
+                    duration: 0.3,
+                }}
                 className="flex max-w-[800px] flex-col gap-4 px-4"
             >
                 {messages.map((message) => (
