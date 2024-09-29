@@ -18,7 +18,7 @@ const ChatbotSection = () => {
         setInView(latest > 0 && latest < 1)
     })
     return (
-        <section className="mx-auto max-w-[1200px] py-4">
+        <section className="mx-auto mb-24 mt-20 max-w-[1200px]">
             <ChatbotTitle />
             <div ref={ref} className="mt-8 h-[500vh] md:mt-16">
                 <div className="sticky top-0 h-screen w-full pb-24 pt-20">
