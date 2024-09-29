@@ -4,13 +4,13 @@ import { MotionValue } from 'framer-motion'
 import ChatTextfield from '@ui/home/chatbot-section/chat-textfield.tsx'
 import ChatList from '@ui/home/chatbot-section/chat-list.tsx'
 import { motion } from 'framer-motion'
-import { useState } from 'react'
 
-const Chatbot = ({ progress }: { progress: MotionValue<number> }) => {
-    const [inView, setInView] = useState(false)
-    progress.on('change', (latest) => {
-        setInView(latest > 0 && latest < 1)
-    })
+interface ChatbotProps {
+    progress: MotionValue<number>
+    inView: boolean
+}
+
+const Chatbot = ({ progress, inView }: ChatbotProps) => {
     return (
         <div
             className="size-full"
@@ -21,7 +21,7 @@ const Chatbot = ({ progress }: { progress: MotionValue<number> }) => {
             <motion.div
                 className="flex size-full rounded-xl bg-gray-900"
                 animate={{
-                    rotateY: inView ? 0 : 30,
+                    rotateY: inView ? 0 : 45,
                 }}
                 transition={{
                     type: 'tween',
@@ -29,13 +29,12 @@ const Chatbot = ({ progress }: { progress: MotionValue<number> }) => {
                     delay: 0.3,
                 }}
                 style={{
-                    transformOrigin: '25% 50%',
                     transformStyle: 'preserve-3d',
                 }}
             >
                 <motion.div
                     animate={{
-                        translateZ: inView ? 0 : 100,
+                        translateZ: inView ? 0 : 50,
                     }}
                     transition={{
                         type: 'tween',
@@ -54,7 +53,7 @@ const Chatbot = ({ progress }: { progress: MotionValue<number> }) => {
                     <motion.div
                         className="flex-1 overflow-hidden"
                         animate={{
-                            translateZ: inView ? 0 : 120,
+                            translateZ: inView ? 0 : 100,
                         }}
                         transition={{
                             type: 'tween',

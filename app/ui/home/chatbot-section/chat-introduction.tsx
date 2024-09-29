@@ -1,5 +1,6 @@
 import { MotionValue } from 'framer-motion'
 import { useState } from 'react'
+import { motion } from 'framer-motion'
 
 const useIntroduction = (progress: MotionValue<number>) => {
     const introductions = [
@@ -31,19 +32,30 @@ const useIntroduction = (progress: MotionValue<number>) => {
 
 interface ChatIntroductionProps {
     progress: MotionValue<number>
+    inView: boolean
 }
 
-const ChatIntroduction = ({ progress }: ChatIntroductionProps) => {
+const ChatIntroduction = ({ progress, inView }: ChatIntroductionProps) => {
     const introduction = useIntroduction(progress)
     return (
-        <div className="max-w-[300px] capitalize">
+        <motion.div
+            animate={{
+                opacity: inView ? 1 : 0,
+            }}
+            transition={{
+                type: 'tween',
+                delay: 0.5,
+                duration: 0.5,
+            }}
+            className="max-w-[300px] capitalize"
+        >
             <h3 className="text-3xl text-gray-400 md:text-2xl">
                 {introduction.title}
             </h3>
             <h4 className="mt-2 hidden text-xl text-gray-600 md:block">
                 {introduction.description}
             </h4>
-        </div>
+        </motion.div>
     )
 }
 

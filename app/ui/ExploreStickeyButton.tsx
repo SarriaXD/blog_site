@@ -45,7 +45,7 @@ interface ExploreStickyButtonProps {
 }
 
 const ExploreStickyButton = ({ href }: ExploreStickyButtonProps) => {
-    const { ref, throttledIsInView: inView } = useThrottledInView(700)
+    const { ref, throttledIsInView: inView } = useThrottledInView(1000)
     const containerTransition = {
         type: 'tween',
         times: [0, 0.45, 0.65, 1],
