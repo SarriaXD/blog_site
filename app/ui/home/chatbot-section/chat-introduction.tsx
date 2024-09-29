@@ -37,10 +37,12 @@ const ChatIntroduction = ({ progress }: ChatIntroductionProps) => {
     const introduction = useIntroduction(progress)
     return (
         <div className="max-w-[300px] capitalize">
-            <h4 className="text-2xl text-gray-400">{introduction.title}</h4>
-            <h3 className="mt-2 hidden text-xl text-gray-600 md:block">
-                {introduction.description}
+            <h3 className="text-3xl text-gray-400 md:text-2xl">
+                {introduction.title}
             </h3>
+            <h4 className="mt-2 hidden text-xl text-gray-600 md:block">
+                {introduction.description}
+            </h4>
         </div>
     )
 }
