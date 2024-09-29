@@ -5,7 +5,7 @@ const useTitleAnimation = () => {
     const ref = useRef(null)
     const enterViewport = useInView(ref, {
         once: false,
-        margin: '100% 0% -20% 0%',
+        margin: '100% 0% -30% 0%',
     })
     return {
         ref,
@@ -18,18 +18,19 @@ const ChatbotTitle = () => {
     return (
         <div
             ref={ref}
-            className={'flex flex-col items-center justify-center gap-4'}
+            className={
+                'mx-auto flex max-w-[700px] flex-col items-center justify-center gap-4 text-center text-4xl text-[#F5F5F7] md:text-6xl lg:text-8xl'
+            }
         >
             <motion.h3
                 animate={{
                     opacity: enterViewport ? 1 : 0,
-                    y: enterViewport ? 0 : 100,
+                    y: enterViewport ? 0 : 200,
                 }}
                 transition={{
-                    type: 'spring',
-                    duration: 1.5,
+                    type: 'tween',
+                    duration: 0.5,
                 }}
-                className="text-center text-3xl text-[#F5F5F7] md:text-6xl lg:text-8xl"
             >
                 {'The '}
                 <span
@@ -46,14 +47,13 @@ const ChatbotTitle = () => {
             <motion.h4
                 animate={{
                     opacity: enterViewport ? 1 : 0,
-                    y: enterViewport ? 0 : 100,
+                    y: enterViewport ? 0 : 200,
                 }}
                 transition={{
-                    type: 'spring',
-                    delay: enterViewport ? 0.3 : 0,
-                    duration: 1.5,
+                    type: 'tween',
+                    delay: enterViewport ? 0.1 : 0,
+                    duration: 0.5,
                 }}
-                className="text-3xl text-[#86868b] md:text-6xl lg:text-8xl"
             >
                 <span
                     className="bg-clip-text text-transparent"

@@ -123,7 +123,7 @@ const TypeAnimationWrapper = ({ title }: { title: string }) => {
                     key={title}
                     sequence={[title]}
                     wrapper="span"
-                    speed={75}
+                    speed={40}
                     omitDeletionAnimation={true}
                     cursor={false}
                 />

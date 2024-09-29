@@ -24,8 +24,9 @@ const Chatbot = ({ progress }: { progress: MotionValue<number> }) => {
                     rotateY: inView ? 0 : 30,
                 }}
                 transition={{
-                    type: 'spring',
-                    duration: 1.5,
+                    type: 'tween',
+                    duration: 0.5,
+                    delay: 0.3,
                 }}
                 style={{
                     transformOrigin: '25% 50%',
@@ -53,7 +54,7 @@ const Chatbot = ({ progress }: { progress: MotionValue<number> }) => {
                     <motion.div
                         className="min-h-0 flex-1"
                         animate={{
-                            translateZ: inView ? 0 : 200,
+                            translateZ: inView ? 0 : 120,
                         }}
                         transition={{
                             type: 'tween',
