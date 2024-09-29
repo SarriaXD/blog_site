@@ -1,9 +1,8 @@
 import { Book, Pen } from '@public/icons'
-import { MotionValue, useInView, useTransform } from 'framer-motion'
+import { MotionValue, useInView } from 'framer-motion'
 import { useRef, useState } from 'react'
 import { TypeAnimation } from 'react-type-animation'
 import { sampleChatHistories } from '@lib/data/ai-chatbot-data.ts'
-import { motion } from 'framer-motion'
 
 const useItems = (value: MotionValue<number>) => {
     const items = [
@@ -179,14 +178,8 @@ const HistoryItem = ({
 
 const ChatSidebar = ({ progress }: { progress: MotionValue<number> }) => {
     const items = useItems(progress)
-    const translateZ = useTransform(progress, [0, 0.1], [100, 0])
     return (
-        <motion.div
-            className="hidden h-full w-[256px] flex-col rounded-l-xl bg-[#171717] text-gray-300 md:flex"
-            style={{
-                translateZ,
-            }}
-        >
+        <div className="hidden h-full w-[256px] overflow-hidden rounded-l-xl bg-[#171717] text-gray-300 md:block">
             <div className="flex items-center justify-between px-4 py-3">
                 <div className="rounded-lg p-2 hover:bg-gray-900">
                     <Book className="transform text-gray-400 transition-all duration-200 hover:shadow-lg active:scale-95" />
@@ -195,23 +188,21 @@ const ChatSidebar = ({ progress }: { progress: MotionValue<number> }) => {
                     <Pen className="size-full transform text-gray-400 transition-all duration-200 hover:shadow-lg active:scale-95" />
                 </div>
             </div>
-            <div className={'flex-1 overflow-hidden'}>
-                <div className="p-2">
-                    <div className="mb-4">
-                        <ul>
-                            {items.map((groupedItem) => (
-                                <GroupedItems
-                                    key={groupedItem.groupedName}
-                                    groupedName={groupedItem.groupedName}
-                                    currentChatId="chat000"
-                                    items={groupedItem.histories}
-                                />
-                            ))}
-                        </ul>
-                    </div>
+            <div className="p-2">
+                <div className="mb-4">
+                    <ul>
+                        {items.map((groupedItem) => (
+                            <GroupedItems
+                                key={groupedItem.groupedName}
+                                groupedName={groupedItem.groupedName}
+                                currentChatId="chat000"
+                                items={groupedItem.histories}
+                            />
+                        ))}
+                    </ul>
                 </div>
             </div>
-        </motion.div>
+        </div>
     )
 }
 

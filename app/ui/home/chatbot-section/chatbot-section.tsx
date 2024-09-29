@@ -15,8 +15,13 @@ const ChatbotSection = () => {
         <section className="mx-auto max-w-[900px] px-4">
             <ChatbotTitle />
             <div ref={ref} className="h-[500vh]">
-                <div className="sticky top-0 h-screen w-full pb-[20vh] pt-32">
-                    <Chatbot progress={progress} />
+                <div className="sticky top-0 h-screen w-full py-24">
+                    <div className="flex size-full flex-col items-center justify-center gap-8 md:flex-row md:gap-16">
+                        <div className="min-h-0 flex-1 md:h-full">
+                            <Chatbot progress={progress} />
+                        </div>
+                        <div>Hello</div>
+                    </div>
                 </div>
             </div>
         </section>

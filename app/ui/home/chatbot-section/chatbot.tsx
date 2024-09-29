@@ -1,27 +1,48 @@
 import ChatHeader from '@ui/home/chatbot-section/chat-header.tsx'
 import ChatSidebar from '@ui/home/chatbot-section/chat-side-bar.tsx'
-import { MotionValue, useTransform } from 'framer-motion'
+import { MotionValue } from 'framer-motion'
 import ChatTextfield from '@ui/home/chatbot-section/chat-textfield.tsx'
 import ChatList from '@ui/home/chatbot-section/chat-list.tsx'
 import { motion } from 'framer-motion'
+import { useState } from 'react'
 
 const Chatbot = ({ progress }: { progress: MotionValue<number> }) => {
-    const rotateY = useTransform(progress, [0, 0.1], [24, 0])
+    const [inView, setInView] = useState(false)
+    progress.on('change', (latest) => {
+        setInView(latest > 0 && latest < 1)
+    })
     return (
         <div
             className="size-full"
             style={{
-                perspective: '1600px',
+                perspective: '800px',
             }}
         >
             <motion.div
                 className="flex size-full rounded-xl bg-gray-900"
+                animate={{
+                    rotateY: inView ? 0 : 30,
+                }}
+                transition={{
+                    type: 'spring',
+                    duration: 1.5,
+                }}
                 style={{
-                    rotateY,
+                    transformOrigin: '25% 50%',
                     transformStyle: 'preserve-3d',
                 }}
             >
-                <ChatSidebar progress={progress} />
+                <motion.div
+                    animate={{
+                        translateZ: inView ? 0 : 100,
+                    }}
+                    transition={{
+                        type: 'tween',
+                        duration: 0.5,
+                    }}
+                >
+                    <ChatSidebar progress={progress} />
+                </motion.div>
                 <div
                     className="flex h-full flex-1 flex-col"
                     style={{
@@ -29,14 +50,18 @@ const Chatbot = ({ progress }: { progress: MotionValue<number> }) => {
                     }}
                 >
                     <ChatHeader />
-                    <div
+                    <motion.div
                         className="min-h-0 flex-1"
-                        style={{
-                            transformStyle: 'preserve-3d',
+                        animate={{
+                            translateZ: inView ? 0 : 200,
+                        }}
+                        transition={{
+                            type: 'tween',
+                            duration: 0.5,
                         }}
                     >
                         <ChatList progress={progress} />
-                    </div>
+                    </motion.div>
                     <ChatTextfield />
                 </div>
             </motion.div>
