@@ -35,7 +35,7 @@ const ImagePreview = ({ imageDate }: { imageDate: StaticImageData }) => {
             <Image
                 src={imageDate}
                 alt={'user image'}
-                className="h-full w-auto"
+                className="h-full w-auto object-cover"
             />
         </div>
     )

@@ -1,31 +1,20 @@
-import { useRef } from 'react'
-import { motion, useInView } from 'framer-motion'
-
-const useTitleAnimation = () => {
-    const ref = useRef(null)
-    const enterViewport = useInView(ref, {
-        once: false,
-        margin: '100% 0% -30% 0%',
-    })
-    return {
-        ref,
-        enterViewport,
-    }
-}
+import { motion } from 'framer-motion'
 
 const ChatbotTitle = () => {
-    const { ref, enterViewport } = useTitleAnimation()
     return (
         <div
-            ref={ref}
             className={
                 'mx-auto flex max-w-[700px] flex-col items-center justify-center gap-4 text-center text-4xl text-[#F5F5F7] md:text-6xl lg:text-8xl'
             }
         >
             <motion.h3
-                animate={{
-                    opacity: enterViewport ? 1 : 0,
-                    y: enterViewport ? 0 : 200,
+                initial={{
+                    opacity: 0,
+                    y: 100,
+                }}
+                whileInView={{
+                    opacity: 1,
+                    y: 0,
                 }}
                 transition={{
                     type: 'tween',
@@ -45,13 +34,16 @@ const ChatbotTitle = () => {
                 {' I built is here to help you.'}
             </motion.h3>
             <motion.h4
-                animate={{
-                    opacity: enterViewport ? 1 : 0,
-                    y: enterViewport ? 0 : 200,
+                initial={{
+                    opacity: 0,
+                    y: 120,
+                }}
+                whileInView={{
+                    opacity: 1,
+                    y: 0,
                 }}
                 transition={{
                     type: 'tween',
-                    delay: enterViewport ? 0.1 : 0,
                     duration: 0.5,
                 }}
             >

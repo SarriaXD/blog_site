@@ -179,7 +179,7 @@ const HistoryItem = ({
 const ChatSidebar = ({ progress }: { progress: MotionValue<number> }) => {
     const items = useItems(progress)
     return (
-        <div className="hidden h-full w-[256px] overflow-hidden rounded-l-xl bg-[#171717] text-gray-300 md:block">
+        <div className="hidden h-full overflow-hidden rounded-l-xl bg-[#171717] text-gray-300 md:block md:w-[180px] xl:w-[256px]">
             <div className="flex items-center justify-between px-4 py-3">
                 <div className="rounded-lg p-2 hover:bg-gray-900">
                     <Book className="transform text-gray-400 transition-all duration-200 hover:shadow-lg active:scale-95" />

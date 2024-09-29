@@ -12,8 +12,20 @@ const Chatbot = ({ progress }: { progress: MotionValue<number> }) => {
         setInView(latest > 0 && latest < 1)
     })
     return (
-        <div
+        <motion.div
             className="size-full"
+            initial={{
+                opacity: 0,
+                translateY: '50%',
+            }}
+            whileInView={{
+                opacity: 1,
+                translateY: 0,
+            }}
+            transition={{
+                type: 'tween',
+                duration: 0.5,
+            }}
             style={{
                 perspective: '800px',
             }}
@@ -66,7 +78,7 @@ const Chatbot = ({ progress }: { progress: MotionValue<number> }) => {
                     <ChatTextfield />
                 </div>
             </motion.div>
-        </div>
+        </motion.div>
     )
 }
 
