@@ -288,7 +288,7 @@ const IntroductionItem = ({
                 duration: 1,
             }}
         >
-            <Card color="gray">
+            <Card tone="neutral">
                 <CardBody className="flex flex-col gap-4">
                     <div className="flex flex-wrap gap-2">
                         {images.map((image, techIndex) => (
@@ -309,8 +309,7 @@ const IntroductionItem = ({
                                 key={techIndex}
                                 size="md"
                                 value={tech}
-                                color="gray"
-                                className="bg-gray-800"
+                                tone="neutral"
                             />
                         ))}
                     </div>

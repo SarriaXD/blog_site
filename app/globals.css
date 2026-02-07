@@ -1,8 +1,98 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
     --app-header-height: 4rem;
     --app-container-max-width: 1120px;
+
+    --ui-bg-base: #05070b;
+    --ui-bg-elev-1: #0b1220;
+    --ui-bg-elev-2: #0f1b30;
+    --ui-surface: rgba(236, 244, 255, 0.09);
+    --ui-surface-strong: rgba(236, 244, 255, 0.16);
+    --ui-border: rgba(232, 240, 255, 0.16);
+    --ui-border-strong: rgba(232, 240, 255, 0.28);
+
+    --ui-text-primary: #edf2ff;
+    --ui-text-secondary: #b8c6df;
+    --ui-text-muted: #8e9bb3;
+
+    --ui-brand-400: #40b8ff;
+    --ui-brand-500: #1d74ff;
+    --ui-brand-glow: rgba(32, 121, 255, 0.46);
+}
+
+@theme {
+    --font-sans: 'SF Pro Display', 'SF Pro Icons', -apple-system, BlinkMacSystemFont,
+        'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+
+    --breakpoint-md: 45.9375rem;
+    --breakpoint-lg: 66.8125rem;
+
+    --text-base: 1.0625rem;
+    --text-base--line-height: 1.4705882353;
+    --text-base--font-weight: 600;
+    --text-base--letter-spacing: 0.022em;
+
+    --text-lg: 1.1875rem;
+    --text-lg--line-height: 1.4211026316;
+    --text-lg--font-weight: 600;
+    --text-lg--letter-spacing: 0.012em;
+
+    --text-xl: 1.3125rem;
+    --text-xl--line-height: 1.381002381;
+    --text-xl--font-weight: 600;
+    --text-xl--letter-spacing: 0.011em;
+
+    --text-2xl: 1.75rem;
+    --text-2xl--line-height: 1.1428571429;
+    --text-2xl--font-weight: 600;
+    --text-2xl--letter-spacing: 0.007em;
+
+    --text-3xl: 2rem;
+    --text-3xl--line-height: 1.125;
+    --text-3xl--font-weight: 600;
+    --text-3xl--letter-spacing: 0.004em;
+
+    --text-4xl: 2.5rem;
+    --text-4xl--line-height: 1.1;
+    --text-4xl--font-weight: 600;
+    --text-4xl--letter-spacing: 0;
+
+    --text-5xl: 3rem;
+    --text-5xl--line-height: 1.0834933333;
+    --text-5xl--font-weight: 600;
+    --text-5xl--letter-spacing: -0.003em;
+
+    --text-6xl: 3.5rem;
+    --text-6xl--line-height: 1.0714285714;
+    --text-6xl--font-weight: 600;
+    --text-6xl--letter-spacing: -0.005em;
+
+    --text-7xl: 4rem;
+    --text-7xl--line-height: 1.0625;
+    --text-7xl--font-weight: 600;
+    --text-7xl--letter-spacing: -0.009em;
+
+    --text-8xl: 5rem;
+    --text-8xl--line-height: 1.05;
+    --text-8xl--font-weight: 600;
+    --text-8xl--letter-spacing: -0.015em;
+
+    --animate-ghost: ghost 4s linear infinite;
+
+    @keyframes ghost {
+        0% {
+            transform: rotate(0deg) translate(10px) rotate(0deg);
+        }
+
+        50% {
+            opacity: 0.5;
+        }
+
+        100% {
+            transform: rotate(360deg) translate(10px) rotate(-360deg);
+        }
+    }
 }
 
 @media (min-width: 768px) {
@@ -11,65 +101,63 @@
     }
 }
 
-@keyframes ghost {
-    0% {
-        transform: rotate(0deg) translate(10px) rotate(0deg);
+@layer base {
+    html,
+    body,
+    #root {
+        position: relative;
+        width: 100%;
+        min-height: 100%;
     }
-    50% {
-        opacity: 0.5;
+
+    html {
+        background: var(--ui-bg-base);
+        color: var(--ui-text-primary);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        scroll-behavior: smooth;
     }
-    100% {
-        transform: rotate(360deg) translate(10px) rotate(-360deg);
+
+    body {
+        background:
+            radial-gradient(1200px 580px at -6% -8%, rgba(60, 165, 255, 0.2), transparent 56%),
+            radial-gradient(900px 500px at 110% 0%, rgba(22, 98, 255, 0.18), transparent 58%),
+            linear-gradient(180deg, var(--ui-bg-elev-1) 0%, var(--ui-bg-base) 44%, #04050a 100%);
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    ::selection {
+        background: rgba(67, 164, 255, 0.35);
+        color: white;
     }
 }
 
-.animate-ghost {
-    animation: ghost 4s linear infinite;
-}
+@layer components {
+    .app-main-offset {
+        padding-top: var(--app-header-height);
+    }
 
-html,
-body,
-#root {
-    position: relative;
-    width: 100%;
-    height: 100%;
-}
-
-html {
-    background: #000;
-    color: #fff;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    scroll-behavior: smooth;
-}
-
-.app-main-offset {
-    padding-top: var(--app-header-height);
-}
-
-.app-container {
-    margin-left: auto;
-    margin-right: auto;
-    width: 100%;
-    max-width: var(--app-container-max-width);
-    padding-left: 1rem;
-    padding-right: 1rem;
-}
-
-@media (min-width: 768px) {
     .app-container {
-        padding-left: 2rem;
-        padding-right: 2rem;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
+        max-width: var(--app-container-max-width);
+        padding-left: 1rem;
+        padding-right: 1rem;
     }
-}
 
-.app-sticky-offset {
-    top: var(--app-header-height);
-    height: calc(100vh - var(--app-header-height));
+    .app-sticky-offset {
+        top: var(--app-header-height);
+        height: calc(100vh - var(--app-header-height));
+    }
+
+    @media (min-width: 768px) {
+        .app-container {
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+    }
 }

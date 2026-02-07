@@ -1,0 +1,427 @@
+- generic [active] [ref=e1]:
+  - banner:
+    - navigation [ref=e2]:
+      - generic [ref=e3]:
+        - link "Back To Home" [ref=e4] [cursor=pointer]:
+          - /url: /
+          - button "Back To Home" [ref=e5]:
+            - img [ref=e6]
+        - list [ref=e8]:
+          - listitem [ref=e9]:
+            - link "Articles" [ref=e10] [cursor=pointer]:
+              - /url: /articles
+              - button "Articles" [ref=e11]
+          - listitem [ref=e12]:
+            - link "Design" [ref=e13] [cursor=pointer]:
+              - /url: /design-system
+              - button "Design" [ref=e14]
+          - listitem [ref=e15]:
+            - link "Projects" [ref=e16] [cursor=pointer]:
+              - /url: https://github.com/SarriaXD?tab=repositories
+              - button "Projects" [ref=e17]
+          - listitem [ref=e18]:
+            - link "Tools" [ref=e19] [cursor=pointer]:
+              - /url: /tools
+              - button "Tools" [ref=e20]
+          - listitem [ref=e21]:
+            - link "Email Me" [ref=e22] [cursor=pointer]:
+              - /url: mailto:sarria.qi.wang@gmail.com
+              - button "Email Me" [ref=e24]:
+                - img [ref=e25]
+          - listitem [ref=e27]:
+            - link "View My Linkedin" [ref=e28] [cursor=pointer]:
+              - /url: https://www.linkedin.com/in/qi-wang-793a562a7
+              - button "View My Linkedin" [ref=e30]:
+                - img [ref=e31]
+          - listitem [ref=e33]:
+            - link "View My Github" [ref=e34] [cursor=pointer]:
+              - /url: https://github.com/SarriaXD
+              - button "View My Github" [ref=e36]:
+                - img [ref=e37]
+  - navigation
+  - main [ref=e39]:
+    - generic [ref=e42]:
+      - generic [ref=e43]:
+        - heading "I'm Qi, a software engineer based in Canada." [level=1] [ref=e45]
+        - heading "A full-stack developer." [level=2] [ref=e47]
+      - generic [ref=e48]:
+        - generic [ref=e50]:
+          - img "Building Cross-Platform Apps" [ref=e53]
+          - generic [ref=e55]:
+            - strong [ref=e56]: Building Cross-Platform Apps
+            - heading "Mobile Developer & Innovator" [level=1] [ref=e57]
+            - paragraph [ref=e58]: Developing fast, cross-platform apps with Flutter. Expertise in native Android using Jetpack Compose for optimized UI and performance.
+        - generic [ref=e60]:
+          - generic [ref=e61]:
+            - strong [ref=e62]: Building Fast Web Apps
+            - heading "Experienced React Developer" [level=1] [ref=e63]
+            - paragraph [ref=e64]: Crafting high-performance React SPAs with sleek animations. Implementing SSR for faster load times and optimizing for SEO to boost visibility.
+          - img "Building Fast Web Apps" [ref=e67]
+        - generic [ref=e70]:
+          - img "Building Robust Backend Systems" [ref=e73]
+          - generic [ref=e75]:
+            - strong [ref=e76]: Building Robust Backend Systems
+            - heading "Backend Developer & Cloud Enthusiast" [level=1] [ref=e77]
+            - paragraph [ref=e78]: Delivering high-performance Spring Boot services with AWS expertise. Specializing in scalable backend solutions and efficient CI/CD pipelines.
+    - generic [ref=e81]:
+      - heading "Frameworks & Languages I Master" [level=1] [ref=e83]
+      - generic [ref=e84]:
+        - generic [ref=e85]:
+          - list [ref=e87]:
+            - listitem [ref=e88]:
+              - generic [ref=e89]:
+                - img "Logo of Android" [ref=e91]
+                - strong [ref=e94]: Android
+            - listitem [ref=e95]:
+              - generic [ref=e96]:
+                - img "Logo of Flutter" [ref=e98]
+                - strong [ref=e101]: Flutter
+            - listitem [ref=e102]:
+              - generic [ref=e103]:
+                - img "Logo of Compose" [ref=e105]
+                - strong [ref=e108]: Compose
+            - listitem [ref=e109]:
+              - generic [ref=e110]:
+                - img "Logo of React" [ref=e112]
+                - strong [ref=e115]: React
+            - listitem [ref=e116]:
+              - generic [ref=e117]:
+                - img "Logo of Spring" [ref=e119]
+                - strong [ref=e122]: Spring
+            - listitem [ref=e123]
+            - listitem [ref=e124]:
+              - generic [ref=e125]:
+                - img "Logo of Android" [ref=e127]
+                - strong [ref=e130]: Android
+            - listitem [ref=e131]:
+              - generic [ref=e132]:
+                - img "Logo of Flutter" [ref=e134]
+                - strong [ref=e137]: Flutter
+            - listitem [ref=e138]:
+              - generic [ref=e139]:
+                - img "Logo of Compose" [ref=e141]
+                - strong [ref=e144]: Compose
+            - listitem [ref=e145]:
+              - generic [ref=e146]:
+                - img "Logo of React" [ref=e148]
+                - strong [ref=e151]: React
+            - listitem [ref=e152]:
+              - generic [ref=e153]:
+                - img "Logo of Spring" [ref=e155]
+                - strong [ref=e158]: Spring
+            - listitem [ref=e159]
+            - listitem [ref=e160]:
+              - generic [ref=e161]:
+                - img "Logo of Android" [ref=e163]
+                - strong [ref=e166]: Android
+            - listitem [ref=e167]:
+              - generic [ref=e168]:
+                - img "Logo of Flutter" [ref=e170]
+                - strong [ref=e173]: Flutter
+            - listitem [ref=e174]:
+              - generic [ref=e175]:
+                - img "Logo of Compose" [ref=e177]
+                - strong [ref=e180]: Compose
+            - listitem [ref=e181]:
+              - generic [ref=e182]:
+                - img "Logo of React" [ref=e184]
+                - strong [ref=e187]: React
+            - listitem [ref=e188]:
+              - generic [ref=e189]:
+                - img "Logo of Spring" [ref=e191]
+                - strong [ref=e194]: Spring
+            - listitem [ref=e195]
+          - generic [ref=e196]:
+            - heading "Frameworks I Excel At" [level=2] [ref=e197]
+            - paragraph [ref=e198]: "Building Powerful Applications: Jetpack Compose, Android, Flutter, React, Spring Boot - Leveraging cutting-edge frameworks to create robust, scalable solutions."
+        - generic [ref=e199]:
+          - list [ref=e201]:
+            - listitem [ref=e202]:
+              - generic [ref=e203]:
+                - img "Logo of Java" [ref=e205]
+                - strong [ref=e208]: Java
+            - listitem [ref=e209]:
+              - generic [ref=e210]:
+                - img "Logo of Kotlin" [ref=e212]
+                - strong [ref=e215]: Kotlin
+            - listitem [ref=e216]:
+              - generic [ref=e217]:
+                - img "Logo of Dart" [ref=e219]
+                - strong [ref=e222]: Dart
+            - listitem [ref=e223]:
+              - generic [ref=e224]:
+                - img "Logo of Python" [ref=e226]
+                - strong [ref=e229]: Python
+            - listitem [ref=e230]:
+              - generic [ref=e231]:
+                - img "Logo of TypeScript" [ref=e233]
+                - strong [ref=e236]: TypeScript
+            - listitem [ref=e237]
+            - listitem [ref=e238]:
+              - generic [ref=e239]:
+                - img "Logo of Java" [ref=e241]
+                - strong [ref=e244]: Java
+            - listitem [ref=e245]:
+              - generic [ref=e246]:
+                - img "Logo of Kotlin" [ref=e248]
+                - strong [ref=e251]: Kotlin
+            - listitem [ref=e252]:
+              - generic [ref=e253]:
+                - img "Logo of Dart" [ref=e255]
+                - strong [ref=e258]: Dart
+            - listitem [ref=e259]:
+              - generic [ref=e260]:
+                - img "Logo of Python" [ref=e262]
+                - strong [ref=e265]: Python
+            - listitem [ref=e266]:
+              - generic [ref=e267]:
+                - img "Logo of TypeScript" [ref=e269]
+                - strong [ref=e272]: TypeScript
+            - listitem [ref=e273]
+            - listitem [ref=e274]:
+              - generic [ref=e275]:
+                - img "Logo of Java" [ref=e277]
+                - strong [ref=e280]: Java
+            - listitem [ref=e281]:
+              - generic [ref=e282]:
+                - img "Logo of Kotlin" [ref=e284]
+                - strong [ref=e287]: Kotlin
+            - listitem [ref=e288]:
+              - generic [ref=e289]:
+                - img "Logo of Dart" [ref=e291]
+                - strong [ref=e294]: Dart
+            - listitem [ref=e295]:
+              - generic [ref=e296]:
+                - img "Logo of Python" [ref=e298]
+                - strong [ref=e301]: Python
+            - listitem [ref=e302]:
+              - generic [ref=e303]:
+                - img "Logo of TypeScript" [ref=e305]
+                - strong [ref=e308]: TypeScript
+            - listitem [ref=e309]
+          - generic [ref=e310]:
+            - heading "Languages I Master" [level=2] [ref=e311]
+            - paragraph [ref=e312]: "Multi-Language Proficiency: Java, Dart, Python, Kotlin, TypeScript - Harnessing diverse programming languages to efficiently solve complex challenges."
+      - generic [ref=e313]:
+        - generic [ref=e314]:
+          - generic [ref=e317]:
+            - generic [ref=e318]:
+              - img "Android image" [ref=e320]
+              - img "Java image" [ref=e322]
+              - img "Kotlin image" [ref=e324]
+            - generic [ref=e325]:
+              - generic [ref=e326]: Android
+              - generic [ref=e327]: Java
+              - generic [ref=e328]: Kotlin
+            - generic [ref=e329]:
+              - heading "Android Development" [level=2] [ref=e330]
+              - paragraph [ref=e331]: I use Java and Kotlin for native Android development, providing robust performance and full access to device features.
+          - generic [ref=e334]:
+            - generic [ref=e335]:
+              - img "Jetpack Compose image" [ref=e337]
+              - img "Kotlin image" [ref=e339]
+            - generic [ref=e340]:
+              - generic [ref=e341]: Jetpack Compose
+              - generic [ref=e342]: Kotlin
+            - generic [ref=e343]:
+              - heading "Jetpack Compose" [level=2] [ref=e344]
+              - paragraph [ref=e345]: I use Jetpack Compose to create declarative user interfaces for both Android and desktop applications, simplifying UI development and supporting multi-platform projects.
+          - generic [ref=e348]:
+            - generic [ref=e349]:
+              - img "Spring Boot image" [ref=e351]
+              - img "Java image" [ref=e353]
+              - img "Kotlin image" [ref=e355]
+            - generic [ref=e356]:
+              - generic [ref=e357]: Spring Boot
+              - generic [ref=e358]: Java
+              - generic [ref=e359]: Kotlin
+            - generic [ref=e360]:
+              - heading "Spring Backend Development" [level=2] [ref=e361]
+              - paragraph [ref=e362]: I use Spring Boot for rapidly developing and deploying enterprise-grade Java applications, with Kotlin offering a more modern and concise syntax option.
+        - generic [ref=e363]:
+          - generic [ref=e366]:
+            - generic [ref=e367]:
+              - img "Flutter image" [ref=e369]
+              - img "Dart image" [ref=e371]
+            - generic [ref=e372]:
+              - generic [ref=e373]: Flutter
+              - generic [ref=e374]: Dart
+            - generic [ref=e375]:
+              - heading "Flutter Cross-Platform Development" [level=2] [ref=e376]
+              - paragraph [ref=e377]: I use Flutter for building high-performance native applications that run on both iOS and Android platforms from a single codebase.
+          - generic [ref=e380]:
+            - generic [ref=e381]:
+              - img "React image" [ref=e383]
+              - img "TypeScript image" [ref=e385]
+            - generic [ref=e386]:
+              - generic [ref=e387]: React
+              - generic [ref=e388]: TypeScript
+            - generic [ref=e389]:
+              - heading "Web Development" [level=2] [ref=e390]
+              - paragraph [ref=e391]: I use TypeScript and React to build modern, reactive web applications, with TypeScript adding static type checking for enhanced reliability.
+          - generic [ref=e394]:
+            - img "Python image" [ref=e397]
+            - generic [ref=e399]: Python
+            - generic [ref=e400]:
+              - heading "Data Science & AI" [level=2] [ref=e401]
+              - paragraph [ref=e402]: I use Python for data analysis and artificial intelligence development. Python’s rich ecosystem of libraries makes it ideal for processing large datasets, creating machine learning models, and developing AI applications.
+    - generic [ref=e405]:
+      - generic [ref=e406]:
+        - heading "Driving Test App." [level=3] [ref=e407]
+        - heading "Powered by Flutter." [level=4] [ref=e408]
+      - generic [ref=e409]:
+        - generic:
+          - generic:
+            - link "Explore This Project":
+              - /url: https://github.com/SarriaXD/manitoba_driving_test
+              - generic:
+                - generic: Explore This Project
+                - generic:
+                  - img
+        - generic [ref=e410]:
+          - generic [ref=e412]:
+            - img "flutter project image" [ref=e414]
+            - img "flutter project image" [ref=e416]
+            - img "flutter project image" [ref=e418]
+          - generic [ref=e422]:
+            - heading "Firebase Authentication" [level=4] [ref=e423]
+            - paragraph [ref=e424]: Secure login and personalized settings for each user, powered by Firebase.
+    - generic [ref=e428]:
+      - heading "The Chatbot I built is here to help you." [level=3] [ref=e430]
+      - generic [ref=e432]:
+        - generic:
+          - generic:
+            - link "Explore This Project":
+              - /url: https://github.com/SarriaXD/ai-chatbot
+              - generic:
+                - generic: Explore This Project
+                - generic:
+                  - img
+        - generic [ref=e433]:
+          - generic [ref=e436]:
+            - generic [ref=e438]:
+              - generic [ref=e439]:
+                - img [ref=e441]
+                - img [ref=e444]
+              - list [ref=e448]:
+                - heading "Today" [level=2] [ref=e449]
+                - listitem [ref=e450]:
+                  - generic [ref=e452]: Table of Dishes and Drinks
+                - listitem [ref=e458]:
+                  - generic [ref=e459]: Exploring the Ethical Implications of AI in Modern Society
+                - listitem [ref=e461]:
+                  - generic [ref=e462]: Advanced JavaScript Debugging Techniques for Complex Applications
+                - listitem [ref=e464]:
+                  - generic [ref=e465]: Quick and Nutritious Lunch Recipe Ideas for Busy Professionals
+                - heading "Yesterday" [level=2] [ref=e467]
+                - listitem [ref=e468]:
+                  - generic [ref=e469]: Curated Book Recommendations Based on Personal Reading Preferences
+                - listitem [ref=e471]:
+                  - generic [ref=e472]: Comprehensive Tutorial on React Hooks and State Management
+                - listitem [ref=e474]:
+                  - generic [ref=e475]: Effective Time Management Strategies for Increased Productivity
+                - heading "2 Days Ago" [level=2] [ref=e477]
+                - listitem [ref=e478]:
+                  - generic [ref=e479]: Personalized Workout Routine Planning for Fitness Goals
+                - listitem [ref=e481]:
+                  - generic [ref=e482]: Efficient Data Analysis Techniques Using Python and Pandas
+                - heading "Last Week" [level=2] [ref=e484]
+                - listitem [ref=e485]:
+                  - generic [ref=e486]: Customized Travel Itinerary Planning for European Vacation
+                - listitem [ref=e488]:
+                  - generic [ref=e489]: Introduction to Machine Learning and Neural Networks
+                - listitem [ref=e491]:
+                  - generic [ref=e492]: Implementing Effective Productivity Techniques in Daily Routine
+                - heading "2 Weeks Ago" [level=2] [ref=e494]
+                - listitem [ref=e495]:
+                  - generic [ref=e496]: Comprehensive Notes from Advanced Guitar Lessons on Jazz Theory
+                - listitem [ref=e498]:
+                  - generic [ref=e499]: Personalized Movie Recommendations Based on Viewing History
+                - heading "Last Month" [level=2] [ref=e501]
+                - listitem [ref=e502]:
+                  - generic [ref=e503]: Creative and Cost-Effective Home Renovation Ideas for Modern Living
+                - listitem [ref=e505]:
+                  - generic [ref=e506]: Tailored Career Advice for Transitioning to the Tech Industry
+                - listitem [ref=e508]:
+                  - generic [ref=e509]: Personalized Fitness Training Plan for Weight Loss
+                - heading "2 Months Ago" [level=2] [ref=e511]
+                - listitem [ref=e512]:
+                  - generic [ref=e513]: Sustainable Gardening Tips for Urban Spaces and Small Yards
+                - listitem [ref=e515]:
+                  - generic [ref=e516]: Long-Term Financial Planning Strategies for Early Retirement
+                - heading "3 Months Ago" [level=2] [ref=e518]
+                - listitem [ref=e519]:
+                  - generic [ref=e520]: Effective Language Learning Strategies for Multilingual Proficiency
+                - listitem [ref=e522]:
+                  - generic [ref=e523]: Collection of Healthy and Delicious Recipes for a Balanced Diet
+            - generic [ref=e525]:
+              - generic [ref=e527]: You
+              - generic [ref=e529]:
+                - generic [ref=e530]:
+                  - paragraph [ref=e532]: What is in this?
+                  - generic [ref=e533]:
+                    - img "user image" [ref=e535]
+                    - generic [ref=e536]:
+                      - generic [ref=e537]: Food Menu
+                      - generic [ref=e538]: pdf
+                - generic [ref=e539]:
+                  - img [ref=e541]
+                  - generic [ref=e544]:
+                    - paragraph [ref=e545]: "The image features a table with three dishes:"
+                    - list [ref=e546]:
+                      - listitem [ref=e547]:
+                        - strong [ref=e548]: A sesame seed burger
+                        - text: ": It appears to have lettuce, pickles, and possibly some meat and cheese inside."
+                      - listitem [ref=e549]:
+                        - strong [ref=e550]: A savory dish on toast
+                        - text: ": This looks like a piece of bread topped with a mixture that may include mushrooms, a poached egg, and some herbs or spices."
+                      - listitem [ref=e551]:
+                        - strong [ref=e552]: A fried chicken dish
+                        - text: ": Served on a slice of bread, garnished with a slice of lemon or another colorful topping."
+                    - paragraph [ref=e553]: Additionally, there are drinks on the table, including a green beverage and several glasses of water. The setting has a wooden table and a casual dining atmosphere.
+              - generic [ref=e557]:
+                - img [ref=e558]
+                - button [disabled] [ref=e560]:
+                  - img [ref=e561]
+          - generic [ref=e563]:
+            - heading "Multimodal Support" [level=3] [ref=e564]
+            - heading "Analyse your Text, and images, PDFs, and more." [level=4] [ref=e565]
+  - contentinfo [ref=e566]:
+    - generic [ref=e567]:
+      - generic [ref=e568]:
+        - heading "About Me" [level=1] [ref=e569]
+        - list [ref=e570]:
+          - listitem [ref=e571]:
+            - paragraph [ref=e572]: Qi Wang
+          - listitem [ref=e573]:
+            - paragraph [ref=e574]: 225 Carlton Street
+          - listitem [ref=e575]:
+            - paragraph [ref=e576]: Winnipeg, MB R3C 0V3
+      - generic [ref=e577]:
+        - heading "Follow Me" [level=1] [ref=e578]
+        - list [ref=e579]:
+          - listitem [ref=e580]:
+            - link "Github" [ref=e581] [cursor=pointer]:
+              - /url: https://github.com/SarriaXD
+              - paragraph [ref=e582]: Github
+          - listitem [ref=e583]:
+            - link "Twitter" [ref=e584] [cursor=pointer]:
+              - /url: https://x.com/qi_wang_sarria
+              - paragraph [ref=e585]: Twitter
+          - listitem [ref=e586]:
+            - link "LinkedIn" [ref=e587] [cursor=pointer]:
+              - /url: https://www.linkedin.com/in/qi-wang-793a562a7
+              - paragraph [ref=e588]: LinkedIn
+      - generic [ref=e589]:
+        - heading "Contact Me" [level=1] [ref=e590]
+        - list [ref=e591]:
+          - listitem [ref=e592]:
+            - link "Email:sarria.qi.wang@gmail.com" [ref=e593] [cursor=pointer]:
+              - /url: mailto:sarria.qi.wang@gmail.com
+              - paragraph [ref=e594]: Email:sarria.qi.wang@gmail.com
+          - listitem [ref=e595]:
+            - 'link "Phone: (431) 788-6683" [ref=e596] [cursor=pointer]':
+              - /url: tel:4317886683
+              - paragraph [ref=e597]: "Phone: (431) 788-6683"
+  - region "Notifications Alt+T"
+  - alert [ref=e598]

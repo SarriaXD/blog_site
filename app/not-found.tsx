@@ -40,7 +40,7 @@ const NotFoundText = () => {
                 <span className="text-red-500">404</span> Page not found
             </h2>
             <Link href="/">
-                <Button color="black">Go back to home</Button>
+                <Button tone="inverse">Go back to home</Button>
             </Link>
         </div>
     )

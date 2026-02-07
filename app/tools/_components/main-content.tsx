@@ -26,7 +26,7 @@ interface GridItemProps {
 const GridItem = ({ title, description, href }: GridItemProps) => {
     return (
         <Link href={href}>
-            <Card color="gray">
+            <Card tone="neutral">
                 <CardBody className="flex">
                     <div className="flex-1">
                         <h2 className="text-xl font-bold capitalize">

@@ -8,6 +8,7 @@ import { BurgerMenu, Dog, Email, Github, Linkedin } from '@public/icons'
 
 const internalLinks = [
     { href: '/articles', text: 'Articles', newTab: false },
+    { href: '/design-system', text: 'Design', newTab: false },
     {
         href: 'https://github.com/SarriaXD?tab=repositories',
         text: 'Projects',
@@ -33,9 +34,9 @@ const InternalLink = ({
         <li>
             <Link {...linkProps}>
                 <Button
-                    variant="text"
+                    variant="ghost"
+                    tone="neutral"
                     size="lg"
-                    color="white"
                     className="normal-case"
                 >
                     {text}
@@ -51,12 +52,13 @@ export const Header = () => {
     return (
         <>
             <header>
-                <nav className="fixed left-0 right-0 top-0 z-50 bg-black/75 backdrop-blur-[20px]">
+                <nav className="fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-[#05070b]/70 backdrop-blur-[20px]">
                     <Container
                         className={`flex items-center justify-between gap-4 ${HEADER_CLASS}`}
                     >
                         <IconButton
                             size="lg"
+                            tone="neutral"
                             className="md:hidden"
                             aria-label="Open sidebar"
                             onClick={() => setOpen(true)}
@@ -66,6 +68,7 @@ export const Header = () => {
                         <Link href="/">
                             <IconButton
                                 size="lg"
+                                tone="neutral"
                                 aria-label="Back To Home"
                                 className="bg-transparent"
                             >
@@ -79,7 +82,7 @@ export const Header = () => {
                             <li>
                                 <Link href="mailto:sarria.qi.wang@gmail.com">
                                     <Tooltip content="Contact me via email">
-                                        <IconButton aria-label="Email Me">
+                                        <IconButton tone="neutral" aria-label="Email Me">
                                             <Email className="size-6 text-white" />
                                         </IconButton>
                                     </Tooltip>
@@ -92,7 +95,10 @@ export const Header = () => {
                                     rel="noopener noreferrer"
                                 >
                                     <Tooltip content="Connect with me on LinkedIn">
-                                        <IconButton aria-label="View My Linkedin">
+                                        <IconButton
+                                            tone="neutral"
+                                            aria-label="View My Linkedin"
+                                        >
                                             <Linkedin className="size-6 text-white" />
                                         </IconButton>
                                     </Tooltip>
@@ -105,7 +111,7 @@ export const Header = () => {
                                     rel="noopener noreferrer"
                                 >
                                     <Tooltip content="Check out my GitHub">
-                                        <IconButton aria-label="View My Github">
+                                        <IconButton tone="neutral" aria-label="View My Github">
                                             <Github className="size-6 text-white" />
                                         </IconButton>
                                     </Tooltip>

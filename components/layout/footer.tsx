@@ -17,7 +17,9 @@ interface SectionProps {
 const Section = ({ title, texts }: SectionProps) => {
     return (
         <div>
-            <h1 className="mb-4 text-lg font-semibold">{title}</h1>
+            <h1 className="mb-4 text-lg font-semibold tracking-[-0.01em]">
+                {title}
+            </h1>
             <ul className="flex flex-col items-start gap-2">
                 {texts.map((link) => {
                     const newTabProps = link.href?.newTab
@@ -27,12 +29,12 @@ const Section = ({ title, texts }: SectionProps) => {
                         <li key={link.text}>
                             {link.href ? (
                                 <Link href={link.href.href} {...newTabProps}>
-                                    <p className="text-gray-400 hover:text-gray-200">
+                                    <p className="text-[var(--ui-text-muted)] transition-colors hover:text-[var(--ui-text-primary)]">
                                         {link.text}
                                     </p>
                                 </Link>
                             ) : (
-                                <p className="text-gray-400">{link.text}</p>
+                                <p className="text-[var(--ui-text-muted)]">{link.text}</p>
                             )}
                         </li>
                     )
@@ -100,7 +102,7 @@ const sections = [
 
 export const Footer = () => {
     return (
-        <footer className="border-t border-gray-700 bg-black text-gray-200">
+        <footer className="mt-10 border-t border-white/12 bg-[#04060a]/72 text-[var(--ui-text-primary)] backdrop-blur-xl md:mt-16">
             <Container className="flex flex-wrap justify-start gap-12 py-12 md:justify-end md:gap-16 md:py-16">
                 {sections.map((section) => (
                     <Section key={section.title} {...section} />

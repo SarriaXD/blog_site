@@ -43,6 +43,7 @@ const links: {
     text: string
 }[] = [
     { href: '/articles', text: 'Articles', newTab: false },
+    { href: '/design-system', text: 'Design', newTab: false },
     {
         href: 'https://github.com/SarriaXD?tab=repositories',
         text: 'Projects',
@@ -146,12 +147,13 @@ export function Sidebar({ open, onClose }: SideBarProps) {
                         exit="exit"
                         variants={sideBarVariants}
                         onClick={onClose}
-                        className="fixed left-0 top-0 z-50 h-screen w-full bg-black/75 backdrop-blur-[20px] will-change-transform"
+                        className="fixed left-0 top-0 z-50 h-screen w-full bg-[#05070b]/72 backdrop-blur-[20px] will-change-transform"
                     >
                         <div className="flex items-center justify-between p-4">
                             <Link href="/">
                                 <IconButton
                                     size="lg"
+                                    tone="neutral"
                                     aria-label="Back To Home"
                                     className="bg-transparent"
                                     onClick={onClose}
@@ -161,7 +163,8 @@ export function Sidebar({ open, onClose }: SideBarProps) {
                             </Link>
                             <IconButton
                                 aria-label="Close Side Bar"
-                                variant="text"
+                                variant="ghost"
+                                tone="neutral"
                                 onClick={onClose}
                             >
                                 <Close className="size-6 text-white" />

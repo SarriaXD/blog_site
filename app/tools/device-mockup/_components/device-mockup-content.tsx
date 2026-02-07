@@ -135,7 +135,7 @@ const DeviceMockupContent = () => {
                     />
                     <div className="flex items-center justify-center">
                         <Button
-                            color="blue"
+                            tone="brand"
                             onClick={handleGenerateMockup}
                             loading={isLoading}
                             disabled={
@@ -150,16 +150,8 @@ const DeviceMockupContent = () => {
             <div className="pointer-events-none fixed inset-x-8 top-0 z-50 h-[100vh] md:inset-x-16 lg:inset-x-32">
                 <Alert
                     open={errorMessage !== null}
-                    color="red"
+                    tone="danger"
                     onClose={() => setErrorMessage(null)}
-                    animate={{
-                        mount: { y: 0 },
-                        unmount: { y: 200 },
-                    }}
-                    transition={{
-                        type: 'spring',
-                        duration: 1,
-                    }}
                     className="pointer-events-auto absolute bottom-[5%] px-8"
                 >
                     {errorMessage}

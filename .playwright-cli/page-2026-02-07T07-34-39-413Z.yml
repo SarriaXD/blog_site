@@ -1,0 +1,98 @@
+- generic [active] [ref=e1]:
+  - banner:
+    - navigation [ref=e2]:
+      - generic [ref=e3]:
+        - button "Open sidebar" [ref=e4]:
+          - img [ref=e5]
+        - link "Back To Home" [ref=e7] [cursor=pointer]:
+          - /url: /
+          - button "Back To Home" [ref=e8]:
+            - img [ref=e9]
+  - navigation
+  - main [ref=e11]:
+    - generic [ref=e14]:
+      - paragraph [ref=e15]: Custom Theme
+      - heading "Frosted Blueprint UI" [level=1] [ref=e16]
+      - paragraph [ref=e17]: "一套重构后的基础设计组件，核心方向是玻璃材质、清晰层级、强对比可读性。 所有组件都围绕 `tone` + `variant` 组合来定制语义与视觉。"
+      - generic [ref=e18]:
+        - button "Get Started" [ref=e19]
+        - button "Explore Components" [ref=e20]
+        - link "Open Tools" [ref=e21] [cursor=pointer]:
+          - /url: /tools
+          - button "Open Tools" [ref=e22]
+    - generic [ref=e25]:
+      - generic [ref=e27]:
+        - heading "1) Buttons" [level=2] [ref=e28]
+        - generic [ref=e29]:
+          - button "Brand Solid" [ref=e30]
+          - button "Neutral Soft" [ref=e31]
+          - button "Danger Outline" [ref=e32]
+          - button "Inverse Solid" [ref=e33]
+          - button "Loading" [disabled] [ref=e34]: Loading
+        - code [ref=e37]: <Button tone="brand">Brand Solid</Button> <Button tone="neutral" variant="soft">Neutral Soft</Button> <Button tone="danger" variant="outline">Danger Outline</Button> <Button tone="inverse">Inverse Solid</Button>
+      - generic [ref=e38]:
+        - generic [ref=e40]:
+          - heading "2) Cards + Chips" [level=2] [ref=e41]
+          - paragraph [ref=e42]: "卡片作为信息容器，`tone` 直接决定语义氛围，适合列表、概览和模块分组。"
+          - generic [ref=e43]:
+            - generic [ref=e44]: neutral
+            - generic [ref=e45]: brand
+            - generic [ref=e46]: danger
+            - generic [ref=e47]: inverse
+          - code [ref=e49]: <Card tone="neutral"> <CardBody> <Chip value="brand" tone="brand" /> </CardBody> </Card>
+        - generic [ref=e51]:
+          - heading "3) Icon Actions + Tooltip" [level=2] [ref=e52]
+          - generic [ref=e53]:
+            - button "email" [ref=e55]:
+              - img [ref=e56]
+            - button "linkedin" [ref=e59]:
+              - img [ref=e60]
+            - button "github" [ref=e63]:
+              - img [ref=e64]
+          - code [ref=e68]: <Tooltip content="GitHub"> <IconButton tone="neutral" aria-label="github"> <Github className="size-5" /> </IconButton> </Tooltip>
+      - generic [ref=e70]:
+        - heading "4) Alerts" [level=2] [ref=e71]
+        - alert [ref=e72]:
+          - generic [ref=e73]: Frame generation failed, please upload a valid PNG or JPG image.
+        - alert [ref=e74]:
+          - generic [ref=e75]: Theme tokens loaded successfully.
+        - code [ref=e77]: <Alert open tone="danger"> Frame generation failed, please upload a valid PNG or JPG image. </Alert>
+  - contentinfo [ref=e78]:
+    - generic [ref=e79]:
+      - generic [ref=e80]:
+        - heading "About Me" [level=1] [ref=e81]
+        - list [ref=e82]:
+          - listitem [ref=e83]:
+            - paragraph [ref=e84]: Qi Wang
+          - listitem [ref=e85]:
+            - paragraph [ref=e86]: 225 Carlton Street
+          - listitem [ref=e87]:
+            - paragraph [ref=e88]: Winnipeg, MB R3C 0V3
+      - generic [ref=e89]:
+        - heading "Follow Me" [level=1] [ref=e90]
+        - list [ref=e91]:
+          - listitem [ref=e92]:
+            - link "Github" [ref=e93] [cursor=pointer]:
+              - /url: https://github.com/SarriaXD
+              - paragraph [ref=e94]: Github
+          - listitem [ref=e95]:
+            - link "Twitter" [ref=e96] [cursor=pointer]:
+              - /url: https://x.com/qi_wang_sarria
+              - paragraph [ref=e97]: Twitter
+          - listitem [ref=e98]:
+            - link "LinkedIn" [ref=e99] [cursor=pointer]:
+              - /url: https://www.linkedin.com/in/qi-wang-793a562a7
+              - paragraph [ref=e100]: LinkedIn
+      - generic [ref=e101]:
+        - heading "Contact Me" [level=1] [ref=e102]
+        - list [ref=e103]:
+          - listitem [ref=e104]:
+            - link "Email:sarria.qi.wang@gmail.com" [ref=e105] [cursor=pointer]:
+              - /url: mailto:sarria.qi.wang@gmail.com
+              - paragraph [ref=e106]: Email:sarria.qi.wang@gmail.com
+          - listitem [ref=e107]:
+            - 'link "Phone: (431) 788-6683" [ref=e108] [cursor=pointer]':
+              - /url: tel:4317886683
+              - paragraph [ref=e109]: "Phone: (431) 788-6683"
+  - region "Notifications Alt+T"
+  - alert [ref=e110]

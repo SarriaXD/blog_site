@@ -17,7 +17,7 @@ const NotFoundText = () => {
                 This Page is under development
             </h2>
             <Link href="/">
-                <Button color="black">Go back to home</Button>
+                <Button tone="inverse">Go back to home</Button>
             </Link>
         </div>
     )

@@ -1,0 +1,137 @@
+- generic [active] [ref=e1]:
+  - banner:
+    - navigation [ref=e2]:
+      - generic [ref=e3]:
+        - button "Open sidebar" [ref=e4]:
+          - img [ref=e5]
+        - link "Back To Home" [ref=e7] [cursor=pointer]:
+          - /url: /
+          - button "Back To Home" [ref=e8]:
+            - img [ref=e9]
+  - navigation
+  - main [ref=e11]:
+    - generic [ref=e14]:
+      - generic [ref=e16]:
+        - generic [ref=e17]: Custom Theme
+        - heading "Aurora Glass UI Kit" [level=1] [ref=e18]
+        - paragraph [ref=e19]: 这是一套彻底重做的基础组件体系。核心目标是更干净的视觉层级、 更稳定的交互语义，以及可以快速扩展的主题能力。
+        - generic [ref=e20]:
+          - button "Start Building" [ref=e21]
+          - button "Read Primitives" [ref=e22]
+          - link "Open Tools" [ref=e23] [cursor=pointer]:
+            - /url: /tools
+            - button "Open Tools" [ref=e24]
+      - generic [ref=e26]:
+        - generic [ref=e27]:
+          - paragraph [ref=e28]: Foundation Tokens
+          - list [ref=e29]:
+            - listitem [ref=e30]:
+              - generic [ref=e31]: Tone
+              - generic [ref=e32]: neutral / brand / danger / inverse
+            - listitem [ref=e33]:
+              - generic [ref=e34]: Variant
+              - generic [ref=e35]: solid / soft / ghost / outline
+            - listitem [ref=e36]:
+              - generic [ref=e37]: Size
+              - generic [ref=e38]: sm / md / lg
+        - generic [ref=e39]:
+          - paragraph [ref=e40]: Quick Actions
+          - generic [ref=e41]:
+            - button "mail" [ref=e42]:
+              - img [ref=e43]
+            - button "linkedin" [ref=e45]:
+              - img [ref=e46]
+            - button "github" [ref=e48]:
+              - img [ref=e49]
+    - generic [ref=e53]:
+      - generic [ref=e54]:
+        - heading "Core Primitives" [level=2] [ref=e55]
+        - paragraph [ref=e56]: 基础组件覆盖布局、操作、状态反馈三个层面。每个例子都给出最小可复用写法。
+      - generic [ref=e57]:
+        - generic [ref=e58]:
+          - generic [ref=e60]:
+            - generic [ref=e61]:
+              - img [ref=e62]
+              - heading "Buttons & Intent" [level=3] [ref=e64]
+            - paragraph [ref=e65]: "通过 `tone` 和 `variant` 表达语义，不再依赖零散颜色类名。"
+            - generic [ref=e66]:
+              - button "Publish" [ref=e67]
+              - button "Save Draft" [ref=e68]
+              - button "Delete" [ref=e69]
+              - button "Preview" [ref=e70]
+            - code [ref=e72]: <Button tone="brand">Publish</Button> <Button tone="neutral" variant="soft">Save Draft</Button> <Button tone="danger" variant="outline">Delete</Button> <Button tone="inverse">Preview</Button>
+          - generic [ref=e74]:
+            - generic [ref=e75]:
+              - img [ref=e76]
+              - heading "Card Composition" [level=3] [ref=e78]
+            - paragraph [ref=e79]: 卡片负责信息分组，Chip 负责状态标签，组合后即可快速形成内容面板。
+            - generic [ref=e80]:
+              - paragraph [ref=e81]: Article Status
+              - generic [ref=e82]:
+                - generic [ref=e83]: Draft
+                - generic [ref=e84]: Review
+                - generic [ref=e85]: Blocked
+                - generic [ref=e86]: Published
+            - code [ref=e88]: <Card tone="neutral"> <CardBody> <Chip value="Review" tone="brand" /> </CardBody> </Card>
+        - generic [ref=e89]:
+          - generic [ref=e91]:
+            - generic [ref=e92]:
+              - img [ref=e93]
+              - heading "Actions, Tooltip, Loading" [level=3] [ref=e95]
+            - paragraph [ref=e96]: 图标按钮用于高频操作，Tooltip 提供上下文，Spinner 负责异步反馈。
+            - generic [ref=e97]:
+              - button "email" [ref=e99]:
+                - img [ref=e100]
+              - button "linkedin" [ref=e103]:
+                - img [ref=e104]
+              - button "github" [ref=e107]:
+                - img [ref=e108]
+            - code [ref=e112]: <Tooltip content="GitHub"> <IconButton tone="neutral" aria-label="github"> <Github className="size-5" /> </IconButton> </Tooltip>
+          - generic [ref=e114]:
+            - generic [ref=e115]:
+              - img [ref=e116]
+              - heading "Alert Feedback" [level=3] [ref=e118]
+            - alert [ref=e119]:
+              - generic [ref=e120]: Save failed. Please check your network and retry.
+            - alert [ref=e121]:
+              - generic [ref=e122]: Tokens synced successfully.
+            - code [ref=e124]: <Alert open tone="danger"> Save failed. Please check your network and retry. </Alert>
+  - contentinfo [ref=e125]:
+    - generic [ref=e126]:
+      - generic [ref=e127]:
+        - heading "About Me" [level=1] [ref=e128]
+        - list [ref=e129]:
+          - listitem [ref=e130]:
+            - paragraph [ref=e131]: Qi Wang
+          - listitem [ref=e132]:
+            - paragraph [ref=e133]: 225 Carlton Street
+          - listitem [ref=e134]:
+            - paragraph [ref=e135]: Winnipeg, MB R3C 0V3
+      - generic [ref=e136]:
+        - heading "Follow Me" [level=1] [ref=e137]
+        - list [ref=e138]:
+          - listitem [ref=e139]:
+            - link "Github" [ref=e140] [cursor=pointer]:
+              - /url: https://github.com/SarriaXD
+              - paragraph [ref=e141]: Github
+          - listitem [ref=e142]:
+            - link "Twitter" [ref=e143] [cursor=pointer]:
+              - /url: https://x.com/qi_wang_sarria
+              - paragraph [ref=e144]: Twitter
+          - listitem [ref=e145]:
+            - link "LinkedIn" [ref=e146] [cursor=pointer]:
+              - /url: https://www.linkedin.com/in/qi-wang-793a562a7
+              - paragraph [ref=e147]: LinkedIn
+      - generic [ref=e148]:
+        - heading "Contact Me" [level=1] [ref=e149]
+        - list [ref=e150]:
+          - listitem [ref=e151]:
+            - link "Email:sarria.qi.wang@gmail.com" [ref=e152] [cursor=pointer]:
+              - /url: mailto:sarria.qi.wang@gmail.com
+              - paragraph [ref=e153]: Email:sarria.qi.wang@gmail.com
+          - listitem [ref=e154]:
+            - 'link "Phone: (431) 788-6683" [ref=e155] [cursor=pointer]':
+              - /url: tel:4317886683
+              - paragraph [ref=e156]: "Phone: (431) 788-6683"
+  - region "Notifications Alt+T"
+  - alert [ref=e157]
