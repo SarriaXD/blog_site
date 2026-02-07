@@ -6,6 +6,7 @@ import { flutterProjectData } from '@lib/data/flutter-project-data.ts'
 import { Header } from '@ui/header.tsx'
 import { Footer } from '@ui/footer.tsx'
 import ChatbotSection from '@ui/home/chatbot-section/chatbot-section.tsx'
+import { MainLayout } from '@ui/ui-kit.tsx'
 
 export default async function Page() {
     const colorsMap = await getAllNeedColorImageColors()
@@ -15,12 +16,12 @@ export default async function Page() {
     return (
         <>
             <Header />
-            <main>
+            <MainLayout>
                 <HeroSection colorsMap={colorsMap} />
                 <TechStackSection colorsMap={colorsMap} />
                 <FlutterProjectSection colors={flutterProjectColors} />
                 <ChatbotSection />
-            </main>
+            </MainLayout>
             <Footer />
         </>
     )

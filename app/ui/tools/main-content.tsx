@@ -43,7 +43,7 @@ const GridItem = ({ title, description, href }: GridItemProps) => {
 
 const MainContent = () => {
     return (
-        <div className="mx-auto w-[400px] p-8 md:w-full">
+        <div className="w-full">
             <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {toolsData.map((tool, index) => (
                     <GridItem key={index} {...tool} />

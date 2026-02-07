@@ -20,6 +20,7 @@ import {
     techIntroductions,
 } from '@lib/data/tech-stack-data.ts'
 import { useMediaQuery } from '@lib/hooks/hooks.ts'
+import { Container, Section, Stack } from '@ui/ui-kit.tsx'
 
 interface CarouselItemProps {
     color: StaticImageColor
@@ -364,9 +365,9 @@ const Introductions = ({ techIntroductions, isMobile }: IntroductionsProps) => {
 export const TechStackSection = ({ colorsMap }: TechStackSectionProps) => {
     const isMobile = useMediaQuery('(max-width: 720px)', true)
     return (
-        <>
-            <section className="bg-black px-8 py-16">
-                <div className="mx-auto flex min-h-screen flex-col gap-8 lg:max-w-[1080px]">
+        <Section className="bg-black">
+            <Container>
+                <Stack className="min-h-screen">
                     <Title isMobile={isMobile} />
                     <div className="flex flex-col gap-4 md:flex-row">
                         <Carousel
@@ -388,9 +389,9 @@ export const TechStackSection = ({ colorsMap }: TechStackSectionProps) => {
                         techIntroductions={techIntroductions}
                         isMobile={isMobile}
                     />
-                    <div className="h-[10vh]" />
-                </div>
-            </section>
-        </>
+                    <div className="h-12 md:h-16" />
+                </Stack>
+            </Container>
+        </Section>
     )
 }

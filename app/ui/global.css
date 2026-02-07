@@ -1,5 +1,16 @@
 @import "tailwindcss";
 
+:root {
+    --app-header-height: 4rem;
+    --app-container-max-width: 1120px;
+}
+
+@media (min-width: 768px) {
+    :root {
+        --app-header-height: 5rem;
+    }
+}
+
 @keyframes ghost {
     0% {
         transform: rotate(0deg) translate(10px) rotate(0deg);
@@ -36,4 +47,29 @@ html {
     padding: 0;
     box-sizing: border-box;
     scroll-behavior: smooth;
+}
+
+.app-main-offset {
+    padding-top: var(--app-header-height);
+}
+
+.app-container {
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    max-width: var(--app-container-max-width);
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+@media (min-width: 768px) {
+    .app-container {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+}
+
+.app-sticky-offset {
+    top: var(--app-header-height);
+    height: calc(100vh - var(--app-header-height));
 }

@@ -13,6 +13,7 @@ import { useRef, useState } from 'react'
 import { flutterProjectData } from '@lib/data/flutter-project-data.ts'
 import { StaticImageColor } from '@lib/utils/utils.ts'
 import ExploreStickyButton from '@ui/ExploreStickeyButton.tsx'
+import { Container, Section } from '@ui/ui-kit.tsx'
 
 const useTitleAnimation = () => {
     const ref = useRef(null)
@@ -347,7 +348,7 @@ const MainContent = ({
     return (
         <div
             ref={ref}
-            className="sticky top-0 mx-auto h-[120vh] md:w-[692px] lg:w-[800px]"
+            className="app-sticky-offset sticky mx-auto md:w-[692px] lg:w-[800px]"
         >
             <ExploreStickyButton
                 href={'https://github.com/SarriaXD/manitoba_driving_test'}
@@ -399,15 +400,15 @@ export const FlutterProjectSection = ({
     })
     const currentDataIndex = useDataIndex(progress)
     return (
-        <section id="my-flutter-project" ref={ref}>
-            <div className="mx-auto h-[550vh] bg-[#101010] pt-24 md:max-w-[908px] lg:max-w-[1120px]">
+        <Section id="my-flutter-project" ref={ref} className="bg-[#101010] py-16 md:py-24">
+            <Container className="h-[550vh]">
                 <Title />
                 <MainContent
                     progress={progress}
                     currentDataIndex={currentDataIndex}
                     colors={colors}
                 />
-            </div>
-        </section>
+            </Container>
+        </Section>
     )
 }

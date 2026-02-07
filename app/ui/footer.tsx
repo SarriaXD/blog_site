@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { Container } from '@ui/ui-kit.tsx'
 
 interface SectionProps {
     title: string
@@ -100,11 +101,11 @@ const sections = [
 export const Footer = () => {
     return (
         <footer className="border-t border-gray-700 bg-black text-gray-200">
-            <div className="container mx-auto flex flex-wrap justify-start gap-16 px-8 py-16 md:justify-end">
+            <Container className="flex flex-wrap justify-start gap-12 py-12 md:justify-end md:gap-16 md:py-16">
                 {sections.map((section) => (
                     <Section key={section.title} {...section} />
                 ))}
-            </div>
+            </Container>
         </footer>
     )
 }

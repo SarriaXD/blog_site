@@ -6,6 +6,7 @@ import { useScroll } from 'framer-motion'
 import { useRef, useState } from 'react'
 import ChatIntroduction from '@ui/home/chatbot-section/chat-introduction.tsx'
 import ExploreStickyButton from '@ui/ExploreStickeyButton.tsx'
+import { Container, Section } from '@ui/ui-kit.tsx'
 
 const ChatbotSection = () => {
     const ref = useRef(null)
@@ -18,10 +19,11 @@ const ChatbotSection = () => {
         setInView(latest > 0 && latest < 1)
     })
     return (
-        <section className="mx-auto mb-24 mt-20 max-w-[1200px]">
-            <ChatbotTitle />
-            <div ref={ref} className="mt-8 h-[500vh] md:mt-16">
-                <div className="sticky top-0 h-screen w-full pb-24 pt-20">
+        <Section className="py-16 md:py-24">
+            <Container className="max-w-[1200px]">
+                <ChatbotTitle />
+                <div ref={ref} className="mt-8 h-[500vh] md:mt-16">
+                    <div className="app-sticky-offset sticky w-full pb-12 pt-8 md:pb-20 md:pt-12">
                     <ExploreStickyButton
                         href={'https://github.com/SarriaXD/ai-chatbot'}
                     />
@@ -32,8 +34,9 @@ const ChatbotSection = () => {
                         <ChatIntroduction progress={progress} inView={inView} />
                     </div>
                 </div>
-            </div>
-        </section>
+                </div>
+            </Container>
+        </Section>
     )
 }
 

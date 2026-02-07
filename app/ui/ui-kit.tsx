@@ -1,7 +1,9 @@
 'use client'
 
 import {
+    forwardRef,
     type ButtonHTMLAttributes,
+    type HTMLAttributes,
     type ReactNode,
 } from 'react'
 
@@ -36,6 +38,81 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     variant?: 'filled' | 'text'
     size?: Size
     loading?: boolean
+}
+
+export const HEADER_CLASS = 'h-16 md:h-20'
+
+interface MainLayoutProps extends HTMLAttributes<HTMLElement> {
+    withHeaderOffset?: boolean
+}
+
+export function MainLayout({
+    withHeaderOffset = true,
+    className,
+    children,
+    ...props
+}: MainLayoutProps) {
+    return (
+        <main
+            className={cn(
+                'w-full',
+                withHeaderOffset && 'app-main-offset',
+                className
+            )}
+            {...props}
+        >
+            {children}
+        </main>
+    )
+}
+
+export function Container({
+    className,
+    children,
+    ...props
+}: HTMLAttributes<HTMLDivElement>) {
+    return (
+        <div className={cn('app-container', className)} {...props}>
+            {children}
+        </div>
+    )
+}
+
+export const Section = forwardRef<HTMLElement, HTMLAttributes<HTMLElement>>(
+    function Section({ className, children, ...props }, ref) {
+        return (
+            <section
+                ref={ref}
+                className={cn('py-14 md:py-20', className)}
+                {...props}
+            >
+                {children}
+            </section>
+        )
+    }
+)
+
+interface StackProps extends HTMLAttributes<HTMLDivElement> {
+    space?: 'sm' | 'md' | 'lg'
+}
+
+const stackSpaceClasses: Record<NonNullable<StackProps['space']>, string> = {
+    sm: 'space-y-4',
+    md: 'space-y-6',
+    lg: 'space-y-10',
+}
+
+export function Stack({
+    space = 'md',
+    className,
+    children,
+    ...props
+}: StackProps) {
+    return (
+        <div className={cn(stackSpaceClasses[space], className)} {...props}>
+            {children}
+        </div>
+    )
 }
 
 export function Button({

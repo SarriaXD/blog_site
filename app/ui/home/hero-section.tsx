@@ -6,6 +6,7 @@ import Image, { StaticImageData } from 'next/image'
 import { StaticImageColor } from '@lib/utils/utils.ts'
 import { useMediaQuery } from '@lib/hooks/hooks.ts'
 import { hero_backend, hero_mobile, hero_web } from '@public/images'
+import { Container, Section, Stack } from '@ui/ui-kit.tsx'
 
 const Introduction = () => {
     return (
@@ -250,16 +251,17 @@ interface HeroSectionProps {
 export const HeroSection = ({ colorsMap }: HeroSectionProps) => {
     const isMobile = useMediaQuery('(max-width: 735px)', true)
     return (
-        <>
-            <section
-                style={{
-                    backgroundImage:
-                        'linear-gradient(180deg,#000000 0%,rgba(0,0,0,0) 100%), radial-gradient(200% 100% at -66% 36%, #0b014a 40%, rgb(0, 73, 184) 80%, rgb(50, 100, 227) 90%, rgb(0, 204, 255) 100%)',
-                }}
-            >
-                <div className="mx-auto px-8 pb-32 pt-24 md:max-w-[908px] md:px-8 lg:max-w-[1120px] lg:px-12">
+        <Section
+            className="pb-20 pt-10 md:pb-28 md:pt-14"
+            style={{
+                backgroundImage:
+                    'linear-gradient(180deg,#000000 0%,rgba(0,0,0,0) 100%), radial-gradient(200% 100% at -66% 36%, #0b014a 40%, rgb(0, 73, 184) 80%, rgb(50, 100, 227) 90%, rgb(0, 204, 255) 100%)',
+            }}
+        >
+            <Container>
+                <Stack space="lg" className="pb-4">
                     <Introduction />
-                    <div className="flex flex-col gap-24">
+                    <div className="flex flex-col gap-20 md:gap-24">
                         {galleryData.map((data, index) => {
                             const preReverse = index % 2 !== 0
                             const reversed = isMobile ? false : preReverse
@@ -274,8 +276,8 @@ export const HeroSection = ({ colorsMap }: HeroSectionProps) => {
                             )
                         })}
                     </div>
-                </div>
-            </section>
-        </>
+                </Stack>
+            </Container>
+        </Section>
     )
 }
