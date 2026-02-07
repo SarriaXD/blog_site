@@ -1,6 +1,6 @@
 'use client'
 
-import { Card, CardBody, Chip } from '@ui/material.tsx'
+import { Card, CardBody, Chip } from '@ui/ui-kit.tsx'
 import {
     motion,
     useAnimationFrame,

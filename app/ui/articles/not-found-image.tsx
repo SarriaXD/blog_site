@@ -1,6 +1,5 @@
 import Image from 'next/image'
 import { not_found } from '@public/images'
-import React from 'react'
 
 const NotFoundImage = () => {
     return (

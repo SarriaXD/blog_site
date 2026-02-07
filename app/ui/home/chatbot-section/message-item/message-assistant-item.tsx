@@ -1,5 +1,4 @@
 import { Dog } from '@public/icons'
-import React from 'react'
 import { Message } from '@ui/home/chatbot-section/message-item/message-item.tsx'
 import MarkdownBlock from '@ui/home/chatbot-section/markdown-block/markdown-block.tsx'
 

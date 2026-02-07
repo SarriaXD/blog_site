@@ -1,11 +1,10 @@
-import React from 'react'
+import { ReactNode } from 'react'
 import '@ui/global.css'
 import FPSCounter from '@ui/FPS-counter.tsx'
 import ToastProvider from '@ui/toast-provider.tsx'
 import { Analytics } from '@vercel/analytics/react'
 import { Metadata } from 'next'
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
     metadataBase: new URL('https://sarria.com'),
     icons: {
@@ -19,7 +18,7 @@ export const metadata: Metadata = {
 export default function RootLayout({
     children,
 }: {
-    children: React.ReactNode
+    children: ReactNode
 }) {
     return (
         <html lang="en">

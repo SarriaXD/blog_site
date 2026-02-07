@@ -1,9 +1,11 @@
-import React, { useEffect } from 'react'
-import { IconButton, List, ListItem, ListItemSuffix } from './material.tsx'
+import { useEffect } from 'react'
+import { IconButton } from './ui-kit.tsx'
 import Link from 'next/link'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Close, Dog, Email, Github, Linkedin } from '@public/icons'
 import { useMediaQuery } from '@lib/hooks/hooks.ts'
+
+const slideEase: [number, number, number, number] = [0.76, 0, 0.24, 1]
 
 const itemVariants = {
     initial: { x: '-100%' },
@@ -11,7 +13,7 @@ const itemVariants = {
         x: 0,
         transition: {
             duration: 0.8,
-            ease: [0.76, 0, 0.24, 1],
+            ease: slideEase,
             delay: 0.05 * i,
         },
     }),
@@ -19,7 +21,7 @@ const itemVariants = {
         x: '-100%',
         transition: {
             duration: 0.8,
-            ease: [0.76, 0, 0.24, 1],
+            ease: slideEase,
             delay: 0.05 * i,
         },
     }),
@@ -27,10 +29,10 @@ const itemVariants = {
 
 const sideBarVariants = {
     initial: { x: '-100%' },
-    enter: { x: 0, transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1] } },
+    enter: { x: 0, transition: { duration: 0.8, ease: slideEase } },
     exit: {
         x: '-100%',
-        transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1] },
+        transition: { duration: 0.8, ease: slideEase },
     },
 }
 
@@ -100,24 +102,26 @@ const LinkItem = ({
         ...(newTab ? { target: '_blank', rel: 'noopener noreferrer' } : {}),
     }
     return (
-        <Link {...linkProps}>
-            <motion.div
-                variants={itemVariants}
-                custom={index}
-                initial="initial"
-                animate="enter"
-                exit="exit"
+        <motion.li
+            className="list-none"
+            variants={itemVariants}
+            custom={index}
+            initial="initial"
+            animate="enter"
+            exit="exit"
+        >
+            <Link
+                {...linkProps}
+                className="flex min-h-11 items-center gap-3 rounded-xl px-4 py-2.5 transition-colors hover:bg-white/10"
             >
-                <ListItem>
-                    <span className="text-base text-white">{text}</span>
-                    {icon && (
-                        <ListItemSuffix>
-                            <LinkIcon icon={icon} />
-                        </ListItemSuffix>
-                    )}
-                </ListItem>
-            </motion.div>
-        </Link>
+                <span className="text-base text-white">{text}</span>
+                {icon && (
+                    <span className="ml-auto">
+                        <LinkIcon icon={icon} />
+                    </span>
+                )}
+            </Link>
+        </motion.li>
     )
 }
 
@@ -142,7 +146,7 @@ export function Sidebar({ open, onClose }: SideBarProps) {
                         exit="exit"
                         variants={sideBarVariants}
                         onClick={onClose}
-                        className="fixed left-0 top-0 z-50 h-screen w-full bg-black bg-opacity-[0.75] backdrop-blur-[20px] will-change-transform"
+                        className="fixed left-0 top-0 z-50 h-screen w-full bg-black/75 backdrop-blur-[20px] will-change-transform"
                     >
                         <div className="flex items-center justify-between p-4">
                             <Link href="/">
@@ -163,16 +167,16 @@ export function Sidebar({ open, onClose }: SideBarProps) {
                                 <Close className="size-6 text-white" />
                             </IconButton>
                         </div>
-                        <List>
-                            {links.map((link) => (
+                        <ul className="flex flex-col gap-1 px-2">
+                            {links.map((link, index) => (
                                 <LinkItem
                                     key={link.text}
                                     {...link}
-                                    index={links.indexOf(link)}
+                                    index={index}
                                     onClose={onClose}
                                 />
                             ))}
-                        </List>
+                        </ul>
                     </motion.div>
                 )}
             </AnimatePresence>

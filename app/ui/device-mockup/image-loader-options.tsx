@@ -55,7 +55,9 @@ const ImageLoaderOptions = ({
                     {tabs.map((tab, index) => (
                         <button
                             key={index}
-                            ref={(el) => (tabRefs.current[index] = el)}
+                            ref={(el) => {
+                                tabRefs.current[index] = el
+                            }}
                             className="relative z-10 flex-1 rounded-md px-4 py-2 text-base font-medium transition-colors duration-300"
                             onClick={() => {
                                 setActiveTab(index)

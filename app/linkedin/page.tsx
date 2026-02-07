@@ -1,7 +1,6 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { Spinner } from '@ui/material.tsx'
 import { useEffect } from 'react'
 
 export default function Page() {
@@ -14,8 +13,8 @@ export default function Page() {
     })
 
     return (
-        <main className="flex size-full items-center justify-center">
-            <Spinner className="size-24" />
+        <main className="flex size-full items-center justify-center gap-4">
+            <div className="size-16 animate-spin rounded-full border-4 border-gray-700 border-t-white" />
             <h1 className="text-center text-4xl">Redirecting to Linkedin</h1>
         </main>
     )

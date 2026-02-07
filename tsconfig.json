@@ -2,9 +2,15 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@public/*": ["public/*"],
-      "@lib/*": ["./app/lib/*"],
-      "@ui/*": ["./app/ui/*"],
+      "@public/*": [
+        "public/*"
+      ],
+      "@lib/*": [
+        "./app/lib/*"
+      ],
+      "@ui/*": [
+        "./app/ui/*"
+      ]
     },
     "target": "ES2020",
     "useDefineForClassFields": true,
@@ -21,7 +27,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
@@ -40,7 +46,8 @@
     "next-env.d.ts",
     ".next/types/**/*.ts",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    ".next/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

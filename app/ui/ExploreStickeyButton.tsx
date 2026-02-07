@@ -1,4 +1,4 @@
-import { motion, useInView } from 'framer-motion'
+import { motion, useInView, type Transition } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowRight } from '@public/icons'
 import { useEffect, useRef, useState } from 'react'
@@ -46,7 +46,7 @@ interface ExploreStickyButtonProps {
 
 const ExploreStickyButton = ({ href }: ExploreStickyButtonProps) => {
     const { ref, throttledIsInView: inView } = useThrottledInView(1000)
-    const containerTransition = {
+    const containerTransition: Transition = {
         type: 'tween',
         times: [0, 0.45, 0.65, 1],
         duration: 0.6,

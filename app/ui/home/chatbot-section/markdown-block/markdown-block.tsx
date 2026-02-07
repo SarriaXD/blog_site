@@ -8,41 +8,44 @@ interface MarkdownBlockProps {
 
 const MarkdownBlock = ({ markdown }: MarkdownBlockProps) => {
     return (
-        <MessageMarkdownMemoized
-            className="markdown-body !bg-transparent !font-normal !text-[#ECECEC]"
-            children={markdown}
-            components={{
-                pre({ children }) {
-                    return (
-                        <pre className={'!bg-transparent !p-0'}>{children}</pre>
-                    )
-                },
-                a({ children }) {
-                    return (
-                        <span className="text-blue-400 underline">
-                            {children}
-                        </span>
-                    )
-                },
-                img(props: ImgHTMLAttributes<HTMLImageElement>) {
-                    return (
-                        <img
-                            src={props.src!}
-                            alt={props.alt!}
-                            className={'rounded-xl'}
-                        />
-                    )
-                },
-            }}
-        />
+        <div className="markdown-body !bg-transparent !font-normal !text-[#ECECEC]">
+            <MessageMarkdownMemoized
+                components={{
+                    pre({ children }) {
+                        return (
+                            <pre className={'!bg-transparent !p-0'}>
+                                {children}
+                            </pre>
+                        )
+                    },
+                    a({ children }) {
+                        return (
+                            <span className="text-blue-400 underline">
+                                {children}
+                            </span>
+                        )
+                    },
+                    img(props: ImgHTMLAttributes<HTMLImageElement>) {
+                        return (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img
+                                src={props.src!}
+                                alt={props.alt!}
+                                className={'rounded-xl'}
+                            />
+                        )
+                    },
+                }}
+            >
+                {markdown}
+            </MessageMarkdownMemoized>
+        </div>
     )
 }
 
 export const MessageMarkdownMemoized = memo(
     Markdown,
-    (prevProps, nextProps) =>
-        prevProps.children === nextProps.children &&
-        prevProps.className === nextProps.className
+    (prevProps, nextProps) => prevProps.children === nextProps.children
 )
 
 export default MarkdownBlock
