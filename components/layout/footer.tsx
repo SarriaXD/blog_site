@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Container } from '@ui/ui-kit.tsx'
+import { Container } from '@components/ui/ui-kit.tsx'
 
 interface SectionProps {
     title: string

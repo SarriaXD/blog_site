@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Button } from '@ui/ui-kit.tsx'
+import { Button } from '@components/ui/ui-kit.tsx'
 
 const NotFoundText = () => {
     return (

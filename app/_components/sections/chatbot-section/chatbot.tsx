@@ -1,8 +1,8 @@
-import ChatHeader from '@ui/home/chatbot-section/chat-header.tsx'
-import ChatSidebar from '@ui/home/chatbot-section/chat-side-bar.tsx'
+import ChatHeader from '@app/_components/sections/chatbot-section/chat-header.tsx'
+import ChatSidebar from '@app/_components/sections/chatbot-section/chat-side-bar.tsx'
 import { MotionValue } from 'framer-motion'
-import ChatTextfield from '@ui/home/chatbot-section/chat-textfield.tsx'
-import ChatList from '@ui/home/chatbot-section/chat-list.tsx'
+import ChatTextfield from '@app/_components/sections/chatbot-section/chat-textfield.tsx'
+import ChatList from '@app/_components/sections/chatbot-section/chat-list.tsx'
 import { motion } from 'framer-motion'
 
 interface ChatbotProps {

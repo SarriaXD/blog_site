@@ -1,9 +1,9 @@
 import { useEffect } from 'react'
-import { IconButton } from './ui-kit.tsx'
+import { IconButton } from '@components/ui/ui-kit.tsx'
 import Link from 'next/link'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Close, Dog, Email, Github, Linkedin } from '@public/icons'
-import { useMediaQuery } from '@lib/hooks/hooks.ts'
+import { useMediaQuery } from '@hooks/hooks.ts'
 
 const slideEase: [number, number, number, number] = [0.76, 0, 0.24, 1]
 

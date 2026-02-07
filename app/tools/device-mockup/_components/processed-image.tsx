@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { Button } from '@ui/ui-kit.tsx'
+import { Button } from '@components/ui/ui-kit.tsx'
 
 interface ProcessedImageProps {
     image: string

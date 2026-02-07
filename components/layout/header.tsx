@@ -1,6 +1,6 @@
 'use client'
 
-import { Button, Container, HEADER_CLASS, IconButton, Tooltip } from './ui-kit.tsx'
+import { Button, Container, HEADER_CLASS, IconButton, Tooltip } from '@components/ui/ui-kit.tsx'
 import Link from 'next/link'
 import { Sidebar } from './sidebar.tsx'
 import { useState } from 'react'

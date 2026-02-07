@@ -5,7 +5,7 @@ import {
 } from '@lib/data/ai-chatbot-data.ts'
 import { AnimatePresence, MotionValue } from 'framer-motion'
 import { useMemo, useState } from 'react'
-import MessageItem from '@ui/home/chatbot-section/message-item/message-item.tsx'
+import MessageItem from '@app/_components/sections/chatbot-section/message-item/message-item.tsx'
 import { motion } from 'framer-motion'
 
 interface ChatListProps {

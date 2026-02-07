@@ -1,6 +1,6 @@
 'use client'
 
-import { Card, CardBody, Chip } from '@ui/ui-kit.tsx'
+import { Card, CardBody, Chip } from '@components/ui/ui-kit.tsx'
 import {
     motion,
     useAnimationFrame,
@@ -19,8 +19,8 @@ import {
     languageTechData,
     techIntroductions,
 } from '@lib/data/tech-stack-data.ts'
-import { useMediaQuery } from '@lib/hooks/hooks.ts'
-import { Container, Section, Stack } from '@ui/ui-kit.tsx'
+import { useMediaQuery } from '@hooks/hooks.ts'
+import { Container, Section, Stack } from '@components/ui/ui-kit.tsx'
 
 interface CarouselItemProps {
     color: StaticImageColor

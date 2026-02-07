@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
-import '@ui/global.css'
-import FPSCounter from '@ui/FPS-counter.tsx'
-import ToastProvider from '@ui/toast-provider.tsx'
+import './globals.css'
+import FPSCounter from '@components/providers/FPS-counter.tsx'
+import ToastProvider from '@components/providers/toast-provider.tsx'
 import { Analytics } from '@vercel/analytics/react'
 import { Metadata } from 'next'
 

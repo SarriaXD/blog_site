@@ -1,4 +1,4 @@
-import { Message } from '@ui/home/chatbot-section/message-item/message-item.tsx'
+import { Message } from '@lib/types/chat.ts'
 import { food } from '@public/images'
 
 const sampleChatHistories = [

@@ -5,11 +5,17 @@
       "@public/*": [
         "public/*"
       ],
-      "@lib/*": [
-        "./app/lib/*"
+      "@app/*": [
+        "./app/*"
       ],
-      "@ui/*": [
-        "./app/ui/*"
+      "@components/*": [
+        "./components/*"
+      ],
+      "@hooks/*": [
+        "./hooks/*"
+      ],
+      "@lib/*": [
+        "./lib/*"
       ]
     },
     "target": "ES2020",

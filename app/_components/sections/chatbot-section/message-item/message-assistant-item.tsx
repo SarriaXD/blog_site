@@ -1,6 +1,6 @@
 import { Dog } from '@public/icons'
-import { Message } from '@ui/home/chatbot-section/message-item/message-item.tsx'
-import MarkdownBlock from '@ui/home/chatbot-section/markdown-block/markdown-block.tsx'
+import { Message } from '@lib/types/chat.ts'
+import MarkdownBlock from '@app/_components/sections/chatbot-section/markdown-block/markdown-block.tsx'
 
 const AssistantItem = (message: Message) => {
     return (

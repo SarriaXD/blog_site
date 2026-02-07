@@ -12,8 +12,8 @@ import {
 import { useRef, useState } from 'react'
 import { flutterProjectData } from '@lib/data/flutter-project-data.ts'
 import { StaticImageColor } from '@lib/utils/utils.ts'
-import ExploreStickyButton from '@ui/ExploreStickeyButton.tsx'
-import { Container, Section } from '@ui/ui-kit.tsx'
+import ExploreStickyButton from '@components/ui/ExploreStickeyButton.tsx'
+import { Container, Section } from '@components/ui/ui-kit.tsx'
 
 const useTitleAnimation = () => {
     const ref = useRef(null)

@@ -1,4 +1,4 @@
-import { Message } from '@ui/home/chatbot-section/message-item/message-item.tsx'
+import { Message, WeatherData } from '@lib/types/chat.ts'
 
 const ToolcallItem = (message: Message) => {
     if (message.toolResults?.toolName == 'getWeatherInformation') {
@@ -15,30 +15,6 @@ const ToolcallItem = (message: Message) => {
                 })}
             />
         )
-    }
-}
-
-export interface WeatherData {
-    location: {
-        name: string
-        localtime: string
-        tz_id: string
-    }
-    current: {
-        temp_c: number
-        condition: {
-            text: string
-            icon: string
-        }
-    }
-    forecast: {
-        forecastday: Array<{
-            date: string
-            day: {
-                maxtemp_c: number
-                mintemp_c: number
-            }
-        }>
     }
 }
 

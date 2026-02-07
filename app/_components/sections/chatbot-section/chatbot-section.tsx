@@ -1,12 +1,12 @@
 'use client'
 
-import ChatbotTitle from '@ui/home/chatbot-section/chatbot-title.tsx'
-import Chatbot from '@ui/home/chatbot-section/chatbot.tsx'
+import ChatbotTitle from '@app/_components/sections/chatbot-section/chatbot-title.tsx'
+import Chatbot from '@app/_components/sections/chatbot-section/chatbot.tsx'
 import { useScroll } from 'framer-motion'
 import { useRef, useState } from 'react'
-import ChatIntroduction from '@ui/home/chatbot-section/chat-introduction.tsx'
-import ExploreStickyButton from '@ui/ExploreStickeyButton.tsx'
-import { Container, Section } from '@ui/ui-kit.tsx'
+import ChatIntroduction from '@app/_components/sections/chatbot-section/chat-introduction.tsx'
+import ExploreStickyButton from '@components/ui/ExploreStickeyButton.tsx'
+import { Container, Section } from '@components/ui/ui-kit.tsx'
 
 const ChatbotSection = () => {
     const ref = useRef(null)

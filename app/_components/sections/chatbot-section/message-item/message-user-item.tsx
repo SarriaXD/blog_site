@@ -1,4 +1,4 @@
-import { Message } from '@ui/home/chatbot-section/message-item/message-item.tsx'
+import { Message } from '@lib/types/chat.ts'
 import Image, { StaticImageData } from 'next/image'
 
 const UserItem = (message: Message) => {
