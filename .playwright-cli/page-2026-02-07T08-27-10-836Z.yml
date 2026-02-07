@@ -1,0 +1,166 @@
+- generic [active] [ref=e1]:
+  - banner:
+    - navigation [ref=e2]:
+      - generic [ref=e3]:
+        - link "Back To Home" [ref=e4] [cursor=pointer]:
+          - /url: /
+          - button "Back To Home" [ref=e5]:
+            - img [ref=e6]
+        - list [ref=e8]:
+          - listitem [ref=e9]:
+            - link "Articles" [ref=e10] [cursor=pointer]:
+              - /url: /articles
+              - button "Articles" [ref=e11]
+          - listitem [ref=e12]:
+            - link "Design" [ref=e13] [cursor=pointer]:
+              - /url: /design-system
+              - button "Design" [ref=e14]
+          - listitem [ref=e15]:
+            - link "Projects" [ref=e16] [cursor=pointer]:
+              - /url: https://github.com/SarriaXD?tab=repositories
+              - button "Projects" [ref=e17]
+          - listitem [ref=e18]:
+            - link "Tools" [ref=e19] [cursor=pointer]:
+              - /url: /tools
+              - button "Tools" [ref=e20]
+          - listitem [ref=e21]:
+            - link "Email Me" [ref=e22] [cursor=pointer]:
+              - /url: mailto:sarria.qi.wang@gmail.com
+              - button "Email Me" [ref=e24]:
+                - img [ref=e25]
+          - listitem [ref=e27]:
+            - link "View My Linkedin" [ref=e28] [cursor=pointer]:
+              - /url: https://www.linkedin.com/in/qi-wang-793a562a7
+              - button "View My Linkedin" [ref=e30]:
+                - img [ref=e31]
+          - listitem [ref=e33]:
+            - link "View My Github" [ref=e34] [cursor=pointer]:
+              - /url: https://github.com/SarriaXD
+              - button "View My Github" [ref=e36]:
+                - img [ref=e37]
+  - navigation
+  - main [ref=e39]:
+    - generic [ref=e42]:
+      - generic [ref=e44]:
+        - generic [ref=e45]: Custom Theme
+        - heading "Aurora Glass UI Kit" [level=1] [ref=e46]
+        - paragraph [ref=e47]: 这是一套彻底重做的基础组件体系。核心目标是更干净的视觉层级、 更稳定的交互语义，以及可以快速扩展的主题能力。
+        - generic [ref=e48]:
+          - button "Start Building" [ref=e49]
+          - button "Read Primitives" [ref=e50]
+          - link "Open Tools" [ref=e51] [cursor=pointer]:
+            - /url: /tools
+            - button "Open Tools" [ref=e52]
+      - generic [ref=e54]:
+        - generic [ref=e55]:
+          - paragraph [ref=e56]: Foundation Tokens
+          - list [ref=e57]:
+            - listitem [ref=e58]:
+              - generic [ref=e59]: Tone
+              - generic [ref=e60]: neutral / brand / danger / inverse
+            - listitem [ref=e61]:
+              - generic [ref=e62]: Variant
+              - generic [ref=e63]: solid / soft / ghost / outline
+            - listitem [ref=e64]:
+              - generic [ref=e65]: Size
+              - generic [ref=e66]: sm / md / lg
+        - generic [ref=e67]:
+          - paragraph [ref=e68]: Quick Actions
+          - generic [ref=e69]:
+            - button "mail" [ref=e70]:
+              - img [ref=e71]
+            - button "linkedin" [ref=e73]:
+              - img [ref=e74]
+            - button "github" [ref=e76]:
+              - img [ref=e77]
+    - generic [ref=e81]:
+      - generic [ref=e82]:
+        - heading "Core Primitives" [level=2] [ref=e83]
+        - paragraph [ref=e84]: 基础组件覆盖布局、操作、状态反馈三个层面。每个例子都给出最小可复用写法。
+      - generic [ref=e85]:
+        - generic [ref=e86]:
+          - generic [ref=e88]:
+            - generic [ref=e89]:
+              - img [ref=e90]
+              - heading "Buttons & Intent" [level=3] [ref=e92]
+            - paragraph [ref=e93]: "通过 `tone` 和 `variant` 表达语义，不再依赖零散颜色类名。"
+            - generic [ref=e94]:
+              - button "Publish" [ref=e95]
+              - button "Save Draft" [ref=e96]
+              - button "Delete" [ref=e97]
+              - button "Preview" [ref=e98]
+            - code [ref=e100]: <Button tone="brand">Publish</Button> <Button tone="neutral" variant="soft">Save Draft</Button> <Button tone="danger" variant="outline">Delete</Button> <Button tone="inverse">Preview</Button>
+          - generic [ref=e102]:
+            - generic [ref=e103]:
+              - img [ref=e104]
+              - heading "Card Composition" [level=3] [ref=e106]
+            - paragraph [ref=e107]: 卡片负责信息分组，Chip 负责状态标签，组合后即可快速形成内容面板。
+            - generic [ref=e108]:
+              - paragraph [ref=e109]: Article Status
+              - generic [ref=e110]:
+                - generic [ref=e111]: Draft
+                - generic [ref=e112]: Review
+                - generic [ref=e113]: Blocked
+                - generic [ref=e114]: Published
+            - code [ref=e116]: <Card tone="neutral"> <CardBody> <Chip value="Review" tone="brand" /> </CardBody> </Card>
+        - generic [ref=e117]:
+          - generic [ref=e119]:
+            - generic [ref=e120]:
+              - img [ref=e121]
+              - heading "Actions, Tooltip, Loading" [level=3] [ref=e123]
+            - paragraph [ref=e124]: 图标按钮用于高频操作，Tooltip 提供上下文，Spinner 负责异步反馈。
+            - generic [ref=e125]:
+              - button "email" [ref=e127]:
+                - img [ref=e128]
+              - button "linkedin" [ref=e131]:
+                - img [ref=e132]
+              - button "github" [ref=e135]:
+                - img [ref=e136]
+            - code [ref=e140]: <Tooltip content="GitHub"> <IconButton tone="neutral" aria-label="github"> <Github className="size-5" /> </IconButton> </Tooltip>
+          - generic [ref=e142]:
+            - generic [ref=e143]:
+              - img [ref=e144]
+              - heading "Alert Feedback" [level=3] [ref=e146]
+            - alert [ref=e147]:
+              - generic [ref=e148]: Save failed. Please check your network and retry.
+            - alert [ref=e149]:
+              - generic [ref=e150]: Tokens synced successfully.
+            - code [ref=e152]: <Alert open tone="danger"> Save failed. Please check your network and retry. </Alert>
+  - contentinfo [ref=e153]:
+    - generic [ref=e154]:
+      - generic [ref=e155]:
+        - heading "About Me" [level=1] [ref=e156]
+        - list [ref=e157]:
+          - listitem [ref=e158]:
+            - paragraph [ref=e159]: Qi Wang
+          - listitem [ref=e160]:
+            - paragraph [ref=e161]: 225 Carlton Street
+          - listitem [ref=e162]:
+            - paragraph [ref=e163]: Winnipeg, MB R3C 0V3
+      - generic [ref=e164]:
+        - heading "Follow Me" [level=1] [ref=e165]
+        - list [ref=e166]:
+          - listitem [ref=e167]:
+            - link "Github" [ref=e168] [cursor=pointer]:
+              - /url: https://github.com/SarriaXD
+              - paragraph [ref=e169]: Github
+          - listitem [ref=e170]:
+            - link "Twitter" [ref=e171] [cursor=pointer]:
+              - /url: https://x.com/qi_wang_sarria
+              - paragraph [ref=e172]: Twitter
+          - listitem [ref=e173]:
+            - link "LinkedIn" [ref=e174] [cursor=pointer]:
+              - /url: https://www.linkedin.com/in/qi-wang-793a562a7
+              - paragraph [ref=e175]: LinkedIn
+      - generic [ref=e176]:
+        - heading "Contact Me" [level=1] [ref=e177]
+        - list [ref=e178]:
+          - listitem [ref=e179]:
+            - link "Email:sarria.qi.wang@gmail.com" [ref=e180] [cursor=pointer]:
+              - /url: mailto:sarria.qi.wang@gmail.com
+              - paragraph [ref=e181]: Email:sarria.qi.wang@gmail.com
+          - listitem [ref=e182]:
+            - 'link "Phone: (431) 788-6683" [ref=e183] [cursor=pointer]':
+              - /url: tel:4317886683
+              - paragraph [ref=e184]: "Phone: (431) 788-6683"
+  - region "Notifications Alt+T"
