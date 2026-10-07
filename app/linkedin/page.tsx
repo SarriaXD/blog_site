@@ -13,9 +13,11 @@ export default function Page() {
     })
 
     return (
-        <main className="flex size-full items-center justify-center gap-4">
-            <div className="size-16 animate-spin rounded-full border-4 border-gray-700 border-t-white" />
-            <h1 className="text-center text-4xl">Redirecting to Linkedin</h1>
+        <main className="flex min-h-screen w-full items-center justify-center gap-5 px-6">
+            <div className="size-14 animate-spin rounded-full border-4 border-white/15 border-t-white" />
+            <h1 className="text-center text-3xl md:text-4xl">
+                Redirecting to LinkedIn
+            </h1>
         </main>
     )
 }

@@ -6,68 +6,49 @@ import {
     type HTMLAttributes,
     type ReactNode,
 } from 'react'
+import { Glass, cn, type GlassTint } from './liquid-glass.tsx'
 
-const cn = (...classes: Array<string | false | null | undefined>) =>
-    classes.filter(Boolean).join(' ')
+export { Glass, cn }
+export type { GlassTint }
 
 type Tone = 'neutral' | 'brand' | 'danger' | 'inverse'
 type Size = 'sm' | 'md' | 'lg'
 type Variant = 'solid' | 'soft' | 'ghost' | 'outline'
 
-const tonePalette: Record<
-    Tone,
-    {
-        solid: string
-        soft: string
-        ghost: string
-        outline: string
-        chip: string
-        alert: string
-        card: string
+/** Maps the semantic tone/variant API onto a glass tint. */
+const resolveTint = (tone: Tone, variant: Variant): GlassTint => {
+    switch (tone) {
+        case 'brand':
+            return variant === 'solid' ? 'brand-solid' : 'brand'
+        case 'danger':
+            return variant === 'solid' ? 'danger-solid' : 'danger'
+        case 'inverse':
+            return 'inverse'
+        default:
+            switch (variant) {
+                case 'solid':
+                    return 'soft'
+                case 'soft':
+                    return 'neutral'
+                case 'ghost':
+                    return 'clear'
+                case 'outline':
+                    return 'clear'
+            }
     }
-> = {
-    neutral: {
-        solid: 'border border-white/20 bg-white/14 text-white shadow-[0_18px_42px_rgba(0,0,0,0.38)] hover:bg-white/20',
-        soft: 'border border-white/20 bg-white/10 text-[#dce5f7] hover:bg-white/15',
-        ghost: 'border border-white/14 bg-white/6 text-[#dce5f7] hover:bg-white/12',
-        outline: 'border border-white/24 bg-transparent text-[#dce5f7] hover:border-white/40 hover:bg-white/10',
-        chip: 'border-white/20 bg-white/10 text-[#dbe4f8]',
-        alert: 'border-white/20 bg-white/12 text-[#e4ebfa]',
-        card: 'border-white/16 bg-white/8 text-[#eef3ff]',
-    },
-    brand: {
-        solid: 'border border-cyan-300/40 bg-[linear-gradient(180deg,#42b9ff_0%,#1d74ff_100%)] text-white shadow-[0_18px_44px_rgba(24,117,255,0.5)] hover:brightness-110',
-        soft: 'border border-cyan-300/35 bg-cyan-500/20 text-cyan-100 hover:bg-cyan-500/28',
-        ghost: 'border border-cyan-300/30 bg-cyan-500/14 text-cyan-200 hover:bg-cyan-500/22',
-        outline: 'border border-cyan-300/45 bg-transparent text-cyan-200 hover:bg-cyan-500/14',
-        chip: 'border-cyan-300/40 bg-cyan-500/20 text-cyan-100',
-        alert: 'border-cyan-300/45 bg-cyan-500/20 text-cyan-100',
-        card: 'border-cyan-300/24 bg-[linear-gradient(160deg,rgba(40,86,157,0.55)_0%,rgba(15,27,52,0.82)_100%)] text-white',
-    },
-    danger: {
-        solid: 'border border-red-300/35 bg-[linear-gradient(180deg,#ff6f84_0%,#d72e45_100%)] text-white shadow-[0_16px_40px_rgba(215,46,69,0.45)] hover:brightness-110',
-        soft: 'border border-red-300/35 bg-red-500/20 text-red-100 hover:bg-red-500/28',
-        ghost: 'border border-red-300/32 bg-red-500/12 text-red-200 hover:bg-red-500/20',
-        outline: 'border border-red-300/40 bg-transparent text-red-200 hover:bg-red-500/15',
-        chip: 'border-red-300/45 bg-red-500/20 text-red-100',
-        alert: 'border-red-300/45 bg-red-500/24 text-red-100',
-        card: 'border-red-300/28 bg-[linear-gradient(160deg,rgba(114,20,33,0.62)_0%,rgba(39,12,17,0.9)_100%)] text-white',
-    },
-    inverse: {
-        solid: 'border border-[#d4deef] bg-[#f2f7ff] text-[#060e1c] shadow-[0_16px_32px_rgba(191,206,232,0.35)] hover:bg-[#e7eef9]',
-        soft: 'border border-[#d4deef] bg-[#ecf2fe] text-[#0b1425] hover:bg-[#e2ebfb]',
-        ghost: 'border border-[#d4deef]/60 bg-white/10 text-[#f1f6ff] hover:bg-white/16',
-        outline: 'border border-[#d4deef] bg-transparent text-[#f1f6ff] hover:bg-white/12',
-        chip: 'border-[#cad6eb] bg-[#edf3fe] text-[#0d1729]',
-        alert: 'border-[#d4deef] bg-[#f1f7ff] text-[#071122]',
-        card: 'border-[#d4deef] bg-[#f3f7ff] text-[#071122]',
-    },
+}
+
+const variantText: Record<Tone, string> = {
+    neutral: 'text-[var(--ui-text-primary)]',
+    brand: 'text-[#dff2ff]',
+    danger: 'text-[#ffe1e6]',
+    inverse: 'text-[#0a1020]',
 }
 
 const buttonSizeClasses: Record<Size, string> = {
-    sm: 'min-h-10 px-5 py-2 text-sm',
-    md: 'min-h-11 px-6 py-2.5 text-[15px]',
-    lg: 'min-h-12 px-7 py-3 text-base',
+    sm: 'min-h-10 px-5 text-sm',
+    md: 'min-h-11 px-6 text-[15px]',
+    lg: 'min-h-12 px-7 text-base',
 }
 
 const iconButtonSizeClasses: Record<Size, string> = {
@@ -82,7 +63,11 @@ const chipSizeClasses: Record<Size, string> = {
     lg: 'h-8 px-3.5 text-sm',
 }
 
-export const HEADER_CLASS = 'h-16 md:h-20'
+export const HEADER_CLASS = 'h-14 md:h-16'
+
+/* ------------------------------------------------------------------ */
+/*  Layout                                                             */
+/* ------------------------------------------------------------------ */
 
 interface MainLayoutProps extends HTMLAttributes<HTMLElement> {
     withHeaderOffset?: boolean
@@ -97,7 +82,7 @@ export function MainLayout({
     return (
         <main
             className={cn(
-                'w-full text-[var(--ui-text-primary)] antialiased',
+                'relative w-full text-[var(--ui-text-primary)] antialiased',
                 withHeaderOffset && 'app-main-offset',
                 className
             )}
@@ -125,7 +110,7 @@ export const Section = forwardRef<HTMLElement, HTMLAttributes<HTMLElement>>(
         return (
             <section
                 ref={ref}
-                className={cn('py-16 md:py-24', className)}
+                className={cn('relative py-16 md:py-24', className)}
                 {...props}
             >
                 {children}
@@ -157,11 +142,17 @@ export function Stack({
     )
 }
 
+/* ------------------------------------------------------------------ */
+/*  Actions                                                            */
+/* ------------------------------------------------------------------ */
+
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     variant?: Variant
     tone?: Tone
     size?: Size
     loading?: boolean
+    /** Disable the (Chromium-only) refraction layer for very small buttons. */
+    refraction?: boolean
 }
 
 export function Button({
@@ -169,6 +160,7 @@ export function Button({
     tone = 'neutral',
     size = 'md',
     loading = false,
+    refraction = true,
     className,
     children,
     disabled,
@@ -176,23 +168,28 @@ export function Button({
 }: ButtonProps) {
     const isDisabled = disabled || loading
     return (
-        <button
+        <Glass
+            as="button"
             type={props.type ?? 'button'}
+            tint={resolveTint(tone, variant)}
+            interactive
+            refraction={refraction}
             disabled={isDisabled}
             className={cn(
-                'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full font-semibold leading-[1.15] tracking-[-0.01em] transition-all duration-200 ease-out active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#05070b]',
+                'inline-flex shrink-0 rounded-full leading-[1.15] font-semibold tracking-[-0.01em]',
                 buttonSizeClasses[size],
-                tonePalette[tone][variant],
-                variant === 'ghost' && 'backdrop-blur-sm',
-                variant === 'soft' && 'backdrop-blur-xl',
-                isDisabled && 'cursor-not-allowed opacity-50',
+                variantText[tone],
+                variant === 'outline' && 'lg-outline',
                 className
             )}
-            {...props}
+            contentClassName="flex items-center justify-center gap-2 whitespace-nowrap"
+            {...(props as HTMLAttributes<HTMLElement>)}
         >
-            {loading && <Spinner className="size-4 border-current border-r-transparent" />}
+            {loading && (
+                <Spinner className="size-4 border-current border-r-transparent" />
+            )}
             {children}
-        </button>
+        </Glass>
     )
 }
 
@@ -200,31 +197,36 @@ interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     variant?: Variant
     tone?: Tone
     size?: Size
+    refraction?: boolean
 }
 
 export function IconButton({
     variant = 'ghost',
     tone = 'neutral',
     size = 'md',
+    refraction = true,
     className,
     children,
     ...props
 }: IconButtonProps) {
     return (
-        <button
+        <Glass
+            as="button"
             type={props.type ?? 'button'}
+            tint={resolveTint(tone, variant)}
+            interactive
+            refraction={refraction}
             className={cn(
-                'inline-flex items-center justify-center rounded-full leading-[1] transition-all duration-200 ease-out active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#05070b]',
+                'inline-flex shrink-0 rounded-full leading-none',
                 iconButtonSizeClasses[size],
-                tonePalette[tone][variant],
-                variant === 'ghost' && 'backdrop-blur-sm',
-                variant === 'soft' && 'backdrop-blur-xl',
+                variantText[tone],
                 className
             )}
-            {...props}
+            contentClassName="flex items-center justify-center"
+            {...(props as HTMLAttributes<HTMLElement>)}
         >
             {children}
-        </button>
+        </Glass>
     )
 }
 
@@ -238,31 +240,61 @@ export function Tooltip({
     return (
         <span className="group relative inline-flex">
             {children}
-            <span className="pointer-events-none absolute -top-11 left-1/2 z-20 hidden -translate-x-1/2 whitespace-nowrap rounded-full border border-white/15 bg-[#0d1118]/95 px-3 py-1.5 text-xs font-medium text-[#e2e9f8] shadow-[0_10px_24px_rgba(0,0,0,0.35)] backdrop-blur-xl md:group-hover:block">
+            <span className="pointer-events-none absolute -top-11 left-1/2 z-20 hidden -translate-x-1/2 rounded-full border border-white/15 bg-[#0d1020]/80 px-3 py-1.5 text-xs font-medium whitespace-nowrap text-[#e6ecfa] shadow-[inset_0_1px_0_rgba(255,255,255,0.25),0_12px_30px_-10px_rgba(0,0,0,0.6)] backdrop-blur-xl md:group-hover:block">
                 {content}
             </span>
         </span>
     )
 }
 
+/* ------------------------------------------------------------------ */
+/*  Surfaces                                                           */
+/* ------------------------------------------------------------------ */
+
 interface CardProps extends HTMLAttributes<HTMLDivElement> {
     tone?: Tone
+    /** Lift and shine on hover (for clickable cards). */
+    interactive?: boolean
+    refraction?: boolean
+    aberration?: boolean
+    band?: number
+    strength?: number
+    contentClassName?: string
 }
 
-export function Card({ tone = 'neutral', className, children, ...props }: CardProps) {
+export const Card = forwardRef<HTMLElement, CardProps>(function Card(
+    {
+        tone = 'neutral',
+        interactive = false,
+        refraction = true,
+        aberration = false,
+        band,
+        strength,
+        className,
+        contentClassName,
+        children,
+        ...props
+    },
+    ref
+) {
     return (
-        <div
-            className={cn(
-                'rounded-[28px] border shadow-[0_24px_54px_rgba(3,6,14,0.35)] backdrop-blur-xl',
-                tonePalette[tone].card,
-                className
-            )}
-            {...props}
+        <Glass
+            ref={ref}
+            as="div"
+            tint={resolveTint(tone, 'soft')}
+            interactive={interactive}
+            refraction={refraction}
+            aberration={aberration}
+            band={band}
+            strength={strength}
+            className={cn('rounded-[28px]', variantText[tone], className)}
+            contentClassName={cn('flex flex-col', contentClassName)}
+            {...(props as HTMLAttributes<HTMLElement>)}
         >
             {children}
-        </div>
+        </Glass>
     )
-}
+})
 
 export function CardBody({
     className,
@@ -288,16 +320,20 @@ export function Chip({
     tone = 'neutral',
 }: ChipProps) {
     return (
-        <span
+        <Glass
+            as="span"
+            tint={resolveTint(tone, 'soft')}
+            refraction={false}
             className={cn(
-                'inline-flex items-center rounded-full border font-semibold tracking-wide backdrop-blur-sm',
+                'inline-flex rounded-full font-semibold tracking-wide shadow-none [--lg-blur:10px]',
                 chipSizeClasses[size],
-                tonePalette[tone].chip,
+                variantText[tone],
                 className
             )}
+            contentClassName="flex items-center whitespace-nowrap"
         >
             {value}
-        </span>
+        </Glass>
     )
 }
 
@@ -329,24 +365,23 @@ export function Alert({
 }: AlertProps) {
     if (!open) return null
     return (
-        <div
+        <Glass
+            as="div"
             role="alert"
-            className={cn(
-                'flex items-center justify-between gap-3 rounded-2xl border p-4 shadow-[0_20px_48px_rgba(2,4,11,0.35)] backdrop-blur-xl',
-                tonePalette[tone].alert,
-                className
-            )}
+            tint={resolveTint(tone, 'soft')}
+            className={cn('rounded-[22px] p-4', variantText[tone], className)}
+            contentClassName="flex items-center justify-between gap-3"
         >
             <div>{children}</div>
             {onClose && (
                 <button
                     type="button"
                     onClick={onClose}
-                    className="rounded-lg px-2 py-1 text-sm opacity-80 transition-opacity hover:opacity-100"
+                    className="rounded-full px-3 py-1 text-sm opacity-80 transition hover:bg-white/10 hover:opacity-100"
                 >
                     Close
                 </button>
             )}
-        </div>
+        </Glass>
     )
 }

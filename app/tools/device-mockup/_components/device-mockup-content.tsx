@@ -100,9 +100,17 @@ const DeviceMockupContent = () => {
         }
     }, [processedImage])
     return (
-        <div className="p-8 md:p-16 lg:p-24">
-            <div className="flex w-full flex-col items-center justify-center gap-8 md:flex-row">
-                <div className="w-[300px] md:w-[500px] lg:w-[800px]">
+        <div className="p-6 md:p-12 lg:p-16">
+            <div className="mb-8 md:mb-12">
+                <h1 className="text-gradient-cool text-3xl md:text-5xl">
+                    Device Mockups
+                </h1>
+                <p className="mt-2 text-[var(--ui-text-secondary)]">
+                    Drop in a screenshot, pick a frame, download the mockup.
+                </p>
+            </div>
+            <div className="flex w-full flex-col items-center justify-center gap-8 md:flex-row md:items-start">
+                <div className="w-full max-w-[520px] md:flex-1">
                     {processedImage && (
                         <ProcessedImage image={processedImage} />
                     )}
@@ -114,7 +122,7 @@ const DeviceMockupContent = () => {
                         />
                     )}
                 </div>
-                <div className="w-[300px] md:w-[500px] lg:w-[800px]">
+                <div className="w-full max-w-[520px] md:flex-1">
                     <ImageUploader
                         onError={(error) => {
                             setErrorMessage(error)

@@ -52,7 +52,7 @@ const RawFPSCounter = ({ defaultVisible = false }: FPSCounterProps) => {
     const { isVisible, fps } = useFPS(defaultVisible)
     if (!isVisible) return null
     return (
-        <div className="fixed right-0 top-24 z-50 flex justify-end rounded bg-black bg-opacity-50 p-2 text-white">
+        <div className="fixed top-24 right-4 z-50 flex justify-end rounded-full border border-white/15 bg-black/40 px-3 py-1.5 text-sm font-semibold text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] backdrop-blur-xl">
             FPS: {fps}
         </div>
     )

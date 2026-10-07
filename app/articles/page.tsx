@@ -8,9 +8,9 @@ export default function Page() {
     return (
         <>
             <Header />
-            <MainLayout className="bg-black">
+            <MainLayout>
                 <Section className="py-16 md:py-24">
-                    <Container className="flex items-center">
+                    <Container className="flex min-h-[60vh] items-center">
                         <div className="flex w-full flex-col items-center gap-8 md:flex-row md:justify-between lg:gap-24">
                             <NotFoundImage />
                             <NotFoundText />

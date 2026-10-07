@@ -6,7 +6,7 @@ import Image, { StaticImageData } from 'next/image'
 import { StaticImageColor } from '@lib/utils/utils.ts'
 import { useMediaQuery } from '@hooks/hooks.ts'
 import { hero_backend, hero_mobile, hero_web } from '@public/images'
-import { Container, Section, Stack } from '@components/ui/ui-kit.tsx'
+import { Container, Glass, Section, Stack } from '@components/ui/ui-kit.tsx'
 
 const Introduction = () => {
     return (
@@ -25,17 +25,21 @@ const Introduction = () => {
                     duration: 1,
                 }}
             >
-                <h1 color="white" className="text-4xl md:text-7xl lg:text-8xl">
-                    <span
-                        className="bg-clip-text text-transparent"
-                        style={{
-                            backgroundImage:
-                                'linear-gradient(90deg, #e8867c, #f5af19, #f12711)',
-                        }}
+                <div className="mb-6 flex justify-center md:mb-8">
+                    <Glass
+                        as="span"
+                        tint="clear"
+                        refraction={false}
+                        className="inline-flex rounded-full px-4 py-1.5 text-sm font-semibold text-white/85 shadow-none [--lg-blur:14px]"
+                        contentClassName="flex items-center gap-2.5"
                     >
-                        I'm Qi
-                    </span>
-                    , a software engineer based in Canada.
+                        <span className="animate-pulse-dot size-2 rounded-full bg-[#7dffbe]" />
+                        Mobile · Web · Backend
+                    </Glass>
+                </div>
+                <h1 className="text-4xl md:text-7xl lg:text-8xl">
+                    <span className="text-gradient-warm">I'm Qi</span>, a
+                    software engineer based in Canada.
                 </h1>
             </motion.div>
             <motion.div
@@ -53,7 +57,7 @@ const Introduction = () => {
                     duration: 1,
                 }}
             >
-                <h2 className="text-2xl text-gray-600 md:text-3xl lg:text-4xl">
+                <h2 className="text-2xl font-medium text-white/55 md:text-3xl lg:text-4xl">
                     A full-stack developer.
                 </h2>
             </motion.div>
@@ -235,11 +239,15 @@ const GalleryIntroduction = ({
             }}
             className="max-w-[420px] flex-1 flex-col md:max-w-full"
         >
-            <strong className="text-lg text-gray-200">{title}</strong>
-            <h1 className="text-3xl font-bold md:text-4xl lg:text-6xl">
+            <strong className="text-sm font-semibold tracking-[0.16em] text-[var(--ui-brand-300)] uppercase">
+                {title}
+            </strong>
+            <h2 className="mt-3 text-3xl font-bold md:text-4xl lg:text-6xl">
                 {subtitle}
-            </h1>
-            <p className="pt-4 text-base text-gray-300 md:text-lg">{content}</p>
+            </h2>
+            <p className="pt-4 text-base text-[var(--ui-text-secondary)] md:text-lg">
+                {content}
+            </p>
         </motion.div>
     )
 }
@@ -251,13 +259,7 @@ interface HeroSectionProps {
 export const HeroSection = ({ colorsMap }: HeroSectionProps) => {
     const isMobile = useMediaQuery('(max-width: 735px)', true)
     return (
-        <Section
-            className="pb-20 pt-10 md:pb-28 md:pt-14"
-            style={{
-                backgroundImage:
-                    'linear-gradient(180deg,#000000 0%,rgba(0,0,0,0) 100%), radial-gradient(200% 100% at -66% 36%, #0b014a 40%, rgb(0, 73, 184) 80%, rgb(50, 100, 227) 90%, rgb(0, 204, 255) 100%)',
-            }}
-        >
+        <Section className="pt-6 pb-20 md:pt-10 md:pb-28">
             <Container>
                 <Stack space="lg" className="pb-4">
                     <Introduction />

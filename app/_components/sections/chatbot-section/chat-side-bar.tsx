@@ -94,7 +94,7 @@ const GroupedItems = ({
 }) => {
     return (
         <>
-            <h2 className="mb-2 mt-4 px-2 py-1 text-lg text-gray-400">
+            <h2 className="mt-4 mb-1 px-2 py-1 text-xs font-semibold tracking-[0.14em] text-white/45 uppercase">
                 {groupedName}
             </h2>
             {items.map((item) => {
@@ -143,34 +143,33 @@ const HistoryItem = ({
     chatId: string
     title: string
 }) => {
-    const bgColor = chatId === currentChatId ? 'bg-gray-900' : ''
-    const threeDotsVisibility = chatId === currentChatId ? '!visible' : ''
-    const threeDotsColor = chatId === currentChatId ? '!bg-gray-900' : ''
+    const active = chatId === currentChatId
     return (
         <li>
             <div
-                className={`relative h-[40px] overflow-hidden whitespace-nowrap rounded-xl p-2 text-[16px] font-normal tracking-tight ${bgColor}`}
+                className={`relative h-[40px] overflow-hidden rounded-xl p-2 text-[15px] font-medium tracking-tight whitespace-nowrap transition-colors ${
+                    active
+                        ? 'bg-white/12 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.18)]'
+                        : 'text-white/70 hover:bg-white/6'
+                }`}
             >
-                {chatId === currentChatId ? (
-                    <TypeAnimationWrapper title={title} />
-                ) : (
-                    title
-                )}
                 <div
-                    className={`absolute inset-y-0 right-0 flex items-center justify-center bg-[#171717] ${threeDotsColor}`}
+                    className="overflow-hidden"
                     style={{
-                        maskImage:
-                            'linear-gradient(to left, black 60%, transparent)',
+                        maskImage: active
+                            ? 'linear-gradient(to right, black 72%, transparent 92%)'
+                            : 'linear-gradient(to right, black 82%, transparent 100%)',
                     }}
                 >
-                    <span
-                        className={`invisible flex h-full items-center justify-center gap-0.5 pl-6 pr-2 ${threeDotsVisibility}`}
-                    >
-                        <span className="size-1 rounded-full bg-gray-400" />
-                        <span className="size-1 rounded-full bg-gray-400" />
-                        <span className="size-1 rounded-full bg-gray-400" />
-                    </span>
+                    {active ? <TypeAnimationWrapper title={title} /> : title}
                 </div>
+                {active && (
+                    <span className="absolute inset-y-0 right-2 flex items-center justify-center gap-0.5">
+                        <span className="size-1 rounded-full bg-white/70" />
+                        <span className="size-1 rounded-full bg-white/70" />
+                        <span className="size-1 rounded-full bg-white/70" />
+                    </span>
+                )}
             </div>
         </li>
     )
@@ -179,13 +178,13 @@ const HistoryItem = ({
 const ChatSidebar = ({ progress }: { progress: MotionValue<number> }) => {
     const items = useItems(progress)
     return (
-        <div className="hidden h-full overflow-hidden rounded-l-xl bg-[#171717] text-gray-300 md:block md:w-[180px] xl:w-[256px]">
+        <div className="hidden h-full overflow-hidden border-r border-white/8 bg-black/18 text-white/80 md:block md:w-[180px] xl:w-[256px]">
             <div className="flex items-center justify-between px-4 py-3">
-                <div className="rounded-lg p-2 hover:bg-gray-900">
-                    <Book className="transform text-gray-400 transition-all duration-200 hover:shadow-lg active:scale-95" />
+                <div className="rounded-xl p-2 transition-colors hover:bg-white/10">
+                    <Book className="transform text-white/60 transition-all duration-200 active:scale-95" />
                 </div>
-                <div className="rounded-lg p-2 hover:bg-gray-900">
-                    <Pen className="size-full transform text-gray-400 transition-all duration-200 hover:shadow-lg active:scale-95" />
+                <div className="rounded-xl p-2 transition-colors hover:bg-white/10">
+                    <Pen className="size-full transform text-white/60 transition-all duration-200 active:scale-95" />
                 </div>
             </div>
             <div className="p-2">

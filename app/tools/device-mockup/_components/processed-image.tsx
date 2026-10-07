@@ -16,7 +16,7 @@ const ProcessedImage = ({ image }: ProcessedImageProps) => {
     return (
         <div
             id="processed-image"
-            className={`grid w-full gap-8 rounded-3xl bg-[#282828] p-4 md:gap-12 md:p-8 lg:gap-16 lg:p-12`}
+            className="glass-inset-dark grid w-full gap-8 rounded-[28px] p-4 md:gap-12 md:p-8 lg:gap-16 lg:p-12"
         >
             <div className="relative aspect-[1]">
                 <Image
@@ -28,7 +28,7 @@ const ProcessedImage = ({ image }: ProcessedImageProps) => {
                     alt=""
                 />
             </div>
-            <div className="flex  h-20 w-full items-center justify-center md:h-28 lg:h-32">
+            <div className="flex h-20 w-full items-center justify-center md:h-28 lg:h-32">
                 <Button tone="brand" onClick={() => downloadImage(image)}>
                     Download
                 </Button>

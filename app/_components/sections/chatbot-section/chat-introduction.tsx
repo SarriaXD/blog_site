@@ -49,10 +49,10 @@ const ChatIntroduction = ({ progress, inView }: ChatIntroductionProps) => {
             }}
             className="max-w-[300px] capitalize"
         >
-            <h3 className="text-3xl text-gray-400 md:text-2xl">
+            <h3 className="text-3xl text-white/90 md:text-2xl">
                 {introduction.title}
             </h3>
-            <h4 className="mt-2 hidden text-xl text-gray-600 md:block">
+            <h4 className="mt-2 hidden text-xl font-medium text-white/50 md:block">
                 {introduction.description}
             </h4>
         </motion.div>

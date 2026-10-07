@@ -4,6 +4,7 @@ import { MotionValue } from 'framer-motion'
 import ChatTextfield from '@app/_components/sections/chatbot-section/chat-textfield.tsx'
 import ChatList from '@app/_components/sections/chatbot-section/chat-list.tsx'
 import { motion } from 'framer-motion'
+import { Glass } from '@components/ui/ui-kit.tsx'
 
 interface ChatbotProps {
     progress: MotionValue<number>
@@ -19,7 +20,7 @@ const Chatbot = ({ progress, inView }: ChatbotProps) => {
             }}
         >
             <motion.div
-                className="flex size-full rounded-xl bg-gray-900"
+                className="size-full"
                 animate={{
                     rotateY: inView ? 0 : 45,
                 }}
@@ -32,38 +33,46 @@ const Chatbot = ({ progress, inView }: ChatbotProps) => {
                     transformStyle: 'preserve-3d',
                 }}
             >
-                <motion.div
-                    animate={{
-                        translateZ: inView ? 0 : 50,
-                    }}
-                    transition={{
-                        type: 'tween',
-                        duration: 0.5,
-                    }}
+                <Glass
+                    tint="dark"
+                    band={28}
+                    strength={0.8}
+                    className="size-full rounded-[28px] [--lg-blur:28px]"
+                    contentClassName="flex"
                 >
-                    <ChatSidebar progress={progress} />
-                </motion.div>
-                <div
-                    className="flex h-full flex-1 flex-col"
-                    style={{
-                        transformStyle: 'preserve-3d',
-                    }}
-                >
-                    <ChatHeader />
                     <motion.div
-                        className="flex-1 overflow-hidden"
                         animate={{
-                            translateZ: inView ? 0 : 100,
+                            translateZ: inView ? 0 : 50,
                         }}
                         transition={{
                             type: 'tween',
                             duration: 0.5,
                         }}
                     >
-                        <ChatList progress={progress} />
+                        <ChatSidebar progress={progress} />
                     </motion.div>
-                    <ChatTextfield />
-                </div>
+                    <div
+                        className="flex h-full flex-1 flex-col"
+                        style={{
+                            transformStyle: 'preserve-3d',
+                        }}
+                    >
+                        <ChatHeader />
+                        <motion.div
+                            className="flex-1 overflow-hidden"
+                            animate={{
+                                translateZ: inView ? 0 : 100,
+                            }}
+                            transition={{
+                                type: 'tween',
+                                duration: 0.5,
+                            }}
+                        >
+                            <ChatList progress={progress} />
+                        </motion.div>
+                        <ChatTextfield />
+                    </div>
+                </Glass>
             </motion.div>
         </div>
     )
