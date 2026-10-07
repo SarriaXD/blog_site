@@ -403,12 +403,11 @@ main {
     .nav__menu {
         display: block;
         position: fixed;
-        inset: var(--nav-h) 0 0 0;
+        inset: 0;
         z-index: 99;
-        padding: 12px var(--gutter) 40px;
-        background: rgba(0, 0, 0, 0.92);
-        -webkit-backdrop-filter: saturate(180%) blur(20px);
-        backdrop-filter: saturate(180%) blur(20px);
+        padding: calc(var(--nav-h) + 12px) var(--gutter) 40px;
+        background: #000;
+        overflow-y: auto;
         transform: translateY(-8px);
         opacity: 0;
         visibility: hidden;
