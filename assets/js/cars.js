@@ -15,6 +15,7 @@ import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js'
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js'
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js'
+import { SMAAPass } from 'three/addons/postprocessing/SMAAPass.js'
 import { HorizontalBlurShader } from 'three/addons/shaders/HorizontalBlurShader.js'
 import { VerticalBlurShader } from 'three/addons/shaders/VerticalBlurShader.js'
 import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js'
@@ -34,14 +35,14 @@ const isSmall = window.matchMedia('(max-width: 734px)').matches
 /* camera presets (Tesla-style view switcher)                          */
 
 const VIEWS = [
-    { id: 'hero', label: 'Front ¾', pos: [5.7, 1.5, 4.5], target: [0.55, 0.74, 0.1], fov: 30 },
+    { id: 'hero', label: 'Front ¾', pos: [6.1, 1.55, 4.9], target: [0.85, 0.76, 0.15], fov: 30 },
     { id: 'front', label: 'Front', pos: [8.2, 1.25, 0.6], target: [0.4, 0.72, 0], fov: 28 },
     { id: 'side', label: 'Side', pos: [0.2, 1.05, 8.6], target: [0, 0.78, 0], fov: 28 },
     { id: 'rear34', label: 'Rear ¾', pos: [-5.8, 1.7, 4.8], target: [-0.2, 0.74, 0], fov: 30 },
     { id: 'rear', label: 'Rear', pos: [-8.2, 1.35, -0.5], target: [-0.3, 0.78, 0], fov: 28 },
     { id: 'top', label: 'Top', pos: [1.2, 8.4, 2.6], target: [0, 0.6, 0], fov: 32 },
-    { id: 'wheel', label: 'Wheel', pos: [3.3, 0.55, 2.55], target: [1.45, 0.4, 0.75], fov: 24 },
-    { id: 'lamp', label: 'Headlight', pos: [3.9, 1.05, 1.9], target: [2.25, 0.84, 0.55], fov: 22 },
+    { id: 'wheel', label: 'Wheel', pos: [3.2, 0.55, 2.55], target: [1.35, 0.4, 0.75], fov: 24 },
+    { id: 'lamp', label: 'Headlight', pos: [3.9, 1.1, 1.9], target: [2.2, 0.86, 0.6], fov: 22 },
 ]
 
 /* ------------------------------------------------------------------ */
@@ -70,7 +71,7 @@ const renderer = new THREE.WebGLRenderer({
 const DPR = Math.min(window.devicePixelRatio || 1, isSmall ? 1.5 : 2)
 renderer.setPixelRatio(DPR)
 renderer.toneMapping = THREE.ACESFilmicToneMapping
-renderer.toneMappingExposure = 1.05
+renderer.toneMappingExposure = 1.1
 renderer.setClearColor(0x000000, 1)
 
 const scene = new THREE.Scene()
@@ -97,15 +98,22 @@ controls.update()
 /* lights                                                              */
 
 RectAreaLightUniformsLib.init()
-const key = new THREE.RectAreaLight(0xffffff, 5.5, 5.2, 1.3)
-key.position.set(0.2, 3.7, 0.4)
-key.lookAt(0.2, 0, 0.4)
+const key = new THREE.RectAreaLight(0xffffff, 3.2, 4.2, 1.0)
+key.position.set(0.2, 3.9, 0.3)
+key.lookAt(0.2, 0, 0.3)
 scene.add(key)
-const rim = new THREE.RectAreaLight(0xd9e6ff, 3.2, 1.2, 3.2)
+// long thin strips either side: the highlight lines along the shoulder
+for (const sz of [1, -1]) {
+    const strip = new THREE.RectAreaLight(0xffffff, 1.6, 6.5, 0.35)
+    strip.position.set(0, 2.3, sz * 4.4)
+    strip.lookAt(0, 0.9, 0)
+    scene.add(strip)
+}
+const rim = new THREE.RectAreaLight(0xd9e6ff, 2.0, 1.2, 3.2)
 rim.position.set(-4.6, 2.3, -3.6)
 rim.lookAt(0, 0.8, 0)
 scene.add(rim)
-const fill = new THREE.RectAreaLight(0xfff1e0, 1.4, 3, 2)
+const fill = new THREE.RectAreaLight(0xfff1e0, 1.2, 3, 2)
 fill.position.set(4.5, 1.6, 4.2)
 fill.lookAt(0, 0.8, 0)
 scene.add(fill)
@@ -266,23 +274,42 @@ scene.add(floor)
 /* ------------------------------------------------------------------ */
 /* post                                                                */
 
+const maxSamples = renderer.capabilities.maxSamples || 4
 const composerTarget = new THREE.WebGLRenderTarget(1, 1, {
     type: THREE.HalfFloatType,
-    samples: isSmall ? 2 : 4,
+    samples: Math.min(isSmall ? 4 : 8, maxSamples),
 })
 const composer = new EffectComposer(renderer, composerTarget)
 composer.setPixelRatio(DPR)
 composer.addPass(new RenderPass(scene, camera))
-const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.32, 0.55, 1.0)
+const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.14, 0.3, 1.5)
 composer.addPass(bloom)
 composer.addPass(new OutputPass())
+// MSAA handles geometry edges; SMAA on the tone-mapped image cleans up the
+// specular shimmer on thin chrome and the lamp edges that MSAA leaves behind.
+const smaa = new SMAAPass(1, 1)
+composer.addPass(smaa)
 
 /* ------------------------------------------------------------------ */
 /* environment                                                         */
 
-new RGBELoader().load(
+// The softboxes in the HDRI peak above 500 — fine for paint, but on dark
+// glass and lamp lenses even a 4% Fresnel reflection of that blows out to
+// white. Compress the highlights above a knee so glossy blacks stay black.
+function compressHighlights(tex, knee = 3, range = 4.5) {
+    const d = tex.image.data
+    for (let i = 0; i < d.length; i++) {
+        if ((i & 3) === 3) continue // alpha
+        const v = d[i]
+        if (v > knee) d[i] = knee + (v - knee) / (1 + (v - knee) / range)
+    }
+    tex.needsUpdate = true
+}
+
+new RGBELoader().setDataType(THREE.FloatType).load(
     '/assets/hdr/studio.hdr',
     (tex) => {
+        compressHighlights(tex)
         tex.mapping = THREE.EquirectangularReflectionMapping
         scene.environment = tex
         scene.environmentIntensity = 1.0
@@ -321,6 +348,7 @@ function resize() {
     renderer.setSize(w, h, false)
     composer.setSize(w, h)
     bloom.setSize(w, h)
+    smaa.setSize(w * DPR, h * DPR)
     const rw = Math.min(1536, Math.round(w * DPR * 0.75))
     const rh = Math.min(1536, Math.round(h * DPR * 0.75))
     floor.getRenderTarget().setSize(rw, rh)
