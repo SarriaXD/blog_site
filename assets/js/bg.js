@@ -4,10 +4,13 @@
  * playhead: the page is split into chapters (`[data-chapter]` sections)
  * and the dust field morphs from one formation to the next as each
  * chapter scrolls in — nebula, stream, orbits, warp tunnel, globe,
- * horizon. A gravity well follows the nearest `[data-well]` element;
- * particles spiral into it and the element's `[data-swallow]` children
- * are pulled into the hole as they scroll past the middle of the screen.
- * Scroll velocity stretches the particles into streaks.
+ * horizon. A gravity well follows the nearest `[data-well]` element and
+ * plays that element's effect (`data-well="hole|spawn|portal|shield|
+ * dim|none"`): particles gather, ring or scatter around it and its
+ * `[data-swallow]` children are swallowed, materialised, flown through
+ * a portal or lifted away as they scroll past the middle of the screen.
+ * Scroll velocity stretches the particles into streaks, and finishing a
+ * chapter sends a shockwave through the field.
  */
 (() => {
     'use strict'
@@ -46,7 +49,8 @@ uniform float uScroll;
 uniform float uDelta;
 uniform float uChapter;
 uniform vec3 uWell;
-uniform vec2 uPull;
+uniform vec4 uPull;   // strength, radius, target radius ratio, static twist
+uniform vec2 uOrbit;  // orbit rate, tilt out of the screen plane
 varying vec2 vUv;
 varying float vL;
 varying float vAlpha;
@@ -65,15 +69,15 @@ float weight(float i) {
 
 /* 0 — nebula: a slowly turning cloud with a clear core, drifting past. */
 vec3 fNebula(vec4 q, float s) {
-    float ang = q.x * TAU + s * 0.12 + uTime * 0.012;
+    float ang = q.x * TAU + s * 0.1 + uTime * 0.012;
     float rad = 1.6 + q.y * q.y * 9.0;
-    float z = -mod(q.z * 24.0 + s * 1.1, 24.0) - 0.8;
+    float z = -mod(q.z * 24.0 + s * 0.9, 24.0) - 0.8;
     return vec3(cos(ang) * rad, sin(ang) * rad * 0.55 + (q.w - 0.5) * 2.5, z);
 }
 
 /* 1 — stream: a wide river of dust flowing toward the camera. */
 vec3 fStream(vec4 q, float s) {
-    float z = -mod(q.z * 24.0 + s * 2.2, 24.0) - 0.8;
+    float z = -mod(q.z * 24.0 + s * 1.3, 24.0) - 0.8;
     float x = (q.x - 0.5) * 22.0 + sin(z * 0.35 + q.w * TAU) * 0.7;
     float y = (q.y - 0.5) * 11.0 + cos(z * 0.25 + q.x * TAU) * 0.4;
     return vec3(x, y, z);
@@ -84,7 +88,7 @@ vec3 fOrbits(vec4 q, float s) {
     float ring = floor(q.w * 3.0);
     float dir = mod(ring, 2.0) == 0.0 ? 1.0 : -1.0;
     float rad = 1.3 + ring * 0.75 + (q.y - 0.5) * 0.22;
-    float ang = q.x * TAU + (s * (0.55 + ring * 0.2) + uTime * 0.02) * dir;
+    float ang = q.x * TAU + (s * (0.4 + ring * 0.15) + uTime * 0.02) * dir;
     vec3 p = vec3(cos(ang) * rad, (q.z - 0.5) * 0.12, sin(ang) * rad);
     p = rotX(p, 0.32 + ring * 0.42);
     p = rotZ(p, ring * 1.05 - 0.4);
@@ -93,9 +97,9 @@ vec3 fOrbits(vec4 q, float s) {
 
 /* 3 — warp: a tunnel streaming past the camera, aimed at the well. */
 vec3 fWarp(vec4 q, float s) {
-    float ang = q.x * TAU + s * 0.08;
+    float ang = q.x * TAU + s * 0.06;
     float rad = 2.0 + q.y * 1.4;
-    float z = -mod(q.z * 30.0 + s * 7.0, 30.0) - 0.5;
+    float z = -mod(q.z * 30.0 + s * 4.5, 30.0) - 0.5;
     vec3 p = vec3(cos(ang) * rad, sin(ang) * rad, z);
     p = rotX(p, atan(uWell.y, -uWell.z));
     p = rotY(p, -atan(uWell.x, -uWell.z));
@@ -105,7 +109,7 @@ vec3 fWarp(vec4 q, float s) {
 /* 4 — globe: a sphere of dust turning behind the well. */
 vec3 fGlobe(vec4 q, float s) {
     float phi = acos(1.0 - 2.0 * q.y);
-    float th = q.x * TAU + s * 0.3 + uTime * 0.02;
+    float th = q.x * TAU + s * 0.25 + uTime * 0.02;
     float rad = 3.3 + (q.z - 0.5) * 0.1;
     if (q.w > 0.94) rad += (q.w - 0.94) * 30.0;
     vec3 p = vec3(sin(phi) * cos(th), cos(phi), sin(phi) * sin(th)) * rad;
@@ -116,20 +120,26 @@ vec3 fGlobe(vec4 q, float s) {
 /* 5 — horizon: a quiet floor of dust running out to the distance. */
 vec3 fHorizon(vec4 q, float s) {
     float x = (q.x - 0.5) * 32.0;
-    float z = -mod(q.z * 30.0 + s * 1.4, 30.0) - 0.6;
+    float z = -mod(q.z * 30.0 + s * 1.2, 30.0) - 0.6;
     float y = -1.5 + (q.y - 0.5) * 0.18 + sin(x * 0.4 + z * 0.3) * 0.1;
     return vec3(x, y, z);
 }
 
-vec3 swirl(vec3 p, out float f) {
+/* The well. Particles inside its radius are drawn toward a target
+   radius (0 = swallowed, 1 = a ring, >1 = blown outward), twisted,
+   set orbiting and optionally tilted into a 3D shell. */
+vec3 swirl(vec3 p, float s, float jitter, out float f) {
     vec2 d = p.xy - uWell.xy;
     float r = length(d);
     float R = max(0.05, uPull.y);
     f = uPull.x * exp(-(r * r) / (R * R));
-    float ang = atan(d.y, d.x) + f * 2.8;
-    float r2 = r * (1.0 - 0.85 * f);
-    vec2 g = -d * uPull.x * 0.06;
-    return vec3(uWell.xy + vec2(cos(ang), sin(ang)) * r2 + g, mix(p.z, uWell.z, f * 0.5));
+    float ang = atan(d.y, d.x)
+        + f * uPull.w
+        + f * uOrbit.x * (s * 0.5 + uTime * 0.22);
+    float r2 = mix(r, R * uPull.z * (0.9 + 0.2 * jitter), f);
+    vec2 g = -d * uPull.x * 0.04 * clamp(1.0 - uPull.z, 0.0, 1.0);
+    float z = mix(p.z, uWell.z + sin(ang) * R * uOrbit.y, f);
+    return vec3(uWell.xy + vec2(cos(ang), sin(ang)) * r2 + g, z);
 }
 
 vec3 place(vec4 q, float s, out float f) {
@@ -141,7 +151,7 @@ vec3 place(vec4 q, float s, out float f) {
     w = weight(3.0); if (w > 0.0) p += w * fWarp(q, s);
     w = weight(4.0); if (w > 0.0) p += w * fGlobe(q, s);
     w = weight(5.0); if (w > 0.0) p += w * fHorizon(q, s);
-    return swirl(p, f);
+    return swirl(p, s, q.w, f);
 }
 
 void main() {
@@ -171,7 +181,7 @@ void main() {
     vec2 axis = px1 - px0;
     float len = length(axis);
     axis = len > 1e-3 ? axis / len : vec2(1.0, 0.0);
-    float hl = min(len * 0.5, 110.0 * uDpr);
+    float hl = min(len * 0.5, 80.0 * uDpr);
     vec2 center = px1 - axis * hl;
     vec2 perp = vec2(-axis.y, axis.x);
     vec2 corner = center + axis * aCorner.x * (hl + rad) + perp * aCorner.y * rad;
@@ -200,6 +210,8 @@ void main() {
     gl_FragColor = vec4(col * a, a);
 }`
 
+    /* A dark disc with a bright ring; also used ring-only for portals and
+       the chapter shockwave. */
     const HOLE_VS = `
 precision highp float;
 attribute vec2 aCorner;
@@ -212,18 +224,18 @@ void main() {
 
     const HOLE_FS = `
 precision mediump float;
-uniform highp vec4 uHole;
+uniform highp vec4 uHole;  // centre px, radius px, core strength
+uniform float uRing;       // ring strength
 uniform float uTime;
 void main() {
     vec2 d = gl_FragCoord.xy - uHole.xy;
     float r = length(d) / max(1.0, uHole.z);
-    float s = uHole.w;
-    float core = s * (1.0 - smoothstep(0.8, 1.0, r));
+    float core = uHole.w * (1.0 - smoothstep(0.8, 1.0, r));
     float ring = exp(-pow((r - 1.0) * 7.0, 2.0));
     float halo = exp(-max(0.0, r - 1.0) * 2.4) * step(1.0, r) * 0.32;
     float ang = atan(d.y, d.x);
     float lobe = 0.72 + 0.28 * sin(ang + uTime * 0.35);
-    float glow = s * (ring * 0.95 + halo) * lobe;
+    float glow = uRing * (ring * 0.95 + halo) * lobe;
     vec3 col = mix(vec3(1.0), vec3(0.5, 0.75, 1.0), 0.55) * glow;
     gl_FragColor = vec4(col, core);
 }`
@@ -310,18 +322,14 @@ void main() {
 
     const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v))
     const smooth = (t) => t * t * (3 - 2 * t)
+    const ramp = (v, from, to) => smooth(clamp((v - from) / (to - from), 0, 1))
 
     const sections = Array.from(document.querySelectorAll('[data-chapter]'))
 
-    const MODES = {
-        full: { pull: 1, hole: 1 },
-        dim: { pull: 0.5, hole: 0.4 },
-        none: { pull: 0, hole: 0 },
-    }
     const wells = Array.from(document.querySelectorAll('[data-well]')).map(
         (el) => ({
             el,
-            mode: MODES[el.dataset.well] || MODES.full,
+            mode: el.dataset.well || 'hole',
             items: Array.from(el.querySelectorAll('[data-swallow]')).map(
                 (item, i) => ({
                     el: item,
@@ -349,6 +357,166 @@ void main() {
         }
     }
 
+    const setItem = (it, tx, ty, sc, rz, ry, opacity) => {
+        it.el.style.transform =
+            `translate3d(${tx.toFixed(1)}px, ${ty.toFixed(1)}px, 0) ` +
+            `rotate(${rz.toFixed(1)}deg) rotateY(${ry.toFixed(1)}deg) ` +
+            `scale(${sc.toFixed(4)})`
+        it.el.style.opacity = opacity.toFixed(3)
+    }
+
+    /* Each effect reads where its element is (cy: centre in viewport px;
+       enter: 0→1 as it rises into the middle; leave: 0→1 as it goes out
+       the top, starting once it is well past the centre so the picture
+       gets its time on screen) and returns the well the background
+       should show, after moving the element's own children. */
+    const EFFECTS = {
+        /* swallowed by a black hole */
+        hole(w, c) {
+            const e = smooth(c.leave)
+            for (const it of w.items) {
+                setItem(
+                    it,
+                    -it.dx * e,
+                    -it.dy * e - c.par,
+                    1 - 0.96 * e,
+                    e * 70 * it.dir,
+                    e * 18 * it.dir,
+                    1 - ramp(c.leave, 0.5, 0.9)
+                )
+            }
+            return {
+                x: c.cx,
+                y: c.cy,
+                radius: c.base * (0.18 + 0.2 * c.leave),
+                pull: c.prox * (1 + 0.5 * c.leave),
+                target: 0,
+                twist: 2.0,
+                orbit: 0.5,
+                tilt: 0,
+                core: c.prox,
+                ring: c.prox,
+            }
+        },
+
+        /* materialises out of gathered dust, dissolves back into it */
+        spawn(w, c) {
+            const inA = smooth(c.enter)
+            // dissolving is quick and calm, so it may start a little earlier
+            const leave = clamp((c.vh * 0.4 - c.cy) / (c.vh * 0.4), 0, 1)
+            const out = smooth(leave)
+            for (const it of w.items) {
+                setItem(
+                    it,
+                    0,
+                    -c.par,
+                    0.9 + 0.1 * inA + 0.08 * out,
+                    0,
+                    0,
+                    inA * (1 - ramp(leave, 0.1, 0.55))
+                )
+            }
+            const burst = Math.sin(Math.PI * clamp(leave / 0.75, 0, 1))
+            return {
+                x: c.cx,
+                y: c.cy,
+                radius: c.base * 0.45,
+                pull: Math.max((1 - inA) * 1.0, burst * 1.1, c.prox * 0.15),
+                target: 0.3 + 2.4 * ramp(leave, 0, 0.45),
+                twist: 1.2 * (1 - out),
+                orbit: 0.4,
+                tilt: 0.5,
+                core: 0,
+                ring: 0,
+                weight: Math.max(c.prox, burst * 0.9, (1 - inA) * 0.8),
+            }
+        },
+
+        /* flies toward the viewer through a ring of light */
+        portal(w, c) {
+            const e = smooth(c.leave)
+            for (const it of w.items) {
+                setItem(
+                    it,
+                    0,
+                    -c.par,
+                    1 + 0.3 * e,
+                    0,
+                    0,
+                    1 - ramp(c.leave, 0.35, 0.85)
+                )
+            }
+            return {
+                x: c.cx,
+                y: c.cy,
+                radius: c.base * 0.5 * (1 - 0.55 * e),
+                pull: c.prox * 0.9,
+                target: 1,
+                twist: 0.3,
+                orbit: 0.6,
+                tilt: 0.15,
+                core: 0,
+                ring: c.prox * (0.5 + 0.7 * c.leave),
+            }
+        },
+
+        /* wrapped in an orbiting shell, then lifts away with it */
+        shield(w, c) {
+            const e = smooth(c.leave)
+            const sc = 1 - 0.4 * e
+            const rise = -c.vh * 0.22 * e
+            for (const it of w.items) {
+                setItem(it, 0, rise - c.par, sc, 0, 0, 1 - ramp(c.leave, 0.55, 0.95))
+            }
+            return {
+                x: c.cx,
+                y: c.cy + rise,
+                radius: c.base * 0.6 * sc,
+                pull: c.prox * (1 - 0.6 * ramp(c.leave, 0.7, 1)),
+                target: 1,
+                twist: 0.8,
+                orbit: 1.4,
+                tilt: 0.75,
+                core: 0,
+                ring: c.prox * 0.2,
+            }
+        },
+
+        /* a faint hole the orbit rings turn around */
+        dim(w, c) {
+            return {
+                x: c.cx,
+                y: c.cy,
+                radius: c.base * 0.12,
+                pull: c.prox * 0.5,
+                target: 0,
+                twist: 1.2,
+                orbit: 0.3,
+                tilt: 0,
+                core: c.prox * 0.4,
+                ring: c.prox * 0.4,
+            }
+        },
+
+        /* position only: aims the tunnel and centres the globe */
+        none(w, c) {
+            return {
+                x: c.cx,
+                y: c.cy,
+                radius: c.base * 0.3,
+                pull: 0,
+                target: 0,
+                twist: 0,
+                orbit: 0,
+                tilt: 0,
+                core: 0,
+                ring: 0,
+            }
+        },
+    }
+    const SELECT_WEIGHT = { hole: 1, spawn: 1, portal: 1, shield: 1, dim: 0.75, none: 0.5 }
+    const WELL_KEYS = ['radius', 'pull', 'target', 'twist', 'orbit', 'tilt', 'core', 'ring']
+
     /* ---------- state ---------- */
 
     let width = 0, height = 0, dpr = 1
@@ -365,12 +533,10 @@ void main() {
     const state = {
         scroll: window.scrollY,
         vel: 0,
-        wellX: 0.5,
-        wellY: 0.5,
-        strength: 0,
-        pull: 0,
-        radius: 80,
         chapter: 0,
+        idx: -1,
+        well: { x: 0.5, y: 0.5, radius: 80, pull: 0, target: 0, twist: 0, orbit: 0, tilt: 0, core: 0, ring: 0 },
+        pulse: { age: 10, x: 0.5, y: 0.5 },
     }
     let lastTime = performance.now()
     let needsMeasure = true
@@ -385,83 +551,75 @@ void main() {
 
         const vh = height
         const y = window.scrollY
-        const ease = 1 - Math.exp(-dt * 9)
         const prev = state.scroll
-        state.scroll += (y - state.scroll) * ease
+        state.scroll += (y - state.scroll) * (1 - Math.exp(-dt * 10))
         const v = (state.scroll - prev) / dt / vh
         state.vel += (v - state.vel) * (1 - Math.exp(-dt * 12))
 
         /* chapter: hold each formation, morph as the next section arrives */
         let idx = 0
         const tops = sections.map((s) => s.getBoundingClientRect().top)
-        for (let i = 0; i < tops.length; i++) if (tops[i] <= vh * 0.55) idx = i
+        for (let i = 0; i < tops.length; i++) if (tops[i] <= vh * 0.45) idx = i
         let u = 0
         if (idx + 1 < tops.length) {
-            u = clamp((vh - tops[idx + 1]) / (vh * 0.45), 0, 1)
+            u = clamp((vh * 1.05 - tops[idx + 1]) / (vh * 0.6), 0, 1)
         }
         state.chapter = idx + smooth(u)
 
+        /* a shockwave each time a chapter is completed */
+        if (state.idx >= 0 && idx !== state.idx) {
+            state.pulse = { age: 0, x: state.well.x, y: state.well.y }
+        }
+        state.idx = idx
+        state.pulse.age += dt
+
         /* well: the data-well element nearest the middle of the screen */
-        let best = null, bestScore = 0
+        let bestScore = 0
+        let target = null
         for (const w of wells) {
             const r = w.el.getBoundingClientRect()
             if (r.width < 2 || r.height < 2) continue
+            const cx = r.left + r.width / 2
             const cy = r.top + r.height / 2
-            const prox = smooth(clamp(1 - Math.abs(cy - vh * 0.45) / (vh * 0.8), 0, 1))
-            const q = clamp((vh * 0.5 - cy) / (vh * 0.6), 0, 1)
-            w.rect = r
-            w.prox = prox
-            w.q = q
-            if (w.items.length) w.el.style.setProperty('--q', q.toFixed(3))
-            const score = prox * (0.5 + 0.5 * w.mode.pull)
+            const c = {
+                cx,
+                cy,
+                vh,
+                base: Math.min(r.width, r.height),
+                prox: smooth(clamp(1 - Math.abs(cy - vh * 0.45) / (vh * 0.8), 0, 1)),
+                enter: clamp((vh * 0.95 - cy) / (vh * 0.45), 0, 1),
+                leave: clamp((vh * 0.3 - cy) / (vh * 0.45), 0, 1),
+                par: (cy - vh / 2) * 0.08,
+            }
+            if (w.items.length) w.el.style.setProperty('--q', c.leave.toFixed(3))
+            const fx = EFFECTS[w.mode] || EFFECTS.hole
+            const t = fx(w, c)
+            const score = (t.weight ?? c.prox) * (SELECT_WEIGHT[w.mode] || 1)
             if (score > bestScore) {
                 bestScore = score
-                best = w
-            }
-
-            /* foreground pulled into the hole */
-            for (const it of w.items) {
-                const e = Math.pow(q, 1.6)
-                const tx = -it.dx * e
-                const ty = -it.dy * e - (cy - vh / 2) * 0.08
-                const sc = 1 - 0.96 * e
-                const rz = e * 160 * it.dir
-                const ry = e * 70 * it.dir
-                it.el.style.transform =
-                    `translate3d(${tx.toFixed(1)}px, ${ty.toFixed(1)}px, 0) ` +
-                    `rotate(${rz.toFixed(1)}deg) rotateY(${ry.toFixed(1)}deg) ` +
-                    `scale(${sc.toFixed(4)})`
-                it.el.style.opacity = (1 - smooth(clamp((q - 0.55) / 0.45, 0, 1))).toFixed(3)
+                target = t
             }
         }
 
-        let tx = 0.5, ty = 0.5, tStrength = 0, tPull = 0, tRadius = state.radius
-        if (best) {
-            const r = best.rect
-            tx = (r.left + r.width / 2) / width
-            ty = (r.top + r.height / 2) / vh
-            const boost = 1 + Math.min(Math.abs(state.vel), 3) * 0.12
-            tStrength = best.prox * best.mode.hole * boost
-            tPull = best.prox * best.mode.pull * boost * (1 + best.q * 0.6)
-            const base = Math.min(r.width, r.height)
-            tRadius = best.mode.hole > 0.5 ? base * (0.18 + 0.22 * best.q) : base * 0.12
+        const S = state.well
+        const T = target || {
+            x: width / 2, y: vh / 2, radius: S.radius,
+            pull: 0, target: 0, twist: 0, orbit: 0, tilt: 0, core: 0, ring: 0,
         }
         const wEase = 1 - Math.exp(-dt * 6)
-        state.wellX += (tx - state.wellX) * wEase
-        state.wellY += (ty - state.wellY) * wEase
-        state.strength += (tStrength - state.strength) * wEase
-        state.pull += (tPull - state.pull) * wEase
-        state.radius += (tRadius - state.radius) * wEase
+        S.x += (T.x / width - S.x) * wEase
+        S.y += (T.y / vh - S.y) * wEase
+        for (const k of WELL_KEYS) S[k] += (T[k] - S[k]) * wEase
 
         /* ---------- draw ---------- */
 
         const aspect = width / vh
-        const ndcX = state.wellX * 2 - 1
-        const ndcY = 1 - state.wellY * 2
+        const ndcX = S.x * 2 - 1
+        const ndcY = 1 - S.y * 2
         const vx = (ndcX * aspect * -WELL_Z) / FOCAL
         const vy = (ndcY * -WELL_Z) / FOCAL
-        const pullR = ((state.radius / (vh / 2)) * -WELL_Z) / FOCAL * 3.4
-        const delta = clamp(state.vel * 0.045, -0.3, 0.3)
+        const pullR = (((S.radius / (vh / 2)) * -WELL_Z) / FOCAL) * (S.target > 0.5 ? 1.6 : 3.4)
+        const delta = clamp(state.vel * 0.03, -0.22, 0.22)
         const t = now / 1000
 
         gl.clearColor(0, 0, 0, 1)
@@ -484,26 +642,37 @@ void main() {
         gl.uniform1f(pu.uDelta, delta)
         gl.uniform1f(pu.uChapter, state.chapter)
         gl.uniform3f(pu.uWell, vx, vy, WELL_Z)
-        gl.uniform2f(pu.uPull, state.pull, pullR)
+        gl.uniform4f(pu.uPull, S.pull, pullR, S.target, S.twist)
+        gl.uniform2f(pu.uOrbit, S.orbit, S.tilt)
         gl.drawArrays(gl.TRIANGLES, 0, COUNT * 6)
         gl.disableVertexAttribArray(aSeed)
 
-        if (state.strength > 0.01) {
+        const drawRing = (x, y, radius, core, ring) => {
+            gl.uniform4f(hole.u.uHole, x * canvas.width, (1 - y) * canvas.height, radius * dpr, core)
+            gl.uniform1f(hole.u.uRing, ring)
+            gl.drawArrays(gl.TRIANGLES, 0, 6)
+        }
+        const pulseAge = state.pulse.age
+        const showWell = S.core > 0.01 || S.ring > 0.01
+        if (showWell || pulseAge < 1.1) {
             gl.useProgram(hole.p)
             gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA)
             gl.bindBuffer(gl.ARRAY_BUFFER, quadBuf)
             gl.enableVertexAttribArray(aCornerH)
             gl.vertexAttribPointer(aCornerH, 2, gl.FLOAT, false, 0, 0)
             gl.uniform2f(hole.u.uRes, canvas.width, canvas.height)
-            gl.uniform4f(
-                hole.u.uHole,
-                state.wellX * canvas.width,
-                (1 - state.wellY) * canvas.height,
-                state.radius * dpr,
-                state.strength
-            )
             gl.uniform1f(hole.u.uTime, t)
-            gl.drawArrays(gl.TRIANGLES, 0, 6)
+            if (showWell) drawRing(S.x, S.y, S.radius, S.core, S.ring)
+            if (pulseAge < 1.1) {
+                const a = pulseAge / 1.1
+                drawRing(
+                    state.pulse.x,
+                    state.pulse.y,
+                    40 + smooth(a) * Math.max(width, vh) * 0.9,
+                    0,
+                    0.7 * (1 - a) * (1 - a)
+                )
+            }
         }
     }
 
