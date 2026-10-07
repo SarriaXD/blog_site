@@ -13,7 +13,7 @@ import { useRef, useState } from 'react'
 import { flutterProjectData } from '@lib/data/flutter-project-data.ts'
 import { StaticImageColor } from '@lib/utils/utils.ts'
 import ExploreStickyButton from '@components/ui/ExploreStickeyButton.tsx'
-import { Container, Section } from '@components/ui/ui-kit.tsx'
+import { Container, Glass, Section } from '@components/ui/ui-kit.tsx'
 
 const useTitleAnimation = () => {
     const ref = useRef(null)
@@ -42,12 +42,12 @@ const Title = () => {
                 duration: 1,
             }}
         >
-            <h3 className="text-3xl text-[#86868b] md:text-6xl lg:text-8xl">
+            <h2 className="text-3xl text-white/45 md:text-6xl lg:text-8xl">
                 Driving Test App.
-            </h3>
-            <h4 className="text-3xl text-[#F5F5F7] md:text-6xl lg:text-8xl">
+            </h2>
+            <h3 className="text-gradient-aurora text-3xl md:text-6xl lg:text-8xl">
                 Powered by Flutter.
-            </h4>
+            </h3>
         </motion.div>
     )
 }
@@ -285,19 +285,24 @@ const Introduction = ({
                 delay: enterViewport ? 0.5 : 0,
                 duration: enterViewport ? 1 : 0.5,
             }}
-            className="relative z-0 p-8"
+            className="relative z-0 px-2 pt-10 md:px-0"
         >
-            <div className="mx-auto mt-8 flex w-[90%] justify-around gap-4 md:w-full">
-                <div className="flex max-w-[90%] flex-col gap-2 md:max-w-[95%] md:flex-row md:gap-12">
+            <Glass
+                tint="clear"
+                band={26}
+                className="mx-auto w-[94%] rounded-[30px] md:w-full"
+                contentClassName="flex items-start justify-between gap-5 p-6 md:p-8"
+            >
+                <div className="flex min-w-0 flex-col gap-2 md:flex-row md:gap-12">
                     <h4 className="text-3xl md:w-[45%] md:text-4xl">{title}</h4>
-                    <p className="text-lg font-semibold text-gray-400 md:w-[45%] md:text-xl">
+                    <p className="text-lg font-medium text-[var(--ui-text-secondary)] md:w-[45%] md:text-xl">
                         {description}
                     </p>
                 </div>
-                <div className="mt-2 h-24 w-1 self-start rounded bg-gray-600 md:mt-0">
+                <div className="mt-1 h-24 w-1.5 shrink-0 self-start rounded-full">
                     <ProgressBar progress={progress} />
                 </div>
-            </div>
+            </Glass>
         </motion.div>
     )
 }
@@ -309,10 +314,10 @@ interface ProgressBarProps {
 const ProgressBar = ({ progress }: ProgressBarProps) => {
     const percentage = useTransform(progress, [0, 1], ['0%', '100%'])
     return (
-        <div className="h-full w-full rounded-full bg-gray-800">
+        <div className="h-full w-full overflow-hidden rounded-full bg-white/12 shadow-[inset_0_1px_2px_rgba(0,0,0,0.4)]">
             <motion.div
                 key={'vertical'}
-                className="block w-full rounded-full bg-gray-500"
+                className="block w-full rounded-full bg-[linear-gradient(180deg,#8be0ff_0%,#2b7fff_100%)] shadow-[0_0_12px_rgba(79,195,255,0.7)]"
                 style={{
                     height: percentage,
                 }}
@@ -400,7 +405,7 @@ export const FlutterProjectSection = ({
     })
     const currentDataIndex = useDataIndex(progress)
     return (
-        <Section id="my-flutter-project" ref={ref} className="bg-[#101010] py-16 md:py-24">
+        <Section id="my-flutter-project" ref={ref} className="py-16 md:py-24">
             <Container className="h-[550vh]">
                 <Title />
                 <MainContent

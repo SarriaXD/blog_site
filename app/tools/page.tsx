@@ -7,7 +7,7 @@ export default function Page() {
     return (
         <>
             <Header />
-            <MainLayout className="bg-[#101010]">
+            <MainLayout>
                 <Section className="py-16 md:py-24">
                     <Container>
                         <MainContent />

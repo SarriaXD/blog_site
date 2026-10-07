@@ -2,6 +2,7 @@ import { motion, useInView, type Transition } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowRight } from '@public/icons'
 import { useEffect, useRef, useState } from 'react'
+import { Glass } from '@components/ui/liquid-glass.tsx'
 
 const useThrottledInView = (throttleDelay: number = 300) => {
     const ref = useRef(null)
@@ -103,35 +104,50 @@ const ExploreStickyButton = ({ href }: ExploreStickyButtonProps) => {
             ref={ref}
             className="pointer-events-none absolute top-0 z-50 flex h-full w-full items-end justify-center"
         >
-            <div className="sticky bottom-8 mb-8 mt-8 flex items-center">
+            <div className="sticky bottom-8 mt-8 mb-8 flex items-center">
                 <motion.div
-                    className="absolute left-0 top-0 h-full w-full rounded-full bg-[#0071e3]"
+                    className="absolute top-0 left-0 h-full w-full rounded-full bg-[var(--ui-brand-500)] blur-[2px]"
                     animate={{
                         opacity: inView ? [0, 1, 1, 1] : 0,
                         scale: inView ? [0, 1.8, 2, 0] : 0,
                     }}
                     transition={containerTransition}
                 />
-                <Link href={href} target="_blank" rel="noopener noreferrer">
+                <Link
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="pointer-events-auto"
+                >
                     <motion.div
-                        className="box-content flex items-center rounded-full bg-gray-800 bg-opacity-70 p-2 capitalize backdrop-blur"
                         variants={containerVariants}
                         animate={inView ? 'visible' : 'hidden'}
                     >
-                        <motion.div
-                            className="overflow-hidden"
-                            variants={textContainerVariants}
+                        <Glass
+                            tint="soft"
+                            interactive
+                            aberration
+                            band={16}
+                            className="inline-flex rounded-full p-2 capitalize [--lg-blur:24px]"
+                            contentClassName="flex items-center"
                         >
-                            <motion.span
-                                className="mx-2 text-nowrap text-[14px] text-base md:mx-4 md:text-lg"
-                                variants={textVariants}
+                            <motion.div
+                                className="overflow-hidden"
+                                variants={textContainerVariants}
                             >
-                                Explore This Project
-                            </motion.span>
-                        </motion.div>
-                        <motion.div variants={iconVariants}>
-                            <ArrowRight className="size-8 rounded-full bg-[#0071e3] p-1 text-white md:size-10 md:p-2" />
-                        </motion.div>
+                                <motion.span
+                                    className="mx-2 block text-[14px] font-semibold text-nowrap md:mx-4 md:text-lg"
+                                    variants={textVariants}
+                                >
+                                    Explore This Project
+                                </motion.span>
+                            </motion.div>
+                            <motion.div variants={iconVariants}>
+                                <span className="flex size-8 items-center justify-center rounded-full bg-[linear-gradient(180deg,#5fc6ff_0%,#2b7fff_100%)] p-1 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.6),0_8px_20px_-8px_rgba(43,127,255,0.9)] md:size-10 md:p-2">
+                                    <ArrowRight className="size-full" />
+                                </span>
+                            </motion.div>
+                        </Glass>
                     </motion.div>
                 </Link>
             </div>

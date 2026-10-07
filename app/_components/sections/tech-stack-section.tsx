@@ -20,7 +20,7 @@ import {
     techIntroductions,
 } from '@lib/data/tech-stack-data.ts'
 import { useMediaQuery } from '@hooks/hooks.ts'
-import { Container, Section, Stack } from '@components/ui/ui-kit.tsx'
+import { Container, Glass, Section, Stack } from '@components/ui/ui-kit.tsx'
 
 interface CarouselItemProps {
     color: StaticImageColor
@@ -52,19 +52,16 @@ const CarouselItem = ({ color, image, name }: CarouselItemProps) => {
                         ></div>
                     </div>
                 </div>
-                <strong className="text-sm relative z-10">{name}</strong>
+                <strong className="relative z-10 text-sm text-white/85">
+                    {name}
+                </strong>
             </div>
         </li>
     )
 }
 
 const CarouseEmptyItem = () => {
-    return (
-        <li
-            className="block size-12
-             "
-        />
-    )
+    return <li className="block size-12" />
 }
 
 const useCarouselAnimation = (index: number, isMobile: boolean) => {
@@ -124,56 +121,65 @@ const Carousel = ({
     return (
         <motion.div
             ref={ref}
-            className="flex flex-1 flex-col overflow-hidden rounded-lg border border-[#1F1F1F] bg-black"
+            className="flex flex-1 flex-col"
             style={{
                 x,
                 y,
                 scale,
             }}
         >
-            <div
-                className="w-full overflow-hidden"
-                style={{
-                    maskImage:
-                        'linear-gradient(to right, transparent 0, black 20%, black 80%, transparent 100%)',
-                }}
+            <Glass
+                tint="neutral"
+                band={30}
+                className="h-full rounded-[30px]"
+                contentClassName="flex flex-col"
             >
-                <motion.ul
-                    className="flex w-[max-content]"
+                <div
+                    className="w-full overflow-hidden pt-6"
                     style={{
-                        x: scrollX,
+                        maskImage:
+                            'linear-gradient(to right, transparent 0, black 20%, black 80%, transparent 100%)',
                     }}
                 >
-                    {data.map((item, index) => (
-                        <CarouselItem
-                            color={colorsMap.get(item.image.src)!}
-                            key={index}
-                            {...item}
-                        />
-                    ))}
-                    <CarouseEmptyItem />
-                    {data.map((item, index) => (
-                        <CarouselItem
-                            color={colorsMap.get(item.image.src)!}
-                            key={index}
-                            {...item}
-                        />
-                    ))}
-                    <CarouseEmptyItem />
-                    {data.map((item, index) => (
-                        <CarouselItem
-                            color={colorsMap.get(item.image.src)!}
-                            key={index}
-                            {...item}
-                        />
-                    ))}
-                    <CarouseEmptyItem />
-                </motion.ul>
-            </div>
-            <div className="p-6">
-                <h2 className="text-xl font-bold">{title}</h2>
-                <p className="mt-1 text-base text-gray-400">{subtitle}</p>
-            </div>
+                    <motion.ul
+                        className="flex w-[max-content]"
+                        style={{
+                            x: scrollX,
+                        }}
+                    >
+                        {data.map((item, index) => (
+                            <CarouselItem
+                                color={colorsMap.get(item.image.src)!}
+                                key={index}
+                                {...item}
+                            />
+                        ))}
+                        <CarouseEmptyItem />
+                        {data.map((item, index) => (
+                            <CarouselItem
+                                color={colorsMap.get(item.image.src)!}
+                                key={index}
+                                {...item}
+                            />
+                        ))}
+                        <CarouseEmptyItem />
+                        {data.map((item, index) => (
+                            <CarouselItem
+                                color={colorsMap.get(item.image.src)!}
+                                key={index}
+                                {...item}
+                            />
+                        ))}
+                        <CarouseEmptyItem />
+                    </motion.ul>
+                </div>
+                <div className="p-6 md:p-7">
+                    <h2 className="text-xl font-bold">{title}</h2>
+                    <p className="mt-1.5 text-base text-[var(--ui-text-secondary)]">
+                        {subtitle}
+                    </p>
+                </div>
+            </Glass>
         </motion.div>
     )
 }
@@ -209,15 +215,9 @@ const Title = ({ isMobile }: { isMobile: boolean }) => {
                     opacity,
                 }}
             >
-                <h1
-                    className="bg-clip-text text-center text-4xl text-transparent md:text-7xl lg:text-8xl"
-                    style={{
-                        backgroundImage:
-                            'linear-gradient(51deg, #F7B500, #6DD400 76%)',
-                    }}
-                >
-                    Frameworks & Languages I Master
-                </h1>
+                <h2 className="text-gradient-cool text-center text-4xl md:text-7xl lg:text-8xl">
+                    Frameworks &amp; Languages I Master
+                </h2>
             </motion.div>
         </>
     )
@@ -288,7 +288,7 @@ const IntroductionItem = ({
                 duration: 1,
             }}
         >
-            <Card tone="neutral">
+            <Card tone="neutral" className="h-full" band={24}>
                 <CardBody className="flex flex-col gap-4">
                     <div className="flex flex-wrap gap-2">
                         {images.map((image, techIndex) => (
@@ -314,10 +314,8 @@ const IntroductionItem = ({
                         ))}
                     </div>
                     <div>
-                        <h2 color="white" className="text-xl font-bold">
-                            {title}
-                        </h2>
-                        <p className="mt-1 text-base text-gray-300">
+                        <h3 className="text-xl font-bold">{title}</h3>
+                        <p className="mt-1 text-base text-[var(--ui-text-secondary)]">
                             {introduction}
                         </p>
                     </div>
@@ -364,7 +362,7 @@ const Introductions = ({ techIntroductions, isMobile }: IntroductionsProps) => {
 export const TechStackSection = ({ colorsMap }: TechStackSectionProps) => {
     const isMobile = useMediaQuery('(max-width: 720px)', true)
     return (
-        <Section className="bg-black">
+        <Section>
             <Container>
                 <Stack className="min-h-screen">
                     <Title isMobile={isMobile} />

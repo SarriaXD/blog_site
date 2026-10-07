@@ -11,7 +11,7 @@ export default function ToastProvider({ children }: ToastProviderProps) {
     return (
         <>
             {children}
-            <ToastContainer className="pt-12" theme={'dark'} />
+            <ToastContainer className="pt-20" theme={'dark'} />
         </>
     )
 }

@@ -63,7 +63,7 @@ const ImageWithCloseButton = ({
             />
             {buttonPosition && (
                 <Close
-                    className="absolute mr-2 mt-2 size-6 rounded-full border border-white bg-gray-600 p-[6px] text-white"
+                    className="absolute mt-2 mr-2 size-7 cursor-pointer rounded-full border border-white/40 bg-black/60 p-[7px] text-white backdrop-blur-md transition hover:bg-black/80"
                     style={{
                         top: `${buttonPosition.top}px`,
                         right: `${buttonPosition.right}px`,
@@ -182,25 +182,25 @@ const ImageUploader = ({
                     ? undefined
                     : () => document.getElementById('fileInput')?.click()
             }
-            className={`relative aspect-[1] w-full cursor-pointer rounded-xl border-2 border-dashed border-gray-600`}
+            className={`glass-inset-dark relative aspect-[1] w-full cursor-pointer rounded-[28px] border-2 border-dashed !border-white/20 transition-colors hover:!border-white/40`}
             style={{
                 cursor: image ? 'default' : 'pointer',
             }}
         >
             {errorMessages && (
-                <div className="flex size-full items-center justify-center rounded-xl bg-red-200">
+                <div className="flex size-full items-center justify-center rounded-[26px] bg-[#ff5c76]/20 px-6 text-center text-[#ffd6dd]">
                     {errorMessages}
                 </div>
             )}
             {isDragging && !errorMessages && (
-                <div className="flex size-full items-center justify-center rounded-xl bg-gray-900">
+                <div className="flex size-full items-center justify-center rounded-[26px] bg-white/10">
                     Release to upload
                 </div>
             )}
             {!image && !isDragging && !errorMessages && (
-                <div className="flex size-full flex-col items-center justify-center rounded-xl text-base">
-                    <Add className="size-12 text-gray-600" />
-                    Click or Drag to upload image
+                <div className="flex size-full flex-col items-center justify-center gap-2 rounded-[26px] text-base text-white/70">
+                    <Add className="size-12 text-white/40" />
+                    Click or drag to upload an image
                 </div>
             )}
             {image && !isDragging && !errorMessages && (
