@@ -3,16 +3,25 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Page not found – Qi Wang</title>
-    <meta name="description" content="That page does not exist.">
-    <meta property="og:title" content="Page not found – Qi Wang">
-    <meta property="og:description" content="That page does not exist.">
+    <title>Cars – Qi Wang</title>
+    <meta name="description" content="A real-time studio render of the Geely Xingyue L. Orbit the car, switch camera angles and paint.">
+    <meta property="og:title" content="Cars – Qi Wang">
+    <meta property="og:description" content="A real-time studio render of the Geely Xingyue L. Orbit the car, switch camera angles and paint.">
     <meta property="og:type" content="website">
     <meta property="og:image" content="https://sarria.ca/assets/img/hero-mobile.webp">
     <meta name="theme-color" content="#000000">
     <link rel="icon" href="/assets/img/favicon-32.png" sizes="32x32">
     <link rel="apple-touch-icon" href="/assets/img/logo-180.png">
     <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="preload" href="/assets/hdr/studio.hdr" as="fetch" crossorigin>
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+        }
+    }
+    </script>
 </head>
 <body>
     <header class="nav">
@@ -45,14 +54,39 @@
         </ul>
     </nav>
     <main>
-        <section class="wrap empty">
-            <div class="empty__copy">
-                <p class="eyebrow reveal">404</p>
-                <h1 class="display reveal" style="--d: 0.08s">Page not found.</h1>
-                <p class="lede reveal" style="--d: 0.16s">The link may be broken, or the page may have moved.</p>
-                <div class="link-row reveal" style="--d: 0.24s"><a class="chev" href="/">Back to home</a></div>
+        <section class="car-stage" id="stage" aria-label="Geely Xingyue L studio render">
+            <canvas class="car-stage__canvas" aria-label="Interactive 3D render of a Geely Xingyue L. Drag to orbit, scroll to zoom."></canvas>
+            <div class="car-stage__title">
+                <p class="eyebrow">Geely</p>
+                <h1 class="title">Xingyue L</h1>
+                <p class="muted" data-caption>Front ¾</p>
             </div>
-            <div class="empty__art reveal reveal--scale"><img src="/assets/img/not-found.webp" width="800" height="800" alt="" fetchpriority="high"></div>
+            <div class="car-views" data-views role="group" aria-label="Camera views"></div>
+            <div class="car-paints" data-paints role="radiogroup" aria-label="Paint"></div>
+            <p class="car-stage__hint muted">Drag to orbit &middot; scroll to zoom &middot; &larr; &rarr; to change view</p>
+            <div class="car-stage__loading" role="status">Rendering&hellip;</div>
+        </section>
+
+        <section class="wrap car-notes" aria-label="About this render">
+            <div class="car-notes__grid">
+                <div>
+                    <p class="eyebrow reveal">The car</p>
+                    <h2 class="headline reveal" style="--d: 0.08s">Geely Xingyue L.</h2>
+                    <p class="body reveal" style="--d: 0.16s">Sold abroad as the Monjaro. 4,770 mm long on a 2,845 mm wheelbase, 20-inch wheels, a waterfall grille, slim LED lamps and a full-width rear light bar.</p>
+                </div>
+                <div>
+                    <p class="eyebrow reveal">The render</p>
+                    <h2 class="headline reveal" style="--d: 0.08s">Built in the browser.</h2>
+                    <p class="body reveal" style="--d: 0.16s">The body is lofted from design curves at the car&rsquo;s real dimensions and lit with a studio HDRI. Clearcoat paint, planar floor reflections, baked contact shadows, bloom and ACES tone mapping, all rendered live with three.js.</p>
+                </div>
+            </div>
+            <dl class="car-specs reveal" style="--d: 0.2s">
+                <div><dt>Length</dt><dd>4,770 mm</dd></div>
+                <div><dt>Width</dt><dd>1,895 mm</dd></div>
+                <div><dt>Height</dt><dd>1,689 mm</dd></div>
+                <div><dt>Wheelbase</dt><dd>2,845 mm</dd></div>
+                <div><dt>Wheels</dt><dd>255/45 R20</dd></div>
+            </dl>
         </section>
     </main>
     <footer class="footer">
@@ -87,11 +121,12 @@
                 </div>
             </div>
             <div class="footer__legal">
-                <span>Copyright &copy; <span data-year>2026</span> Qi Wang. All rights reserved.</span>
+                <span>Copyright &copy; <span data-year>2026</span> Qi Wang. All rights reserved. Studio HDRI by Poly Haven (CC0).</span>
                 <span>Winnipeg, Canada</span>
             </div>
         </div>
     </footer>
     <script src="/assets/js/main.js" defer></script>
+    <script type="module" src="/assets/js/cars.js"></script>
 </body>
 </html>

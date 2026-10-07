@@ -4,7 +4,7 @@ Personal website of Sarria (Qi Wang), live at https://sarria.ca.
 
 ## What this is
 
-A hand-written static site: plain HTML, one CSS file, two small JS files. No framework, no build step, no package manager. Open `index.html` in a browser or serve the folder with any static server.
+A hand-written static site: plain HTML, one CSS file, a few small JS files. No framework, no build step, no package manager. Open `index.html` in a browser or serve the folder with any static server. The only external dependency is three.js, loaded from jsDelivr by the `/cars` page through an import map.
 
 ## Deployment
 
@@ -16,17 +16,22 @@ A hand-written static site: plain HTML, one CSS file, two small JS files. No fra
 
 - `index.html` — home: hero, three discipline features, tech stack (logo grid + carousel), Flutter project (sticky scrollytelling), chatbot showcase (sticky scrollytelling).
 - `tools/index.html`, `tools/device-mockup/index.html` — tools index and the device mockup tool (POSTs to `https://api.sarria.ca/mockup-device`).
+- `cars/index.html` — real-time studio render of the Geely Xingyue L (three.js). Full-viewport stage, a side rail of camera presets (Tesla-style view switching), paint swatches, specs below.
 - `articles/index.html` — placeholder until articles exist.
 - `linkedin/index.html` — meta-refresh redirect to LinkedIn.
 - `404.html` — not found.
 - `assets/css/style.css` — all styles. Design tokens live in `:root`. Breakpoints: 734px (phone) and 1068px (tablet).
 - `assets/js/main.js` — nav menu, reveal-on-scroll, parallax (`data-parallax`), sticky scrolly sections (`data-scrolly`), carousel.
 - `assets/js/mockup.js` — device mockup tool only.
+- `assets/js/cars.js` — the `/cars` scene: renderer, HDRI environment, blurred planar floor reflection (custom `Reflector` shader), contact shadow baked once at start, bloom + ACES, camera presets with spherical fly-to, idle auto-rotate.
+- `assets/js/xingyue-l.js` — the car itself, built procedurally: the body is a loft of rounded cross-sections driven by longitudinal curves (`yTop`, `yBelt`, `zShoulder`, `zRoofEdge`, arches), with per-face material regions (paint, glass, trim). Lamps and the rear light bar are `facePatch` panels sampled from the skin; trims are tubes along profile knots. Dimensions are the real car's (4770 × 1895 × 1689 mm, 2845 mm wheelbase, 255/45 R20).
+- `assets/hdr/studio.hdr` — 1k studio HDRI from Poly Haven (CC0), used for image-based lighting on `/cars`.
 - `assets/img/` — WebP images, pre-sized (hero ≤1200px, phone screenshots 640px, logos 160px). Convert new images with ImageMagick: `convert in.png -resize 1200x\> -quality 82 out.webp`.
 
 ## Conventions
 
-- Nav and footer are duplicated verbatim in every page. Change them in all five HTML files.
+- Nav and footer are duplicated verbatim in every page. Change them in all six HTML files (home, tools, device-mockup, cars, articles, 404; `linkedin/` is a bare redirect).
 - Design language is deliberately restrained: black canvas, `--fg-2` grey for secondary text, one accent (`--link` / `--accent`), system font stack, backdrop blur only on the nav. Keep colour to the images.
 - Animations are scroll-driven only. Elements with `.reveal` fade up once; `[data-parallax="0.1"]` moves relative to its parent; `[data-scrolly]` sections swap `[data-scene]` elements as `.step` elements cross the viewport centre. All motion is disabled under `prefers-reduced-motion`.
 - Icons are inline SVG from Font Awesome Free (CC BY 4.0).
+- `/cars` is the one page with heavy client-side work. Keep it self-contained: three.js version pinned in the import map, no other libraries. To check it headlessly, serve the folder and screenshot with Playwright using Chromium's SwiftShader flags (`--use-gl=angle --use-angle=swiftshader --enable-unsafe-swiftshader`); software rendering runs well under 1 fps there, so wait generously before screenshots.
