@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="/assets/css/style.css">
 </head>
 <body>
+    <canvas class="bg" id="bg" aria-hidden="true"></canvas>
     <header class="nav">
         <div class="wrap nav__inner">
             <a class="nav__logo" href="/" aria-label="Home">
@@ -46,7 +47,7 @@
     </nav>
     <main>
         <!-- Hero -->
-        <section class="hero wrap wrap--wide" aria-labelledby="hero-title">
+        <section class="hero wrap wrap--wide" aria-labelledby="hero-title" data-chapter>
             <div class="hero__copy">
                 <p class="eyebrow reveal">Mobile &middot; Web &middot; Backend</p>
                 <h1 id="hero-title" class="display reveal" style="--d: 0.08s">Hi, I&rsquo;m Qi.</h1>
@@ -56,16 +57,15 @@
                     <a class="chev" href="https://github.com/SarriaXD" target="_blank" rel="noopener noreferrer">GitHub</a>
                 </div>
             </div>
-            <div class="hero__art reveal reveal--scale" style="--d: 0.3s">
-                <img class="art-left" src="/assets/img/hero-web.webp" width="1088" height="1292" alt="" data-parallax="0.14" fetchpriority="low">
-                <img class="art-main" src="/assets/img/hero-mobile.webp" width="1088" height="1292" alt="Illustration of a phone running a cross-platform app" data-parallax="0.06" data-parallax-base="translateX(-50%)" fetchpriority="high">
-                <img class="art-right" src="/assets/img/hero-backend.webp" width="862" height="740" alt="" data-parallax="0.2" fetchpriority="low">
+            <div class="hero__art reveal reveal--scale" style="--d: 0.3s" data-well>
+                <img class="art-left" src="/assets/img/hero-web.webp" width="1088" height="1292" alt="" data-swallow="left" fetchpriority="low">
+                <img class="art-main" src="/assets/img/hero-mobile.webp" width="1088" height="1292" alt="Illustration of a phone running a cross-platform app" data-swallow fetchpriority="high">
+                <img class="art-right" src="/assets/img/hero-backend.webp" width="862" height="740" alt="" data-swallow="right" fetchpriority="low">
             </div>
-            <div class="hero__fade"></div>
         </section>
 
         <!-- Three disciplines -->
-        <section class="wrap" aria-label="What I do">
+        <section class="wrap" aria-label="What I do" data-chapter>
             <article class="feature">
                 <div class="feature__copy">
                     <p class="eyebrow reveal">Mobile</p>
@@ -73,8 +73,8 @@
                     <p class="body reveal" style="--d: 0.16s">Fast, cross-platform apps with Flutter. Native Android with Jetpack Compose when the UI and performance call for it.</p>
                     <div class="link-row reveal" style="--d: 0.24s"><a class="chev" href="#flutter">See the Flutter app</a></div>
                 </div>
-                <div class="feature__art reveal reveal--scale">
-                    <img src="/assets/img/hero-mobile.webp" width="1088" height="1292" alt="Phone running a Flutter app" loading="lazy" data-parallax="0.1">
+                <div class="feature__art reveal reveal--scale" data-well>
+                    <img src="/assets/img/hero-mobile.webp" width="1088" height="1292" alt="Phone running a Flutter app" loading="lazy" data-swallow="right">
                 </div>
             </article>
             <article class="feature feature--flip">
@@ -84,8 +84,8 @@
                     <p class="body reveal" style="--d: 0.16s">High-performance React apps with server rendering for first paint, and the attention to detail that keeps them smooth on every screen.</p>
                     <div class="link-row reveal" style="--d: 0.24s"><a class="chev" href="https://github.com/SarriaXD?tab=repositories" target="_blank" rel="noopener noreferrer">Browse projects</a></div>
                 </div>
-                <div class="feature__art reveal reveal--scale">
-                    <img src="/assets/img/hero-web.webp" width="1088" height="1292" alt="Browser window with a React application" loading="lazy" data-parallax="0.1">
+                <div class="feature__art reveal reveal--scale" data-well>
+                    <img src="/assets/img/hero-web.webp" width="1088" height="1292" alt="Browser window with a React application" loading="lazy" data-swallow="left">
                 </div>
             </article>
             <article class="feature">
@@ -95,21 +95,21 @@
                     <p class="body reveal" style="--d: 0.16s">Spring Boot services on AWS, with scalable architecture and CI/CD pipelines that ship without drama.</p>
                     <div class="link-row reveal" style="--d: 0.24s"><a class="chev" href="mailto:sarria.qi.wang@gmail.com">Work with me</a></div>
                 </div>
-                <div class="feature__art reveal reveal--scale">
-                    <img src="/assets/img/hero-backend.webp" width="862" height="740" alt="Server and cloud illustration" loading="lazy" data-parallax="0.1">
+                <div class="feature__art reveal reveal--scale" data-well>
+                    <img src="/assets/img/hero-backend.webp" width="862" height="740" alt="Server and cloud illustration" loading="lazy" data-swallow="right">
                 </div>
             </article>
         </section>
 
         <!-- Tech stack -->
-        <section class="section section--tint" id="stack" aria-labelledby="stack-title">
+        <section class="section" id="stack" aria-labelledby="stack-title" data-chapter>
             <div class="wrap">
                 <div class="intro">
                     <p class="eyebrow reveal">Tech stack</p>
                     <h2 id="stack-title" class="headline reveal" style="--d: 0.08s">The tools I reach for.</h2>
                     <p class="lede reveal" style="--d: 0.16s">Five frameworks. Five languages. One way of working: pick the right tool, then go deep.</p>
                 </div>
-                <ul class="logos reveal" style="--d: 0.2s">
+                <ul class="logos reveal" style="--d: 0.2s" data-well="dim">
                     <li><img src="/assets/img/tech/android.webp" width="44" height="44" alt="" loading="lazy">Android</li>
                     <li><img src="/assets/img/tech/flutter.webp" width="44" height="44" alt="" loading="lazy">Flutter</li>
                     <li><img src="/assets/img/tech/jetpack-compose.webp" width="44" height="44" alt="" loading="lazy">Compose</li>
@@ -169,7 +169,7 @@
         </section>
 
         <!-- Flutter project -->
-        <section class="section" id="flutter" aria-labelledby="flutter-title">
+        <section class="section" id="flutter" aria-labelledby="flutter-title" data-chapter>
             <div class="wrap">
                 <div class="intro">
                     <p class="eyebrow reveal">Featured project</p>
@@ -177,7 +177,7 @@
                     <p class="lede reveal" style="--d: 0.16s">Practice tests, progress history and a look you can make your own.</p>
                 </div>
                 <div class="scrolly" data-scrolly>
-                    <div class="scrolly__stage reveal reveal--scale" aria-hidden="true">
+                    <div class="scrolly__stage reveal reveal--scale" aria-hidden="true" data-well="none">
                         <div class="phones">
                             <div class="phones__scene" data-scene>
                                 <img src="/assets/img/flutter/firebase-1.webp" width="640" height="1320" alt="" loading="lazy"><img src="/assets/img/flutter/firebase-2.webp" width="640" height="1320" alt="" loading="lazy"><img src="/assets/img/flutter/firebase-3.webp" width="640" height="1320" alt="" loading="lazy">
@@ -224,7 +224,7 @@
         </section>
 
         <!-- Chatbot -->
-        <section class="section section--tint" id="chatbot" aria-labelledby="chat-title">
+        <section class="section" id="chatbot" aria-labelledby="chat-title" data-chapter>
             <div class="wrap">
                 <div class="intro">
                     <p class="eyebrow reveal">Side project</p>
@@ -233,7 +233,7 @@
                     <div class="link-row reveal" style="--d: 0.24s; justify-content: center; margin-top: 20px"><a class="chev" href="https://github.com/SarriaXD/ai-chatbot" target="_blank" rel="noopener noreferrer">Explore on GitHub</a><a class="chev" href="https://chat.sarria.ca" target="_blank" rel="noopener noreferrer">Try it live</a></div>
                 </div>
                 <div class="scrolly scrolly--chat" data-scrolly="pinned">
-                    <div class="scrolly__stage reveal reveal--scale">
+                    <div class="scrolly__stage reveal reveal--scale" data-well="none">
                         <div class="chat" role="img" aria-label="Preview of the chatbot interface">
                             <div class="chat__bar"><i></i><i></i><i></i><span>chat.sarria.ca</span></div>
                             <div class="chat__body">
@@ -289,7 +289,7 @@
             </div>
         </section>
     </main>
-    <footer class="footer">
+    <footer class="footer" data-chapter>
         <div class="wrap">
             <div class="footer__grid">
                 <div class="footer__brand">
@@ -327,5 +327,6 @@
         </div>
     </footer>
     <script src="/assets/js/main.js" defer></script>
+    <script src="/assets/js/bg.js" defer></script>
 </body>
 </html>
