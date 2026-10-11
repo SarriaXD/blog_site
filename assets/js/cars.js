@@ -5,8 +5,11 @@
  * dropped at /assets/models/model-3.glb it is used instead (see GLB
  * below). Lighting is image based (a CC0 studio HDRI from Poly Haven)
  * plus a long overhead softbox; the floor is a planar reflection blurred
- * through mip levels and darkened by a contact shadow baked once the car
- * is in. Bloom and ACES tone mapping run in a half-float post chain.
+ * by how far the reflected surface sits above the floor (read back from
+ * the reflection pass's depth) and darkened by a contact shadow baked once
+ * the car is in. Bloom and ACES tone mapping run in a half-float post
+ * chain. Frames are only rendered while something moves, and the pixel
+ * ratio steps down on machines that cannot hold ~30 fps.
  */
 
 import * as THREE from 'three'
@@ -84,11 +87,18 @@ if (!supportsWebGL2()) {
 
 const renderer = new THREE.WebGLRenderer({
     canvas,
-    antialias: true,
+    antialias: false, // the post chain renders into its own multisampled target
     alpha: false,
     powerPreference: 'high-performance',
 })
-const DPR = Math.min(window.devicePixelRatio || 1, isSmall ? 1.5 : 2)
+// Quality levels, stepped down at runtime if frames come in slow.
+const QUALITY = [
+    { dpr: Math.min(window.devicePixelRatio || 1, isSmall ? 1.25 : 1.5), refl: 0.6, bloom: true },
+    { dpr: 1, refl: 0.5, bloom: true },
+    { dpr: 1, refl: 0.4, bloom: false },
+]
+let qualityLevel = 0
+let DPR = QUALITY[0].dpr
 renderer.setPixelRatio(DPR)
 renderer.toneMapping = THREE.ACESFilmicToneMapping
 renderer.toneMappingExposure = 1.1
@@ -188,7 +198,12 @@ function fitImported(root) {
         const swap = (m) => (paintMats.has(m) ? mats.paint : m)
         o.material = Array.isArray(o.material) ? o.material.map(swap) : swap(o.material)
         const list = Array.isArray(o.material) ? o.material : [o.material]
-        for (const m of list) if (m && m !== mats.paint && 'envMapIntensity' in m) m.envMapIntensity = 1.0
+        for (const m of list) {
+            if (!m || m === mats.paint) continue
+            if ('envMapIntensity' in m) m.envMapIntensity = 1.0
+            // roughness 0 on big surfaces turns the HDRI into sparkle; keep a little
+            if ('roughness' in m) m.roughness = Math.max(m.roughness, m.transparent ? 0.06 : 0.28)
+        }
     })
     return { group, materials: mats }
 }
@@ -278,8 +293,12 @@ const floorShader = {
         textureMatrix: { value: new THREE.Matrix4() },
         tShadow: { value: null },
         shadowRect: { value: new THREE.Vector4(0, 0, SHADOW_HALF.x, SHADOW_HALF.y) },
-        blur: { value: 2.8 },
-        strength: { value: 0.55 },
+        tDepth: { value: null },
+        invProj: { value: new THREE.Matrix4() },
+        camWorld: { value: new THREE.Matrix4() },
+        projScale: { value: new THREE.Vector2(1, 1) },
+        texel: { value: new THREE.Vector2(1 / 1024, 1 / 1024) },
+        strength: { value: 0.6 },
     },
     vertexShader: /* glsl */ `
         uniform mat4 textureMatrix;
@@ -298,22 +317,56 @@ const floorShader = {
         uniform vec3 color;
         uniform sampler2D tDiffuse;
         uniform sampler2D tShadow;
+        uniform sampler2D tDepth;
         uniform vec4 shadowRect;
-        uniform float blur;
+        uniform mat4 invProj;
+        uniform mat4 camWorld;
+        uniform vec2 projScale;
+        uniform vec2 texel;
         uniform float strength;
         varying vec4 vUv;
         varying vec3 vWorld;
         #include <common>
         #include <logdepthbuf_pars_fragment>
+
+        // Glossy floor: a surface h metres above the floor reflects with a
+        // blur about 0.35 h wide (sharp at the tyre contact, soft on the
+        // roof). Height and distance come from the reflection pass's depth.
+        vec2 probe(vec2 uv) {
+            float z = texture2D(tDepth, uv).r;
+            vec4 p = invProj * vec4(uv * 2.0 - 1.0, z * 2.0 - 1.0, 1.0);
+            p /= p.w;
+            float h = (camWorld * p).y;
+            return vec2(clamp(h, 0.0, 4.0), max(-p.z, 0.05));
+        }
+        vec2 radiusFor(vec2 hd) {
+            return min(hd.x * 0.35, 1.5) * projScale / hd.y;
+        }
+
         void main() {
             #include <logdepthbuf_fragment>
             vec3 V = normalize(cameraPosition - vWorld);
             float grazing = pow(1.0 - clamp(V.y, 0.0, 1.0), 2.2);
             float d = length(vWorld.xz);
-            // the reflection gets softer further from the car
-            float lod = blur + smoothstep(1.5, 7.0, d) * 2.5;
-            vec3 refl = texture2DProjLodEXT(tDiffuse, vUv, lod).rgb;
-            float reflAmt = mix(0.28, 1.0, grazing) * strength;
+
+            vec2 uv = vUv.xy / vUv.w;
+            vec2 r = max(radiusFor(probe(uv)), texel);
+            vec3 refl = vec3(0.0);
+            float wsum = 0.0;
+            for (int j = -4; j <= 4; j++) {
+                for (int i = -1; i <= 1; i++) {
+                    vec2 o = vec2(float(i) * 0.5, float(j) / 4.0);
+                    vec2 ouv = uv + o * r;
+                    float w = exp(-dot(o, o) * 2.0);
+                    // a sharper surface must not scatter into this pixel
+                    vec2 rt = radiusFor(probe(ouv)) + texel;
+                    w *= step(abs(o.x * r.x), rt.x) * step(abs(o.y * r.y), rt.y);
+                    refl += texture2D(tDiffuse, ouv).rgb * w;
+                    wsum += w;
+                }
+            }
+            refl /= max(wsum, 1e-4);
+            float reflAmt = mix(0.3, 1.0, grazing) * strength;
 
             vec2 suv = (vWorld.xz - shadowRect.xy) / (2.0 * shadowRect.zw) + 0.5;
             float sh = 0.0;
@@ -338,16 +391,30 @@ const floor = new Reflector(new THREE.PlaneGeometry(floorSize, floorSize), {
     textureWidth: 1024,
     textureHeight: 1024,
     textureType: THREE.HalfFloatType,
-    multisample: isSmall ? 0 : 4,
+    multisample: 0, // the blur hides edges; MSAA and a depth texture don't mix well
     shader: floorShader,
 })
 floor.rotation.x = -Math.PI / 2
 floor.position.y = 0
 {
-    const tex = floor.getRenderTarget().texture
-    tex.generateMipmaps = true
-    tex.minFilter = THREE.LinearMipmapLinearFilter
-    tex.magFilter = THREE.LinearFilter
+    const rt = floor.getRenderTarget()
+    rt.texture.generateMipmaps = false
+    rt.texture.minFilter = THREE.LinearFilter
+    rt.texture.magFilter = THREE.LinearFilter
+    rt.depthTexture = new THREE.DepthTexture(rt.width, rt.height)
+    floor.material.uniforms.tDepth.value = rt.depthTexture
+    // after the reflection pass, hand the floor the virtual camera so the
+    // shader can turn depth back into height above the floor
+    const reflect = floor.onBeforeRender
+    floor.onBeforeRender = function (r, sc, cam, ...rest) {
+        reflect.call(this, r, sc, cam, ...rest)
+        const u = floor.material.uniforms
+        const vc = floor.camera
+        u.invProj.value.copy(vc.projectionMatrix).invert()
+        u.camWorld.value.copy(vc.matrixWorld)
+        const e = vc.projectionMatrix.elements
+        u.projScale.value.set(0.5 * e[0], 0.5 * e[5])
+    }
 }
 scene.add(floor)
 
@@ -367,7 +434,7 @@ loadCar().then(({ group, materials: m }) => {
 const maxSamples = renderer.capabilities.maxSamples || 4
 const composerTarget = new THREE.WebGLRenderTarget(1, 1, {
     type: THREE.HalfFloatType,
-    samples: Math.min(isSmall ? 4 : 8, maxSamples),
+    samples: Math.min(4, maxSamples),
 })
 const composer = new EffectComposer(renderer, composerTarget)
 composer.setPixelRatio(DPR)
@@ -419,11 +486,18 @@ new RGBELoader().setDataType(THREE.FloatType).load(
     }
 )
 
+// Frames are rendered only while the camera moves or `dirty` asks for more.
+let dirty = 2
+function invalidate() {
+    dirty = 2
+}
+
 let isReady = false
 let envReady = false
 function ready() {
     if (isReady || !carReady || !envReady) return
     isReady = true
+    invalidate()
     stage.classList.add('is-ready')
     loading.remove()
     armIdle()
@@ -440,14 +514,27 @@ function resize() {
     camera.updateProjectionMatrix()
     renderer.setSize(w, h, false)
     composer.setSize(w, h)
-    bloom.setSize(w, h)
+    bloom.setSize(w / 2, h / 2) // the bloom is soft and weak; a quarter-res chain is plenty
     smaa.setSize(w * DPR, h * DPR)
-    const rw = Math.min(1536, Math.round(w * DPR * 0.75))
-    const rh = Math.min(1536, Math.round(h * DPR * 0.75))
+    const q = QUALITY[qualityLevel]
+    const rw = Math.min(1280, Math.round(w * DPR * q.refl))
+    const rh = Math.min(1280, Math.round(h * DPR * q.refl))
     floor.getRenderTarget().setSize(rw, rh)
+    floor.material.uniforms.texel.value.set(1 / rw, 1 / rh)
     if (currentView && !move && typeof flyTo === 'function') flyTo(currentView, true)
+    invalidate()
 }
 new ResizeObserver(resize).observe(stage)
+
+function setQuality(level) {
+    qualityLevel = Math.min(level, QUALITY.length - 1)
+    const q = QUALITY[qualityLevel]
+    DPR = q.dpr
+    renderer.setPixelRatio(DPR)
+    composer.setPixelRatio(DPR)
+    bloom.enabled = q.bloom
+    resize()
+}
 
 /* ------------------------------------------------------------------ */
 /* camera moves                                                        */
@@ -486,6 +573,7 @@ function flyTo(view, instant = false) {
     }
     controls.autoRotate = false
     controls.enabled = false
+    invalidate()
 }
 
 function stepMove(now) {
@@ -573,6 +661,7 @@ PAINTS.forEach((p, i) => {
         paintList.querySelectorAll('[role="radio"]').forEach((el) => el.setAttribute('aria-checked', 'false'))
         b.setAttribute('aria-checked', 'true')
         if (materials) applyPaint(materials, p)
+        invalidate()
     })
     paintList.appendChild(b)
 })
@@ -607,14 +696,37 @@ resize()
 flyTo(VIEWS[0], true)
 
 let lastFrame = 0
+let lastRender = 0
+let sampled = 0
+let slow = 0
 function frame(now) {
     if (!visible || document.hidden) return
     requestAnimationFrame(frame)
     // cap to ~60 fps on high-refresh displays; the reflection pass is not free
     if (now - lastFrame < 15) return
     lastFrame = now
-    if (move) stepMove(now)
-    else controls.update()
+    let moved
+    if (move) {
+        stepMove(now)
+        moved = true
+    } else moved = controls.update()
+    if (!moved && dirty <= 0) {
+        lastRender = 0
+        return
+    }
+    if (!moved) dirty--
     composer.render()
+    // while frames are flowing, watch the pace; drop a quality level if
+    // more than half of a 90-frame window came in under 30 fps
+    if (lastRender && isReady) {
+        sampled++
+        if (now - lastRender > 34) slow++
+        if (sampled >= 90) {
+            if (slow > 45 && qualityLevel < QUALITY.length - 1) setQuality(qualityLevel + 1)
+            sampled = 0
+            slow = 0
+        }
+    }
+    lastRender = now
 }
 requestAnimationFrame(frame)
