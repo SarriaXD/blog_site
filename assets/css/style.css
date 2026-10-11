@@ -1042,6 +1042,24 @@ main {
     opacity: 1;
 }
 
+.car-stage__fps {
+    position: absolute;
+    top: clamp(24px, 5vh, 56px);
+    right: max(var(--gutter), calc((100% - var(--content)) / 2));
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11px;
+    line-height: 1;
+    letter-spacing: 0.04em;
+    color: var(--fg-2);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.8s var(--ease) 1.2s;
+}
+
+.car-stage.is-ready .car-stage__fps {
+    opacity: 1;
+}
+
 .car-stage__loading {
     position: absolute;
     inset: 0;
@@ -1263,7 +1281,8 @@ main {
 
 @media (prefers-reduced-motion: reduce) {
     .car-stage__canvas,
-    .car-stage__hint {
+    .car-stage__hint,
+    .car-stage__fps {
         transition: none;
     }
 }
