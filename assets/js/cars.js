@@ -43,23 +43,25 @@ const VIEWS = [
     { id: 'rear34', label: 'Rear ¾', pos: [-5.5, 1.5, 4.5], target: [-0.3, 0.62, 0], fov: 30 },
     { id: 'rear', label: 'Rear', pos: [-7.9, 1.15, -0.4], target: [-0.3, 0.64, 0], fov: 28 },
     { id: 'top', label: 'Top', pos: [1.0, 8.0, 2.4], target: [0, 0.5, 0], fov: 32 },
-    { id: 'wheel', label: 'Wheel', pos: [3.1, 0.5, 2.5], target: [1.5, 0.36, 0.75], fov: 24 },
+    { id: 'wheel', label: 'Wheel', pos: [3.5, 0.62, 2.9], target: [1.45, 0.36, 0.72], fov: 24 },
     { id: 'lamp', label: 'Headlight', pos: [3.8, 0.95, 1.8], target: [2.15, 0.76, 0.6], fov: 22 },
 ]
 
 /* ------------------------------------------------------------------ */
 /* optional downloaded model                                           */
 
-// Drop a glTF binary of the car at this path and it replaces the procedural
-// model. `forward` is the axis the car's nose points along in the file
-// (glTF convention is +z); it is turned to face +x, scaled to the real
-// length and stood on the floor. Materials whose name matches `paintName`
-// (or, failing that, the one covering the most triangles) become the
-// paint so the swatches still work. Credit the author in the page footer.
+// A glTF binary of the car at this path replaces the procedural model.
+// The file's longest horizontal axis is turned to lie along x, `nose` says
+// which way the car then faces, and it is scaled to the real length and
+// stood on the floor. Materials whose name matches `paintName` (or, failing
+// that, the opaque one covering the most triangles) become the paint so
+// the swatches still work. The committed file is "Tesla model 3 2024" by
+// brandonleong28 on Sketchfab, CC BY 4.0, credited in the page footer; its
+// material names are opaque, hence the exact match below.
 const GLB = {
     url: '/assets/models/model-3.glb',
-    forward: '+z',
-    paintName: /paint|body|carrosserie|exterior|lack/i,
+    nose: '+x',
+    paintName: /^Geohoodsub00021Mtl$|paint|carrosserie|exterior|lack/i,
     notPaint: /glass|window|wind|tire|tyre|wheel|rim|interior|seat|light|lamp|lens|chrome|rubber|plastic|black|mirror|logo/i,
 }
 
@@ -145,14 +147,16 @@ let materials = null
 /** Orient, scale and ground an imported model; swap its paint for ours. */
 function fitImported(root) {
     const mats = createMaterials()
-    const yaw = { '+z': Math.PI / 2, '-z': -Math.PI / 2, '+x': 0, '-x': Math.PI }[GLB.forward] ?? Math.PI / 2
     const group = new THREE.Group()
     group.name = 'model-3-glb'
-    root.rotation.y = yaw
     group.add(root)
     group.updateMatrixWorld(true)
     let box = new THREE.Box3().setFromObject(group)
-    const size = box.getSize(new THREE.Vector3())
+    let size = box.getSize(new THREE.Vector3())
+    root.rotation.y = (size.z > size.x ? Math.PI / 2 : 0) + (GLB.nose === '-x' ? Math.PI : 0)
+    group.updateMatrixWorld(true)
+    box = new THREE.Box3().setFromObject(group)
+    size = box.getSize(new THREE.Vector3())
     const s = DIMS.length / Math.max(size.x, 1e-6)
     root.scale.setScalar(s)
     group.updateMatrixWorld(true)
@@ -191,11 +195,10 @@ function fitImported(root) {
 
 async function loadCar() {
     try {
-        const head = await fetch(GLB.url, { method: 'HEAD' })
-        const type = head.headers.get('content-type') || ''
-        if (!head.ok || /text\/html/.test(type)) throw new Error('no glb')
         const { GLTFLoader } = await import('three/addons/loaders/GLTFLoader.js')
-        const gltf = await new GLTFLoader().loadAsync(GLB.url)
+        const gltf = await new GLTFLoader().loadAsync(GLB.url, (e) => {
+            if (loading && e.lengthComputable) loading.textContent = `Loading the car… ${Math.round((100 * e.loaded) / e.total)}%`
+        })
         stage.dataset.model = 'glb'
         return fitImported(gltf.scene)
     } catch {
