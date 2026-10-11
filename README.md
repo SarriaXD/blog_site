@@ -2,7 +2,7 @@
 
 Source for my personal website, [sarria.ca](https://sarria.ca).
 
-It is a static site: HTML, one stylesheet and a few small scripts. No framework, no build step. The home page is a scroll-driven film drawn entirely in code on a canvas (no images), and the `/cars` page renders a Geely Xingyue L live in the browser with three.js (loaded from a CDN). Clone it and open `index.html`, or serve the folder:
+It is a static site: HTML, one stylesheet and a few small scripts. No framework, no build step. The home page is a scroll-driven film drawn entirely in code on a canvas (no images), and the `/cars` page renders a Tesla Model 3 live in the browser with three.js (loaded from a CDN). Clone it and open `index.html`, or serve the folder:
 
 ```sh
 python3 -m http.server 8000

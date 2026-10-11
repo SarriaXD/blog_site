@@ -1,10 +1,12 @@
-/* sarria.ca — /cars: real-time studio render of the Xingyue L.
+/* sarria.ca — /cars: real-time studio render of the Tesla Model 3.
  *
  * three.js is loaded from a CDN through the import map in cars/index.html.
- * Lighting is image based (a CC0 studio HDRI from Poly Haven) plus a long
- * overhead softbox; the floor is a planar reflection blurred through mip
- * levels and darkened by a contact shadow baked once at start-up. Bloom
- * and ACES tone mapping run in a half-float post chain.
+ * The car is built procedurally in model-3.js; if a downloaded glTF is
+ * dropped at /assets/models/model-3.glb it is used instead (see GLB
+ * below). Lighting is image based (a CC0 studio HDRI from Poly Haven)
+ * plus a long overhead softbox; the floor is a planar reflection blurred
+ * through mip levels and darkened by a contact shadow baked once the car
+ * is in. Bloom and ACES tone mapping run in a half-float post chain.
  */
 
 import * as THREE from 'three'
@@ -19,7 +21,7 @@ import { SMAAPass } from 'three/addons/postprocessing/SMAAPass.js'
 import { HorizontalBlurShader } from 'three/addons/shaders/HorizontalBlurShader.js'
 import { VerticalBlurShader } from 'three/addons/shaders/VerticalBlurShader.js'
 import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js'
-import { buildCar, applyPaint, PAINTS } from './xingyue-l.js'
+import { buildCar, createMaterials, applyPaint, PAINTS, DIMS } from './model-3.js'
 
 const stage = document.getElementById('stage')
 const canvas = stage.querySelector('canvas')
@@ -35,15 +37,31 @@ const isSmall = window.matchMedia('(max-width: 734px)').matches
 /* camera presets (Tesla-style view switcher)                          */
 
 const VIEWS = [
-    { id: 'hero', label: 'Front ¾', pos: [6.1, 1.55, 4.9], target: [0.85, 0.76, 0.15], fov: 30 },
-    { id: 'front', label: 'Front', pos: [8.2, 1.25, 0.6], target: [0.4, 0.72, 0], fov: 28 },
-    { id: 'side', label: 'Side', pos: [0.2, 1.05, 8.6], target: [0, 0.78, 0], fov: 28 },
-    { id: 'rear34', label: 'Rear ¾', pos: [-5.8, 1.7, 4.8], target: [-0.2, 0.74, 0], fov: 30 },
-    { id: 'rear', label: 'Rear', pos: [-8.2, 1.35, -0.5], target: [-0.3, 0.78, 0], fov: 28 },
-    { id: 'top', label: 'Top', pos: [1.2, 8.4, 2.6], target: [0, 0.6, 0], fov: 32 },
-    { id: 'wheel', label: 'Wheel', pos: [3.2, 0.55, 2.55], target: [1.35, 0.4, 0.75], fov: 24 },
-    { id: 'lamp', label: 'Headlight', pos: [3.9, 1.1, 1.9], target: [2.2, 0.86, 0.6], fov: 22 },
+    { id: 'hero', label: 'Front ¾', pos: [5.7, 1.35, 4.6], target: [0.75, 0.62, 0.1], fov: 30 },
+    { id: 'front', label: 'Front', pos: [7.9, 1.0, 0.5], target: [0.4, 0.6, 0], fov: 28 },
+    { id: 'side', label: 'Side', pos: [0.1, 0.9, 8.3], target: [0, 0.66, 0], fov: 28 },
+    { id: 'rear34', label: 'Rear ¾', pos: [-5.5, 1.5, 4.5], target: [-0.3, 0.62, 0], fov: 30 },
+    { id: 'rear', label: 'Rear', pos: [-7.9, 1.15, -0.4], target: [-0.3, 0.64, 0], fov: 28 },
+    { id: 'top', label: 'Top', pos: [1.0, 8.0, 2.4], target: [0, 0.5, 0], fov: 32 },
+    { id: 'wheel', label: 'Wheel', pos: [3.1, 0.5, 2.5], target: [1.5, 0.36, 0.75], fov: 24 },
+    { id: 'lamp', label: 'Headlight', pos: [3.8, 0.95, 1.8], target: [2.15, 0.76, 0.6], fov: 22 },
 ]
+
+/* ------------------------------------------------------------------ */
+/* optional downloaded model                                           */
+
+// Drop a glTF binary of the car at this path and it replaces the procedural
+// model. `forward` is the axis the car's nose points along in the file
+// (glTF convention is +z); it is turned to face +x, scaled to the real
+// length and stood on the floor. Materials whose name matches `paintName`
+// (or, failing that, the one covering the most triangles) become the
+// paint so the swatches still work. Credit the author in the page footer.
+const GLB = {
+    url: '/assets/models/model-3.glb',
+    forward: '+z',
+    paintName: /paint|body|carrosserie|exterior|lack/i,
+    notPaint: /glass|window|wind|tire|tyre|wheel|rim|interior|seat|light|lamp|lens|chrome|rubber|plastic|black|mirror|logo/i,
+}
 
 /* ------------------------------------------------------------------ */
 /* renderer                                                            */
@@ -121,8 +139,70 @@ scene.add(fill)
 /* ------------------------------------------------------------------ */
 /* car                                                                 */
 
-const { group: car, materials } = buildCar()
-scene.add(car)
+let car = null
+let materials = null
+
+/** Orient, scale and ground an imported model; swap its paint for ours. */
+function fitImported(root) {
+    const mats = createMaterials()
+    const yaw = { '+z': Math.PI / 2, '-z': -Math.PI / 2, '+x': 0, '-x': Math.PI }[GLB.forward] ?? Math.PI / 2
+    const group = new THREE.Group()
+    group.name = 'model-3-glb'
+    root.rotation.y = yaw
+    group.add(root)
+    group.updateMatrixWorld(true)
+    let box = new THREE.Box3().setFromObject(group)
+    const size = box.getSize(new THREE.Vector3())
+    const s = DIMS.length / Math.max(size.x, 1e-6)
+    root.scale.setScalar(s)
+    group.updateMatrixWorld(true)
+    box = new THREE.Box3().setFromObject(group)
+    const centre = box.getCenter(new THREE.Vector3())
+    root.position.set(-centre.x, -box.min.y, -centre.z)
+
+    // find the paint: by name first, else the biggest opaque material
+    const area = new Map()
+    const byName = new Set()
+    root.traverse((o) => {
+        if (!o.isMesh) return
+        const list = Array.isArray(o.material) ? o.material : [o.material]
+        const n = o.geometry.index ? o.geometry.index.count : o.geometry.attributes.position.count
+        for (const m of list) {
+            if (!m) continue
+            const name = m.name || ''
+            if (GLB.paintName.test(name) && !GLB.notPaint.test(name)) byName.add(m)
+            if (!m.transparent && !GLB.notPaint.test(name)) area.set(m, (area.get(m) || 0) + n / list.length)
+        }
+    })
+    let paintMats = byName
+    if (!paintMats.size && area.size) {
+        const best = [...area.entries()].sort((a, b) => b[1] - a[1])[0][0]
+        paintMats = new Set([best])
+    }
+    root.traverse((o) => {
+        if (!o.isMesh) return
+        const swap = (m) => (paintMats.has(m) ? mats.paint : m)
+        o.material = Array.isArray(o.material) ? o.material.map(swap) : swap(o.material)
+        const list = Array.isArray(o.material) ? o.material : [o.material]
+        for (const m of list) if (m && m !== mats.paint && 'envMapIntensity' in m) m.envMapIntensity = 1.0
+    })
+    return { group, materials: mats }
+}
+
+async function loadCar() {
+    try {
+        const head = await fetch(GLB.url, { method: 'HEAD' })
+        const type = head.headers.get('content-type') || ''
+        if (!head.ok || /text\/html/.test(type)) throw new Error('no glb')
+        const { GLTFLoader } = await import('three/addons/loaders/GLTFLoader.js')
+        const gltf = await new GLTFLoader().loadAsync(GLB.url)
+        stage.dataset.model = 'glb'
+        return fitImported(gltf.scene)
+    } catch {
+        stage.dataset.model = 'procedural'
+        return buildCar()
+    }
+}
 
 /* ------------------------------------------------------------------ */
 /* contact shadow baked once (car is static)                           */
@@ -184,8 +264,6 @@ function bakeContactShadow() {
     return rtA.texture
 }
 
-const shadowTex = bakeContactShadow()
-
 /* ------------------------------------------------------------------ */
 /* floor: blurred planar reflection + contact shadow                   */
 
@@ -195,7 +273,7 @@ const floorShader = {
         color: { value: new THREE.Color(0x0c0c0e) },
         tDiffuse: { value: null },
         textureMatrix: { value: new THREE.Matrix4() },
-        tShadow: { value: shadowTex },
+        tShadow: { value: null },
         shadowRect: { value: new THREE.Vector4(0, 0, SHADOW_HALF.x, SHADOW_HALF.y) },
         blur: { value: 2.8 },
         strength: { value: 0.55 },
@@ -268,8 +346,17 @@ floor.position.y = 0
     tex.minFilter = THREE.LinearMipmapLinearFilter
     tex.magFilter = THREE.LinearFilter
 }
-floor.material.uniforms.tShadow.value = shadowTex
 scene.add(floor)
+
+let carReady = false
+loadCar().then(({ group, materials: m }) => {
+    car = group
+    materials = m
+    scene.add(car)
+    floor.material.uniforms.tShadow.value = bakeContactShadow()
+    carReady = true
+    ready()
+})
 
 /* ------------------------------------------------------------------ */
 /* post                                                                */
@@ -314,6 +401,7 @@ new RGBELoader().setDataType(THREE.FloatType).load(
         scene.environment = tex
         scene.environmentIntensity = 1.0
         scene.environmentRotation = new THREE.Euler(0, Math.PI * 0.42, 0)
+        envReady = true
         ready()
     },
     undefined,
@@ -322,14 +410,16 @@ new RGBELoader().setDataType(THREE.FloatType).load(
         import('three/addons/environments/RoomEnvironment.js').then(({ RoomEnvironment }) => {
             const pmrem = new THREE.PMREMGenerator(renderer)
             scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture
+            envReady = true
             ready()
         })
     }
 )
 
 let isReady = false
+let envReady = false
 function ready() {
-    if (isReady) return
+    if (isReady || !carReady || !envReady) return
     isReady = true
     stage.classList.add('is-ready')
     loading.remove()
@@ -479,7 +569,7 @@ PAINTS.forEach((p, i) => {
     b.addEventListener('click', () => {
         paintList.querySelectorAll('[role="radio"]').forEach((el) => el.setAttribute('aria-checked', 'false'))
         b.setAttribute('aria-checked', 'true')
-        applyPaint(materials, p)
+        if (materials) applyPaint(materials, p)
     })
     paintList.appendChild(b)
 })

@@ -1475,47 +1475,48 @@
     /* ---------- scene 5 — a car, as a blueprint ---------- */
 
     const CAR = (() => {
-        /* local coordinates: 1000 long, roof at y=0, ground at y=354, nose to the right */
+        /* local coordinates: 1000 long (4720 mm), ground at y=358, roof at y=53, nose to the right */
         const body = new Path()
-        body.m(72, 302)
-        body.c(44, 296, 28, 262, 32, 222)
-        body.l(36, 154)
-        body.c(38, 118, 54, 92, 86, 78)
-        body.l(112, 70)
-        body.c(170, 42, 262, 8, 420, 2)
-        body.c(520, -2, 610, 12, 688, 52)
-        body.c(738, 80, 770, 122, 802, 142)
-        body.c(862, 150, 932, 160, 976, 174)
-        body.c(1000, 186, 1006, 216, 998, 242)
-        body.c(992, 272, 974, 294, 948, 302)
-        body.l(878, 308)
-        body.a(779, 282, 102, Math.atan2(26, 99), Math.PI - Math.atan2(26, 99) - TAU, 26)
-        body.l(281, 308)
-        body.a(182, 282, 102, Math.atan2(26, 102), Math.PI - Math.atan2(26, 102) - TAU, 26)
-        body.l(72, 302)
-        /* roof rails */
-        body.m(150, -8).c(300, -14, 500, -16, 640, -10)
-        /* shoulder line */
-        body.m(90, 176).c(300, 170, 700, 160, 960, 164)
-        /* sill crease */
-        body.m(290, 290).l(680, 290)
+        body.m(8, 300)
+        body.c(2, 296, 0, 290, 1, 282)
+        body.l(4, 202)
+        body.c(6, 182, 12, 164, 20, 156)
+        body.c(34, 150, 54, 146, 64, 146)
+        body.c(120, 122, 190, 86, 230, 74)
+        body.c(300, 60, 400, 52, 470, 53)
+        body.c(530, 54, 610, 72, 680, 133)
+        body.c(700, 140, 800, 160, 924, 191)
+        body.c(962, 200, 986, 212, 994, 231)
+        body.c(999, 248, 1000, 268, 1000, 282)
+        body.c(1000, 298, 990, 310, 950, 312)
+        body.l(898, 312)
+        body.a(818, 285, 84, Math.atan2(27, 79.5), Math.PI - Math.atan2(27, 79.5) - TAU, 26)
+        body.l(289, 312)
+        body.a(209, 285, 84, Math.atan2(27, 79.5), Math.PI - Math.atan2(27, 79.5) - TAU, 26)
+        body.l(60, 312)
+        body.c(30, 311, 12, 308, 8, 300)
+        /* shoulder line, soft, rising towards the tail */
+        body.m(30, 172).c(300, 180, 700, 178, 930, 190)
+        /* rocker crease */
+        body.m(300, 292).l(740, 292)
 
         const glass = new Path()
-        glass.m(118, 84).c(170, 54, 282, 24, 430, 18).c(520, 14, 592, 24, 652, 36).l(724, 112).l(118, 120).z()
-        glass.m(430, 18).l(432, 118) /* B-pillar */
-        glass.m(262, 26).l(254, 119) /* C-pillar */
+        glass.m(131, 142).c(170, 104, 200, 84, 221, 76).c(300, 62, 400, 58, 489, 62).l(669, 149).z()
+        glass.m(437, 60).l(441, 149) /* B-pillar */
+        glass.m(246, 73).l(248, 146) /* rear door / quarter glass */
         /* doors */
-        glass.m(432, 126).c(434, 190, 436, 250, 438, 304)
-        glass.m(254, 126).c(252, 190, 254, 250, 262, 304)
-        glass.rr(366, 150, 36, 8, 4)
-        glass.rr(190, 150, 36, 8, 4)
+        glass.m(458, 152).c(458, 200, 457, 260, 457, 312)
+        glass.m(246, 148).c(246, 200, 247, 260, 250, 312)
+        glass.m(657, 152).c(657, 200, 655, 260, 652, 312)
+        glass.rr(461, 159, 36, 6, 3)
+        glass.rr(249, 159, 36, 6, 3)
         /* mirror */
-        glass.rr(730, 94, 30, 18, 6)
-        glass.m(730, 104).l(722, 112)
+        glass.rr(612, 132, 28, 16, 5)
+        glass.m(620, 148).l(626, 152)
 
         const lamps = new Path()
-        lamps.m(906, 158).l(986, 176).l(982, 190).l(898, 174).z()
-        lamps.m(36, 150).l(74, 142).l(76, 162).l(36, 166).z()
+        lamps.m(930, 196).l(990, 205).l(988, 211).l(928, 203).z()
+        lamps.m(6, 158).l(44, 150).l(46, 162).l(8, 168).z()
 
         const dims = new Path()
         /* overall length */
@@ -1523,29 +1524,30 @@
         dims.m(0, 392).l(0, 408)
         dims.m(1000, 392).l(1000, 408)
         /* wheelbase */
-        dims.m(182, 376).l(779, 376)
-        dims.m(182, 370).l(182, 382)
-        dims.m(779, 370).l(779, 382)
+        dims.m(209, 376).l(818, 376)
+        dims.m(209, 370).l(209, 382)
+        dims.m(818, 370).l(818, 382)
         /* height */
-        dims.m(1050, 0).l(1050, 354)
-        dims.m(1042, 0).l(1058, 0)
-        dims.m(1042, 354).l(1058, 354)
-        dims.m(0, 0).l(1050, 0)
+        dims.m(1050, 53).l(1050, 358)
+        dims.m(1042, 53).l(1058, 53)
+        dims.m(1042, 358).l(1058, 358)
+        dims.m(0, 53).l(1050, 53)
         return { body, glass, lamps, dims }
     })()
 
     const drawWheel = (c, x, y, ang, p, w) => {
         if (p <= 0) return
-        const tire = new Path().circle(x, y, 76)
-        const rim = new Path().circle(x, y, 50)
+        const tire = new Path().circle(x, y, 71)
+        const rim = new Path().circle(x, y, 48)
         ink(c, tire, span(p, 0, 0.5), w * 1.4)
         ink(c, rim, span(p, 0.3, 0.7), w)
+        /* seven vanes of the aero cover */
         const sp = new Path()
-        for (let i = 0; i < 5; i++) {
-            const a = ang + (i / 5) * TAU
-            for (const d of [-0.1, 0.1]) {
+        for (let i = 0; i < 7; i++) {
+            const a = ang + (i / 7) * TAU
+            for (const d of [-0.08, 0.08]) {
                 sp.m(x + Math.cos(a + d * 3) * 11, y + Math.sin(a + d * 3) * 11)
-                sp.l(x + Math.cos(a + d) * 47, y + Math.sin(a + d) * 47)
+                sp.l(x + Math.cos(a + d) * 44, y + Math.sin(a + d) * 44)
             }
         }
         sp.circle(x, y, 11)
@@ -1554,7 +1556,7 @@
         c.strokeStyle = INK
         c.lineWidth = w
         c.beginPath()
-        c.arc(x, y, 30, 0, TAU)
+        c.arc(x, y, 28, 0, TAU)
         c.stroke()
         c.globalAlpha /= 0.3 * span(p, 0.6, 1) || 1
     }
@@ -1600,8 +1602,8 @@
             ink(c, CAR.body, span(t, 0, 0.42), w)
             ink(c, CAR.glass, span(t, 0.12, 0.52), w * 0.9, INK, 0.9)
             const ang = t * 16
-            drawWheel(c, 182, 282, ang, span(t, 0.3, 0.6), w)
-            drawWheel(c, 779, 282, ang, span(t, 0.34, 0.64), w)
+            drawWheel(c, 209, 287, ang, span(t, 0.3, 0.6), w)
+            drawWheel(c, 818, 287, ang, span(t, 0.34, 0.64), w)
             /* lamps */
             const lamp = span(t, 0.55, 0.7)
             if (lamp > 0) {
@@ -1613,14 +1615,14 @@
                     trace(c, CAR.lamps, 1)
                     c.fill()
                     c.globalAlpha = v
-                    glow(g, x0 + 950 * k, y0 + 174 * k, 120 * k, 'rgba(180, 220, 255, 0.9)', v * lit * 0.8)
-                    glow(g, x0 + 50 * k, y0 + 156 * k, 90 * k, 'rgba(255, 60, 60, 0.9)', v * lit * 0.7)
+                    glow(g, x0 + 960 * k, y0 + 203 * k, 120 * k, 'rgba(180, 220, 255, 0.9)', v * lit * 0.8)
+                    glow(g, x0 + 26 * k, y0 + 159 * k, 90 * k, 'rgba(255, 60, 60, 0.9)', v * lit * 0.7)
                     c.fillStyle = 'rgb(255, 70, 70)'
                     c.beginPath()
-                    c.moveTo(36, 150)
-                    c.lineTo(74, 142)
-                    c.lineTo(76, 162)
-                    c.lineTo(36, 166)
+                    c.moveTo(6, 158)
+                    c.lineTo(44, 150)
+                    c.lineTo(46, 162)
+                    c.lineTo(8, 168)
                     c.fill()
                 }
             }
@@ -1632,14 +1634,14 @@
                 c.setLineDash([])
                 const fs = Math.max(11 * F.px, 11) / k
                 const la = span(dp, 0.5, 1)
-                text(c, '4770 mm', 500, 424, fs, { align: 'center', col: INK_DIM, alpha: la })
-                text(c, '2845 mm wheelbase', 480, 364, fs * 0.9, { align: 'center', col: INK_DIM, alpha: la })
+                text(c, '4720 mm', 500, 424, fs, { align: 'center', col: INK_DIM, alpha: la })
+                text(c, '2875 mm wheelbase', 513, 364, fs * 0.9, { align: 'center', col: INK_DIM, alpha: la })
                 c.save()
-                c.translate(1050 + fs * 1.4, 177)
+                c.translate(1050 + fs * 1.4, 205)
                 c.rotate(-Math.PI / 2)
-                text(c, '1689 mm', 0, 0, fs, { align: 'center', col: INK_DIM, alpha: la })
+                text(c, '1441 mm', 0, 0, fs, { align: 'center', col: INK_DIM, alpha: la })
                 c.restore()
-                text(c, 'GEELY XINGYUE L · 1 : 1 · SIDE ELEVATION', 0, -36, fs * 0.85, {
+                text(c, 'TESLA MODEL 3 · 1 : 1 · SIDE ELEVATION', 0, 17, fs * 0.85, {
                     col: INK_DIM,
                     alpha: la,
                     weight: 600,
