@@ -32,6 +32,7 @@ const loading = stage.querySelector('.car-stage__loading')
 const viewList = stage.querySelector('[data-views]')
 const paintList = stage.querySelector('[data-paints]')
 const caption = stage.querySelector('[data-caption]')
+const fpsEl = stage.querySelector('[data-fps]')
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 const isSmall = window.matchMedia('(max-width: 734px)').matches
@@ -128,25 +129,31 @@ controls.update()
 /* lights                                                              */
 
 RectAreaLightUniformsLib.init()
+const areaLights = []
 const key = new THREE.RectAreaLight(0xffffff, 3.2, 4.2, 1.0)
 key.position.set(0.2, 3.9, 0.3)
 key.lookAt(0.2, 0, 0.3)
 scene.add(key)
+areaLights.push(key)
 // long thin strips either side: the highlight lines along the shoulder
 for (const sz of [1, -1]) {
     const strip = new THREE.RectAreaLight(0xffffff, 1.6, 6.5, 0.35)
     strip.position.set(0, 2.3, sz * 4.4)
     strip.lookAt(0, 0.9, 0)
     scene.add(strip)
+    areaLights.push(strip)
 }
 const rim = new THREE.RectAreaLight(0xd9e6ff, 2.0, 1.2, 3.2)
 rim.position.set(-4.6, 2.3, -3.6)
 rim.lookAt(0, 0.8, 0)
 scene.add(rim)
+areaLights.push(rim)
 const fill = new THREE.RectAreaLight(0xfff1e0, 1.2, 3, 2)
 fill.position.set(4.5, 1.6, 4.2)
 fill.lookAt(0, 0.8, 0)
 scene.add(fill)
+areaLights.push(fill)
+for (const l of areaLights) l.updateMatrixWorld()
 
 /* ------------------------------------------------------------------ */
 /* car                                                                 */
@@ -285,11 +292,50 @@ function bakeContactShadow() {
 /* ------------------------------------------------------------------ */
 /* floor: blurred planar reflection + contact shadow                   */
 
+/** Soft value noise for the floor's mottling, tiled in world space. */
+function noiseTexture() {
+    const c = document.createElement('canvas')
+    c.width = 256
+    c.height = 256
+    const ctx = c.getContext('2d')
+    ctx.fillStyle = '#808080'
+    ctx.fillRect(0, 0, 256, 256)
+    for (const [cells, amp] of [
+        [6, 0.5],
+        [16, 0.3],
+        [40, 0.2],
+    ]) {
+        const small = document.createElement('canvas')
+        small.width = cells
+        small.height = cells
+        const sc = small.getContext('2d')
+        const img = sc.createImageData(cells, cells)
+        for (let i = 0; i < cells * cells; i++) {
+            const v = Math.round(128 + (Math.random() - 0.5) * 255 * amp)
+            img.data[i * 4] = img.data[i * 4 + 1] = img.data[i * 4 + 2] = v
+            img.data[i * 4 + 3] = 255
+        }
+        sc.putImageData(img, 0, 0)
+        ctx.globalAlpha = amp
+        ctx.imageSmoothingEnabled = true
+        ctx.drawImage(small, 0, 0, 256, 256)
+    }
+    const tex = new THREE.CanvasTexture(c)
+    tex.wrapS = tex.wrapT = THREE.RepeatWrapping
+    tex.colorSpace = THREE.NoColorSpace
+    return tex
+}
+
+const NLIGHTS = areaLights.length
 const floorShader = {
     name: 'StudioFloor',
     uniforms: {
-        color: { value: new THREE.Color(0x0c0c0e) },
+        color: { value: new THREE.Color(0x0d0d10) },
         tDiffuse: { value: null },
+        tBlur1: { value: null },
+        tBlur2: { value: null },
+        tBlur3: { value: null },
+        tBlur4: { value: null },
         textureMatrix: { value: new THREE.Matrix4() },
         tShadow: { value: null },
         shadowRect: { value: new THREE.Vector4(0, 0, SHADOW_HALF.x, SHADOW_HALF.y) },
@@ -298,7 +344,16 @@ const floorShader = {
         camWorld: { value: new THREE.Matrix4() },
         projScale: { value: new THREE.Vector2(1, 1) },
         texel: { value: new THREE.Vector2(1 / 1024, 1 / 1024) },
-        strength: { value: 0.6 },
+        tEnv: { value: null },
+        envRot: { value: new THREE.Matrix3() },
+        envStrength: { value: 0.0 },
+        tNoise: { value: null },
+        strength: { value: 0.7 },
+        lightPos: { value: areaLights.map((l) => l.getWorldPosition(new THREE.Vector3())) },
+        lightRight: { value: areaLights.map((l) => new THREE.Vector3(l.width / 2, 0, 0).applyQuaternion(l.quaternion)) },
+        lightUp: { value: areaLights.map((l) => new THREE.Vector3(0, l.height / 2, 0).applyQuaternion(l.quaternion)) },
+        lightNormal: { value: areaLights.map((l) => new THREE.Vector3(0, 0, -1).applyQuaternion(l.quaternion)) },
+        lightColor: { value: areaLights.map((l) => l.color.clone().multiplyScalar(l.intensity * 0.22)) },
     },
     vertexShader: /* glsl */ `
         uniform mat4 textureMatrix;
@@ -313,25 +368,40 @@ const floorShader = {
             gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
             #include <logdepthbuf_vertex>
         }`,
-    fragmentShader: /* glsl */ `
+    // Reflector only copies uniforms and shaders, not defines, so the light
+    // count is spliced into the source
+    fragmentShader: `#define NLIGHTS ${NLIGHTS}\n` + /* glsl */ `
         uniform vec3 color;
         uniform sampler2D tDiffuse;
+        uniform sampler2D tBlur1;
+        uniform sampler2D tBlur2;
+        uniform sampler2D tBlur3;
+        uniform sampler2D tBlur4;
         uniform sampler2D tShadow;
         uniform sampler2D tDepth;
+        uniform sampler2D tEnv;
+        uniform sampler2D tNoise;
         uniform vec4 shadowRect;
         uniform mat4 invProj;
         uniform mat4 camWorld;
+        uniform mat3 envRot;
         uniform vec2 projScale;
         uniform vec2 texel;
         uniform float strength;
+        uniform float envStrength;
+        uniform vec3 lightPos[NLIGHTS];
+        uniform vec3 lightRight[NLIGHTS];
+        uniform vec3 lightUp[NLIGHTS];
+        uniform vec3 lightNormal[NLIGHTS];
+        uniform vec3 lightColor[NLIGHTS];
         varying vec4 vUv;
         varying vec3 vWorld;
         #include <common>
         #include <logdepthbuf_pars_fragment>
 
-        // Glossy floor: a surface h metres above the floor reflects with a
-        // blur about 0.35 h wide (sharp at the tyre contact, soft on the
-        // roof). Height and distance come from the reflection pass's depth.
+        // Height above the floor of the surface seen in the reflection at
+        // uv, and its distance from the (virtual) camera, from the depth
+        // the reflection pass wrote.
         vec2 probe(vec2 uv) {
             float z = texture2D(tDepth, uv).r;
             vec4 p = invProj * vec4(uv * 2.0 - 1.0, z * 2.0 - 1.0, 1.0);
@@ -339,34 +409,61 @@ const floorShader = {
             float h = (camWorld * p).y;
             return vec2(clamp(h, 0.0, 4.0), max(-p.z, 0.05));
         }
-        vec2 radiusFor(vec2 hd) {
-            return min(hd.x * 0.35, 1.5) * projScale / hd.y;
+
+        // The reflection, blurred by a radius in level-0 texels: pick from
+        // the pre-blurred pyramid so a wide blur costs nothing extra.
+        vec4 reflection(vec2 uv, float radiusPx) {
+            float L = clamp(log2(max(radiusPx, 1.0)) - 0.5, 0.0, 4.0);
+            float f = fract(L);
+            int i = int(floor(L));
+            vec4 a;
+            vec4 b;
+            if (i == 0) { a = texture2D(tDiffuse, uv); b = texture2D(tBlur1, uv); }
+            else if (i == 1) { a = texture2D(tBlur1, uv); b = texture2D(tBlur2, uv); }
+            else if (i == 2) { a = texture2D(tBlur2, uv); b = texture2D(tBlur3, uv); }
+            else { a = texture2D(tBlur3, uv); b = texture2D(tBlur4, uv); }
+            return mix(a, b, f);
         }
 
         void main() {
             #include <logdepthbuf_fragment>
             vec3 V = normalize(cameraPosition - vWorld);
-            float grazing = pow(1.0 - clamp(V.y, 0.0, 1.0), 2.2);
+            vec3 N = vec3(0.0, 1.0, 0.0);
+            float NdV = clamp(V.y, 0.0, 1.0);
             float d = length(vWorld.xz);
 
+            // floor material: dark epoxy with faint mottling in tone and gloss
+            vec2 nuv = vWorld.xz * 0.16;
+            float n1 = texture2D(tNoise, nuv).r;
+            float n2 = texture2D(tNoise, nuv * 2.9 + vec2(0.37, 0.11)).r;
+            float tone = 0.86 + 0.28 * n1;
+            float gloss = 0.82 + 0.36 * n2;
+            float spec = (0.08 + 0.72 * pow(1.0 - NdV, 3.0)) * strength * gloss;
+
+            // the car in the floor: sharp where it touches, soft higher up
             vec2 uv = vUv.xy / vUv.w;
-            vec2 r = max(radiusFor(probe(uv)), texel);
-            vec3 refl = vec3(0.0);
-            float wsum = 0.0;
-            for (int j = -4; j <= 4; j++) {
-                for (int i = -1; i <= 1; i++) {
-                    vec2 o = vec2(float(i) * 0.5, float(j) / 4.0);
-                    vec2 ouv = uv + o * r;
-                    float w = exp(-dot(o, o) * 2.0);
-                    // a sharper surface must not scatter into this pixel
-                    vec2 rt = radiusFor(probe(ouv)) + texel;
-                    w *= step(abs(o.x * r.x), rt.x) * step(abs(o.y * r.y), rt.y);
-                    refl += texture2D(tDiffuse, ouv).rgb * w;
-                    wsum += w;
+            vec2 hd = probe(uv);
+            float rPx = min(hd.x * 0.35, 1.5) * projScale.y / hd.y / texel.y;
+            vec4 car = reflection(uv, rPx);
+
+            // the studio around it: the HDRI's softboxes, and the area lights
+            // as soft rectangles, hidden where the car is
+            vec3 R = reflect(-V, N);
+            vec3 studio = texture2D(tEnv, equirectUv(envRot * R)).rgb * envStrength;
+            for (int i = 0; i < NLIGHTS; i++) {
+                float denom = dot(R, lightNormal[i]);
+                if (denom < -1e-4) {
+                    float t = dot(lightPos[i] - vWorld, lightNormal[i]) / denom;
+                    if (t > 0.0) {
+                        vec3 p = vWorld + R * t - lightPos[i];
+                        vec2 q = vec2(dot(p, lightRight[i]) / dot(lightRight[i], lightRight[i]), dot(p, lightUp[i]) / dot(lightUp[i], lightUp[i]));
+                        float soft = 0.25 + 0.09 * t;
+                        float m = (1.0 - smoothstep(1.0 - soft, 1.0 + soft, abs(q.x))) * (1.0 - smoothstep(1.0 - soft, 1.0 + soft, abs(q.y)));
+                        studio += lightColor[i] * m / (1.0 + 0.03 * t * t);
+                    }
                 }
             }
-            refl /= max(wsum, 1e-4);
-            float reflAmt = mix(0.3, 1.0, grazing) * strength;
+            studio *= 1.0 - car.a;
 
             vec2 suv = (vWorld.xz - shadowRect.xy) / (2.0 * shadowRect.zw) + 0.5;
             float sh = 0.0;
@@ -376,8 +473,8 @@ const floorShader = {
             sh = smoothstep(0.0, 0.9, sh);
 
             float pool = exp(-d * d * 0.05);
-            vec3 base = color * (0.3 + 0.7 * pool);
-            vec3 col = base * (1.0 - sh * 0.93) + refl * reflAmt * (1.0 - sh * 0.55);
+            vec3 base = color * tone * (0.35 + 0.65 * pool);
+            vec3 col = base * (1.0 - sh * 0.93) + (car.rgb + studio) * spec * (1.0 - sh * 0.6);
             col *= 1.0 - smoothstep(5.5, 12.5, d);
             gl_FragColor = vec4(col, 1.0);
             #include <tonemapping_fragment>
@@ -396,19 +493,78 @@ const floor = new Reflector(new THREE.PlaneGeometry(floorSize, floorSize), {
 })
 floor.rotation.x = -Math.PI / 2
 floor.position.y = 0
+// Blur pyramid of the reflection: four halvings, each a separable 9-tap
+// gaussian, so the floor can pick any softness without ghosting.
+const blurLevels = []
+const blurTemps = []
+const blurQuad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2))
+const blurScene = new THREE.Scene()
+blurScene.add(blurQuad)
+const blurCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1)
+const blurH = new THREE.ShaderMaterial({
+    uniforms: THREE.UniformsUtils.clone(HorizontalBlurShader.uniforms),
+    vertexShader: HorizontalBlurShader.vertexShader,
+    fragmentShader: HorizontalBlurShader.fragmentShader,
+    depthTest: false,
+    depthWrite: false,
+})
+const blurV = new THREE.ShaderMaterial({
+    uniforms: THREE.UniformsUtils.clone(VerticalBlurShader.uniforms),
+    vertexShader: VerticalBlurShader.vertexShader,
+    fragmentShader: VerticalBlurShader.fragmentShader,
+    depthTest: false,
+    depthWrite: false,
+})
+for (let i = 0; i < 4; i++) {
+    const opts = { type: THREE.HalfFloatType, depthBuffer: false, minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter }
+    blurLevels.push(new THREE.WebGLRenderTarget(1, 1, opts))
+    blurTemps.push(new THREE.WebGLRenderTarget(1, 1, opts))
+}
+function blurPyramid() {
+    const prevRT = renderer.getRenderTarget()
+    let src = floor.getRenderTarget().texture
+    for (let i = 0; i < 4; i++) {
+        blurQuad.material = blurH
+        blurH.uniforms.tDiffuse.value = src
+        blurH.uniforms.h.value = 1 / blurLevels[i].width
+        renderer.setRenderTarget(blurTemps[i])
+        renderer.render(blurScene, blurCam)
+        blurQuad.material = blurV
+        blurV.uniforms.tDiffuse.value = blurTemps[i].texture
+        blurV.uniforms.v.value = 1 / blurLevels[i].height
+        renderer.setRenderTarget(blurLevels[i])
+        renderer.render(blurScene, blurCam)
+        src = blurLevels[i].texture
+    }
+    renderer.setRenderTarget(prevRT)
+}
+
 {
     const rt = floor.getRenderTarget()
     rt.texture.generateMipmaps = false
     rt.texture.minFilter = THREE.LinearFilter
     rt.texture.magFilter = THREE.LinearFilter
     rt.depthTexture = new THREE.DepthTexture(rt.width, rt.height)
-    floor.material.uniforms.tDepth.value = rt.depthTexture
-    // after the reflection pass, hand the floor the virtual camera so the
-    // shader can turn depth back into height above the floor
+    const u = floor.material.uniforms
+    u.tDepth.value = rt.depthTexture
+    u.tNoise.value = noiseTexture()
+    blurLevels.forEach((l, i) => (u['tBlur' + (i + 1)].value = l.texture))
+    const clearColor = new THREE.Color()
     const reflect = floor.onBeforeRender
     floor.onBeforeRender = function (r, sc, cam, ...rest) {
+        // render the reflection over a transparent clear so its alpha says
+        // where the car is; the studio shows through everywhere else
+        const bg = sc.background
+        const alpha = r.getClearAlpha()
+        r.getClearColor(clearColor)
+        sc.background = null
+        r.setClearColor(0x000000, 0)
         reflect.call(this, r, sc, cam, ...rest)
-        const u = floor.material.uniforms
+        r.setClearColor(clearColor, alpha)
+        sc.background = bg
+        blurPyramid()
+        // hand the floor the virtual camera so the shader can turn depth
+        // back into height above the floor
         const vc = floor.camera
         u.invProj.value.copy(vc.projectionMatrix).invert()
         u.camWorld.value.copy(vc.matrixWorld)
@@ -463,6 +619,77 @@ function compressHighlights(tex, knee = 3, range = 4.5) {
     tex.needsUpdate = true
 }
 
+/** A small, heavily blurred copy of the HDRI for the floor's glossy reflection. */
+function blurredEquirect(tex, W = 128, H = 64) {
+    const { width, height, data } = tex.image
+    const bx = width / W
+    const by = height / H
+    const box = new Float32Array(W * H * 3)
+    for (let y = 0; y < H; y++) {
+        for (let x = 0; x < W; x++) {
+            let r = 0
+            let g = 0
+            let b = 0
+            let n = 0
+            for (let yy = Math.floor(y * by); yy < Math.floor((y + 1) * by); yy++) {
+                for (let xx = Math.floor(x * bx); xx < Math.floor((x + 1) * bx); xx++) {
+                    const i = (yy * width + xx) * 4
+                    r += data[i]
+                    g += data[i + 1]
+                    b += data[i + 2]
+                    n++
+                }
+            }
+            const o = (y * W + x) * 3
+            box[o] = r / n
+            box[o + 1] = g / n
+            box[o + 2] = b / n
+        }
+    }
+    // two box blurs, wrapping horizontally
+    const R = 3
+    let src = box
+    for (let pass = 0; pass < 2; pass++) {
+        const tmp = new Float32Array(W * H * 3)
+        for (let y = 0; y < H; y++) {
+            for (let x = 0; x < W; x++) {
+                for (let c = 0; c < 3; c++) {
+                    let acc = 0
+                    for (let k = -R; k <= R; k++) acc += src[(y * W + ((x + k + W) % W)) * 3 + c]
+                    tmp[(y * W + x) * 3 + c] = acc / (2 * R + 1)
+                }
+            }
+        }
+        const out = new Float32Array(W * H * 3)
+        for (let y = 0; y < H; y++) {
+            for (let x = 0; x < W; x++) {
+                for (let c = 0; c < 3; c++) {
+                    let acc = 0
+                    for (let k = -R; k <= R; k++) acc += tmp[(Math.min(H - 1, Math.max(0, y + k)) * W + x) * 3 + c]
+                    out[(y * W + x) * 3 + c] = acc / (2 * R + 1)
+                }
+            }
+        }
+        src = out
+    }
+    const half = new Uint16Array(W * H * 4)
+    for (let i = 0; i < W * H; i++) {
+        half[i * 4] = THREE.DataUtils.toHalfFloat(src[i * 3])
+        half[i * 4 + 1] = THREE.DataUtils.toHalfFloat(src[i * 3 + 1])
+        half[i * 4 + 2] = THREE.DataUtils.toHalfFloat(src[i * 3 + 2])
+        half[i * 4 + 3] = THREE.DataUtils.toHalfFloat(1)
+    }
+    const out = new THREE.DataTexture(half, W, H, THREE.RGBAFormat, THREE.HalfFloatType)
+    out.flipY = tex.flipY
+    out.wrapS = THREE.RepeatWrapping
+    out.wrapT = THREE.ClampToEdgeWrapping
+    out.minFilter = THREE.LinearFilter
+    out.magFilter = THREE.LinearFilter
+    out.colorSpace = tex.colorSpace
+    out.needsUpdate = true
+    return out
+}
+
 new RGBELoader().setDataType(THREE.FloatType).load(
     '/assets/hdr/studio.hdr',
     (tex) => {
@@ -471,6 +698,10 @@ new RGBELoader().setDataType(THREE.FloatType).load(
         scene.environment = tex
         scene.environmentIntensity = 1.0
         scene.environmentRotation = new THREE.Euler(0, Math.PI * 0.42, 0)
+        const u = floor.material.uniforms
+        u.tEnv.value = blurredEquirect(tex)
+        u.envRot.value.setFromMatrix4(new THREE.Matrix4().makeRotationFromEuler(scene.environmentRotation))
+        u.envStrength.value = 0.45
         envReady = true
         ready()
     },
@@ -521,6 +752,12 @@ function resize() {
     const rh = Math.min(1280, Math.round(h * DPR * q.refl))
     floor.getRenderTarget().setSize(rw, rh)
     floor.material.uniforms.texel.value.set(1 / rw, 1 / rh)
+    for (let i = 0; i < 4; i++) {
+        const lw = Math.max(1, rw >> (i + 1))
+        const lh = Math.max(1, rh >> (i + 1))
+        blurLevels[i].setSize(lw, lh)
+        blurTemps[i].setSize(lw, lh)
+    }
     if (currentView && !move && typeof flyTo === 'function') flyTo(currentView, true)
     invalidate()
 }
@@ -699,11 +936,14 @@ let lastFrame = 0
 let lastRender = 0
 let sampled = 0
 let slow = 0
+let fpsCount = 0
+let fpsT0 = 0
 function frame(now) {
     if (!visible || document.hidden) return
     requestAnimationFrame(frame)
-    // cap to ~60 fps on high-refresh displays; the reflection pass is not free
-    if (now - lastFrame < 15) return
+    // let the display pace us (120 Hz where the browser allows it); the
+    // small gate only folds duplicate callbacks
+    if (now - lastFrame < 4) return
     lastFrame = now
     let moved
     if (move) {
@@ -712,10 +952,22 @@ function frame(now) {
     } else moved = controls.update()
     if (!moved && dirty <= 0) {
         lastRender = 0
+        if (fpsEl && fpsT0 && now - fpsT0 > 1000) {
+            fpsEl.textContent = 'idle'
+            fpsT0 = 0
+            fpsCount = 0
+        }
         return
     }
     if (!moved) dirty--
     composer.render()
+    fpsCount++
+    if (!fpsT0) fpsT0 = now
+    else if (now - fpsT0 >= 500) {
+        if (fpsEl) fpsEl.textContent = `${Math.round((fpsCount * 1000) / (now - fpsT0))} fps · ${DPR}×`
+        fpsCount = 0
+        fpsT0 = now
+    }
     // while frames are flowing, watch the pace; drop a quality level if
     // more than half of a 90-frame window came in under 30 fps
     if (lastRender && isReady) {
