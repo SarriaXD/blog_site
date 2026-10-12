@@ -484,9 +484,12 @@ export function createMaterials() {
     const paint = new THREE.MeshPhysicalMaterial({
         color: 0x55585c,
         metalness: 0.75,
-        roughness: 0.34,
+        roughness: 0.4,
         clearcoat: 1,
-        clearcoatRoughness: 0.04,
+        // not a mirror: the glTF body is 26k triangles, and a point light's
+        // highlight on a near-mirror clearcoat lights one quad at a time,
+        // reading as a square sliding over the hood
+        clearcoatRoughness: 0.12,
         envMapIntensity: 1.1,
     })
     const glass = new THREE.MeshPhysicalMaterial({
@@ -1111,6 +1114,6 @@ export function applyPaint(materials, paint) {
     const m = materials.paint
     m.color.setHex(paint.hex)
     m.metalness = paint.metallic ? 0.75 : 0.05
-    m.roughness = paint.metallic ? 0.34 : 0.45
+    m.roughness = paint.metallic ? 0.4 : 0.45
     m.needsUpdate = true
 }

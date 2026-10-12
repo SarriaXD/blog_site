@@ -23,7 +23,6 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js'
 import { SMAAPass } from 'three/addons/postprocessing/SMAAPass.js'
 import { HorizontalBlurShader } from 'three/addons/shaders/HorizontalBlurShader.js'
 import { VerticalBlurShader } from 'three/addons/shaders/VerticalBlurShader.js'
-import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js'
 import { buildCar, createMaterials, applyPaint, PAINTS, DIMS } from './model-3.js'
 
 const stage = document.getElementById('stage')
@@ -130,33 +129,41 @@ controls.update()
 /* ------------------------------------------------------------------ */
 /* lights                                                              */
 
-RectAreaLightUniformsLib.init()
-const areaLights = []
 // the key is a spot high overhead: a small source, so paint takes a tight
 // highlight rather than mirroring a softbox, and a round pool on the floor
 const key = new THREE.SpotLight(0xfff4e4, 150, 0, 0.4, 0.35, 2)
 key.position.set(0.2, 9, 0.3)
 key.target.position.set(0.2, 0, 0.3)
 scene.add(key, key.target)
-// long thin strips either side: the highlight lines along the shoulder
-for (const sz of [1, -1]) {
-    const strip = new THREE.RectAreaLight(0xffffff, 2.4, 6.5, 0.35)
-    strip.position.set(0, 2.3, sz * 4.4)
-    strip.lookAt(0, 0.9, 0)
-    scene.add(strip)
-    areaLights.push(strip)
+
+// The softboxes: long strips either side for the highlight lines along the
+// shoulder, a cool rim behind, a warm fill in front. They are not scene
+// lights. A RectAreaLight is a hard-edged rectangle, and from the angles a
+// view change passes through the hood mirrors it as a bright square; so
+// they are painted into the environment map instead (paintLights below),
+// as soft-edged ellipses that the paint's roughness then filters like any
+// other part of the studio. The floor draws the same list analytically.
+const ENV_ROTATION = new THREE.Euler(0, Math.PI * 0.42, 0)
+function softbox(color, intensity, width, height, position, target) {
+    const pos = new THREE.Vector3(...position)
+    const away = pos.clone().sub(new THREE.Vector3(...target)).normalize() // the RectAreaLight frame: +z away from the target
+    const right = new THREE.Vector3(0, 1, 0).cross(away).normalize()
+    const up = away.clone().cross(right)
+    return {
+        color: new THREE.Color(color),
+        intensity,
+        position: pos,
+        right: right.multiplyScalar(width / 2),
+        up: up.multiplyScalar(height / 2),
+        normal: away.clone().negate(),
+    }
 }
-const rim = new THREE.RectAreaLight(0xd9e6ff, 2.4, 1.2, 3.2)
-rim.position.set(-4.6, 2.3, -3.6)
-rim.lookAt(0, 0.8, 0)
-scene.add(rim)
-areaLights.push(rim)
-const fill = new THREE.RectAreaLight(0xfff1e0, 2.6, 4.5, 1.2) // a strip too: a square panel mirrors as a square on the paint
-fill.position.set(4.5, 1.6, 4.2)
-fill.lookAt(0, 0.8, 0)
-scene.add(fill)
-areaLights.push(fill)
-for (const l of areaLights) l.updateMatrixWorld()
+const areaLights = [
+    softbox(0xffffff, 3.2, 6.5, 0.35, [0, 2.3, 4.4], [0, 0.9, 0]),
+    softbox(0xffffff, 3.2, 6.5, 0.35, [0, 2.3, -4.4], [0, 0.9, 0]),
+    softbox(0xd9e6ff, 3.2, 1.2, 3.2, [-4.6, 2.3, -3.6], [0, 0.8, 0]),
+    softbox(0xfff1e0, 3.4, 4.5, 1.2, [4.5, 1.6, 4.2], [0, 0.8, 0]),
+]
 
 /* ------------------------------------------------------------------ */
 /* the key light, visible: a spot's cone with dust drifting through it   */
@@ -476,11 +483,11 @@ const floorShader = {
         envStrength: { value: 0.0 },
         tNoise: { value: null },
         strength: { value: 0.85 },
-        lightPos: { value: areaLights.map((l) => l.getWorldPosition(new THREE.Vector3())) },
-        lightRight: { value: areaLights.map((l) => new THREE.Vector3(l.width / 2, 0, 0).applyQuaternion(l.quaternion)) },
-        lightUp: { value: areaLights.map((l) => new THREE.Vector3(0, l.height / 2, 0).applyQuaternion(l.quaternion)) },
-        lightNormal: { value: areaLights.map((l) => new THREE.Vector3(0, 0, -1).applyQuaternion(l.quaternion)) },
-        lightColor: { value: areaLights.map((l) => l.color.clone().multiplyScalar(l.intensity * 0.16)) },
+        lightPos: { value: areaLights.map((l) => l.position) },
+        lightRight: { value: areaLights.map((l) => l.right) },
+        lightUp: { value: areaLights.map((l) => l.up) },
+        lightNormal: { value: areaLights.map((l) => l.normal) },
+        lightColor: { value: areaLights.map((l) => l.color.clone().multiplyScalar(l.intensity * 0.12)) },
     },
     vertexShader: /* glsl */ `
         uniform mat4 textureMatrix;
@@ -755,15 +762,62 @@ composer.addPass(smaa)
 // reads pale from the side and the floor glows. Pull the room down to the
 // black of a car studio and keep only the lights: paint and a polished
 // floor are meant to show the softboxes as shapes on dark.
-function darkenRoom(tex, floor = 0.1, lo = 1.6, hi = 4.5) {
-    const d = tex.image.data
+// The ceiling goes too, lamps included: two small lamps sit at the zenith,
+// where an equirect has almost no resolution, and the roughness-filtered
+// environment turns them into a soft square that the hood mirrors from
+// any high angle. The spot is the only light overhead.
+function darkenRoom(tex, floor = 0.1, lo = 1.6, hi = 4.5, ceiling = 0.82) {
+    const { width: W, height: H, data: d } = tex.image
     for (let i = 0; i < d.length; i += 4) {
+        const y = (i >> 2) / W
+        const v = tex.flipY ? 1 - (y + 0.5) / H : (y + 0.5) / H
         const lum = 0.2126 * d[i] + 0.7152 * d[i + 1] + 0.0722 * d[i + 2]
-        const t = Math.min(1, Math.max(0, (lum - lo) / (hi - lo)))
+        const t = v > ceiling ? 0 : Math.min(1, Math.max(0, (lum - lo) / (hi - lo)))
         const k = floor + (1 - floor) * t * t * (3 - 2 * t)
         d[i] *= k
         d[i + 1] *= k
         d[i + 2] *= k
+    }
+}
+
+// Paint the softboxes into the equirect, seen from the middle of the car:
+// each is an ellipse with a soft edge, in radiance, at the direction its
+// panel is seen in. three.js samples the environment through the scene's
+// rotation, so the direction is rotated into the texture's frame first.
+function paintLights(tex, lights, rotation) {
+    const { width: W, height: H, data } = tex.image
+    const unrot = new THREE.Matrix3().setFromMatrix4(new THREE.Matrix4().makeRotationFromEuler(rotation)).transpose()
+    const eye = new THREE.Vector3(0, 0.8, 0)
+    const T = new THREE.Vector3()
+    const D = new THREE.Vector3()
+    const P = new THREE.Vector3()
+    const list = lights.map((l) => ({ ...l, toEye: l.position.clone().sub(eye), rr: l.right.lengthSq(), uu: l.up.lengthSq() }))
+    for (let y = 0; y < H; y++) {
+        const v = tex.flipY ? 1 - (y + 0.5) / H : (y + 0.5) / H
+        const lat = (v - 0.5) * Math.PI
+        for (let x = 0; x < W; x++) {
+            const lon = ((x + 0.5) / W - 0.5) * Math.PI * 2
+            // the inverse of three's equirectUv: u from atan2(z, x), v from asin(y)
+            T.set(Math.cos(lat) * Math.cos(lon), Math.sin(lat), Math.cos(lat) * Math.sin(lon))
+            D.copy(T).applyMatrix3(unrot)
+            const o = (y * W + x) * 4
+            for (const l of list) {
+                const denom = D.dot(l.normal)
+                if (denom >= -1e-4) continue
+                const t = l.toEye.dot(l.normal) / denom
+                if (t <= 0) continue
+                P.copy(D).multiplyScalar(t).sub(l.toEye)
+                const qx = P.dot(l.right) / l.rr
+                const qy = P.dot(l.up) / l.uu
+                const r = Math.sqrt(qx * qx + qy * qy)
+                if (r >= 1) continue
+                const e = Math.min(1, (1 - r) / 0.3)
+                const m = e * e * (3 - 2 * e) * l.intensity
+                data[o] += l.color.r * m
+                data[o + 1] += l.color.g * m
+                data[o + 2] += l.color.b * m
+            }
+        }
     }
 }
 
@@ -855,15 +909,16 @@ new RGBELoader().setDataType(THREE.FloatType).load(
     '/assets/hdr/studio.hdr',
     (tex) => {
         darkenRoom(tex)
+        paintLights(tex, areaLights, ENV_ROTATION)
         compressHighlights(tex)
         tex.mapping = THREE.EquirectangularReflectionMapping
         scene.environment = tex
         scene.environmentIntensity = 1.0
-        scene.environmentRotation = new THREE.Euler(0, Math.PI * 0.42, 0)
+        scene.environmentRotation = ENV_ROTATION
         const u = floor.material.uniforms
         u.tEnv.value = blurredEquirect(tex)
         u.envRot.value.setFromMatrix4(new THREE.Matrix4().makeRotationFromEuler(scene.environmentRotation))
-        u.envStrength.value = 0.3
+        u.envStrength.value = 0.15
         envReady = true
         ready()
     },
