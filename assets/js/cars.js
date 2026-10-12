@@ -151,7 +151,7 @@ rim.position.set(-4.6, 2.3, -3.6)
 rim.lookAt(0, 0.8, 0)
 scene.add(rim)
 areaLights.push(rim)
-const fill = new THREE.RectAreaLight(0xfff1e0, 2.6, 3, 2)
+const fill = new THREE.RectAreaLight(0xfff1e0, 2.6, 4.5, 1.2) // a strip too: a square panel mirrors as a square on the paint
 fill.position.set(4.5, 1.6, 4.2)
 fill.lookAt(0, 0.8, 0)
 scene.add(fill)
@@ -480,7 +480,7 @@ const floorShader = {
         lightRight: { value: areaLights.map((l) => new THREE.Vector3(l.width / 2, 0, 0).applyQuaternion(l.quaternion)) },
         lightUp: { value: areaLights.map((l) => new THREE.Vector3(0, l.height / 2, 0).applyQuaternion(l.quaternion)) },
         lightNormal: { value: areaLights.map((l) => new THREE.Vector3(0, 0, -1).applyQuaternion(l.quaternion)) },
-        lightColor: { value: areaLights.map((l) => l.color.clone().multiplyScalar(l.intensity * 0.18)) },
+        lightColor: { value: areaLights.map((l) => l.color.clone().multiplyScalar(l.intensity * 0.16)) },
     },
     vertexShader: /* glsl */ `
         uniform mat4 textureMatrix;
@@ -587,8 +587,11 @@ const floorShader = {
                     if (t > 0.0) {
                         vec3 p = vWorld + R * t - lightPos[i];
                         vec2 q = vec2(dot(p, lightRight[i]) / dot(lightRight[i], lightRight[i]), dot(p, lightUp[i]) / dot(lightUp[i], lightUp[i]));
-                        float soft = 0.25 + 0.09 * t;
-                        float m = (1.0 - smoothstep(1.0 - soft, 1.0 + soft, abs(q.x))) * (1.0 - smoothstep(1.0 - soft, 1.0 + soft, abs(q.y)));
+                        // an elliptical bloom, not the panel's rectangle: a glossy
+                        // floor smears a light into a streak with no corners, and
+                        // the smear widens with the distance the reflected ray travels
+                        float soft = 0.6 + 0.12 * t;
+                        float m = (1.0 - smoothstep(1.0 - soft, 1.0 + soft, length(q))) / (1.0 + soft);
                         studio += lightColor[i] * m / (1.0 + 0.03 * t * t);
                     }
                 }
