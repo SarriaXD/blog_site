@@ -1103,7 +1103,7 @@ function flyTo(view, instant = false) {
     const toPos = new THREE.Vector3(...view.pos)
     const toTarget = new THREE.Vector3(...view.target)
     const to = new THREE.Spherical().setFromVector3(toPos.clone().sub(toTarget))
-    to.radius *= distanceScale()
+    if (!view.exact) to.radius *= distanceScale()
     // shortest way round
     let dTheta = to.theta - from.theta
     while (dTheta > Math.PI) dTheta -= Math.PI * 2
@@ -1158,7 +1158,7 @@ let idleTimer = 0
 function armIdle() {
     clearTimeout(idleTimer)
     controls.autoRotate = false
-    if (reduceMotion) return
+    if (reduceMotion || holdIdle) return
     idleTimer = setTimeout(() => {
         controls.autoRotate = true
     }, 5000)
@@ -1166,9 +1166,33 @@ function armIdle() {
 controls.addEventListener('start', () => {
     clearTimeout(idleTimer)
     controls.autoRotate = false
+    holdIdle = false
     currentView = null
     setActiveView(null)
 })
+
+/* ------------------------------------------------------------------ */
+/* a view as a link: #cam=x,y,z,tx,ty,tz,fov                           */
+
+// Written into the address bar once the camera comes to rest after a drag
+// or pinch, read at load, so a view can be sent as a link and reproduced
+// exactly (no stage scaling, no auto-rotate until the next touch).
+// Presets write nothing: they are reproducible by name.
+function readCamHash() {
+    const m = /[#&]cam=([^&]+)/.exec(location.hash)
+    if (!m) return null
+    const v = m[1].split(',').map(Number)
+    if (v.length !== 7 || v.some((x) => !Number.isFinite(x))) return null
+    return { id: 'cam', pos: v.slice(0, 3), target: v.slice(3, 6), fov: v[6], exact: true }
+}
+function writeCamHash() {
+    const p = camera.position
+    const t = controls.target
+    const f = (x) => x.toFixed(3)
+    history.replaceState(null, '', `#cam=${[p.x, p.y, p.z, t.x, t.y, t.z, camera.fov].map(f).join(',')}`)
+}
+const camFromHash = readCamHash()
+let holdIdle = !!camFromHash
 controls.addEventListener('end', armIdle)
 
 /* ------------------------------------------------------------------ */
@@ -1199,7 +1223,7 @@ for (const v of VIEWS) {
     })
     viewList.appendChild(b)
 }
-setActiveView(VIEWS[0].id)
+setActiveView(camFromHash ? null : VIEWS[0].id)
 
 PAINTS.forEach((p, i) => {
     const b = document.createElement('button')
@@ -1246,7 +1270,7 @@ document.addEventListener('visibilitychange', () => {
 })
 
 resize()
-flyTo(VIEWS[0], true)
+flyTo(camFromHash || VIEWS[0], true)
 
 let lastFrame = 0
 let lastRender = 0
@@ -1267,6 +1291,7 @@ function frame(now) {
         moved = true
     } else moved = controls.update()
     if (!moved && dirty <= 0) {
+        if (lastRender && !currentView) writeCamHash()
         lastRender = 0
         if (fpsEl && fpsT0 && now - fpsT0 > 1000) {
             fpsEl.textContent = 'idle'
