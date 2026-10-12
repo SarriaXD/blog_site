@@ -156,6 +156,119 @@ areaLights.push(fill)
 for (const l of areaLights) l.updateMatrixWorld()
 
 /* ------------------------------------------------------------------ */
+/* the key light, visible: a soft beam from the softbox with dust in it */
+
+const studio = new THREE.Group()
+studio.name = 'studio'
+const beam = new THREE.Mesh(
+    new THREE.CylinderGeometry(1, 1, 1, 48, 1, true),
+    new THREE.ShaderMaterial({
+        uniforms: { color: { value: new THREE.Color(0xfff4e4) }, strength: { value: 0.06 } },
+        vertexShader: /* glsl */ `
+            varying float vY;
+            varying vec3 vN;
+            varying vec3 vV;
+            void main() {
+                vY = position.y + 0.5;
+                vN = normalize(normalMatrix * normal);
+                vec4 mv = modelViewMatrix * vec4(position, 1.0);
+                vV = normalize(-mv.xyz);
+                gl_Position = projectionMatrix * mv;
+            }`,
+        fragmentShader: /* glsl */ `
+            uniform vec3 color;
+            uniform float strength;
+            varying float vY;
+            varying vec3 vN;
+            varying vec3 vV;
+            void main() {
+                // soft at the silhouette, brightest facing us; brighter near the source
+                float edge = pow(abs(dot(normalize(vN), normalize(vV))), 1.6);
+                float fall = mix(0.08, 1.0, vY * vY);
+                gl_FragColor = vec4(color * strength * edge * fall, 1.0);
+            }`,
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+        side: THREE.DoubleSide,
+    })
+)
+// from the 4.2 × 1 m softbox at 3.9 m down to a wider pool on the floor
+beam.scale.set(2.6, key.position.y, 1.4)
+beam.position.set(key.position.x, key.position.y / 2, key.position.z)
+{
+    // taper: top matches the softbox, bottom spreads
+    const pos = beam.geometry.attributes.position
+    for (let i = 0; i < pos.count; i++) {
+        const t = pos.getY(i) + 0.5 // 1 at the top
+        const k = THREE.MathUtils.lerp(1.0, 0.72, t)
+        pos.setX(i, pos.getX(i) * k)
+        pos.setZ(i, pos.getZ(i) * k)
+    }
+    pos.needsUpdate = true
+    beam.geometry.computeVertexNormals()
+}
+studio.add(beam)
+
+function dustSprite() {
+    const c = document.createElement('canvas')
+    c.width = c.height = 64
+    const ctx = c.getContext('2d')
+    const g = ctx.createRadialGradient(32, 32, 0, 32, 32, 32)
+    g.addColorStop(0, 'rgba(255,255,255,1)')
+    g.addColorStop(0.35, 'rgba(255,255,255,0.5)')
+    g.addColorStop(1, 'rgba(255,255,255,0)')
+    ctx.fillStyle = g
+    ctx.fillRect(0, 0, 64, 64)
+    const tex = new THREE.CanvasTexture(c)
+    tex.colorSpace = THREE.SRGBColorSpace
+    return tex
+}
+const DUST = 360
+const dustPos = new Float32Array(DUST * 3)
+const dustSeed = new Float32Array(DUST * 2)
+for (let i = 0; i < DUST; i++) {
+    const a = Math.random() * Math.PI * 2
+    const r = Math.sqrt(Math.random())
+    const y = Math.random()
+    const k = THREE.MathUtils.lerp(1.0, 0.72, y)
+    dustPos[i * 3] = key.position.x + Math.cos(a) * r * 2.6 * k
+    dustPos[i * 3 + 1] = y * key.position.y
+    dustPos[i * 3 + 2] = key.position.z + Math.sin(a) * r * 1.4 * k
+    dustSeed[i * 2] = Math.random() * Math.PI * 2
+    dustSeed[i * 2 + 1] = 0.6 + Math.random() * 0.8
+}
+const dust = new THREE.Points(
+    new THREE.BufferGeometry().setAttribute('position', new THREE.BufferAttribute(dustPos, 3)),
+    new THREE.PointsMaterial({
+        map: dustSprite(),
+        color: 0xfff1d6,
+        size: 0.028,
+        sizeAttenuation: true,
+        transparent: true,
+        opacity: 0.55,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+    })
+)
+studio.add(dust)
+scene.add(studio)
+
+/** Drift the motes down through the beam, swaying a little. */
+function stepDust(dt, now) {
+    const pos = dust.geometry.attributes.position
+    const top = key.position.y
+    for (let i = 0; i < DUST; i++) {
+        let y = pos.getY(i) - dt * 0.07 * dustSeed[i * 2 + 1]
+        if (y < 0.02) y += top
+        pos.setY(i, y)
+        const sway = Math.sin(now * 0.0004 * dustSeed[i * 2 + 1] + dustSeed[i * 2]) * dt * 0.02
+        pos.setX(i, pos.getX(i) + sway)
+    }
+    pos.needsUpdate = true
+}
+
+/* ------------------------------------------------------------------ */
 /* car                                                                 */
 
 let car = null
@@ -330,7 +443,7 @@ const NLIGHTS = areaLights.length
 const floorShader = {
     name: 'StudioFloor',
     uniforms: {
-        color: { value: new THREE.Color(0x0d0d10) },
+        color: { value: new THREE.Color(0x0a0a0c) },
         tDiffuse: { value: null },
         tBlur1: { value: null },
         tBlur2: { value: null },
@@ -348,12 +461,12 @@ const floorShader = {
         envRot: { value: new THREE.Matrix3() },
         envStrength: { value: 0.0 },
         tNoise: { value: null },
-        strength: { value: 0.7 },
+        strength: { value: 0.85 },
         lightPos: { value: areaLights.map((l) => l.getWorldPosition(new THREE.Vector3())) },
         lightRight: { value: areaLights.map((l) => new THREE.Vector3(l.width / 2, 0, 0).applyQuaternion(l.quaternion)) },
         lightUp: { value: areaLights.map((l) => new THREE.Vector3(0, l.height / 2, 0).applyQuaternion(l.quaternion)) },
         lightNormal: { value: areaLights.map((l) => new THREE.Vector3(0, 0, -1).applyQuaternion(l.quaternion)) },
-        lightColor: { value: areaLights.map((l) => l.color.clone().multiplyScalar(l.intensity * 0.22)) },
+        lightColor: { value: areaLights.map((l) => l.color.clone().multiplyScalar(l.intensity * 0.16)) },
     },
     vertexShader: /* glsl */ `
         uniform mat4 textureMatrix;
@@ -438,13 +551,15 @@ const floorShader = {
             float n2 = texture2D(tNoise, nuv * 2.9 + vec2(0.37, 0.11)).r;
             float tone = 0.86 + 0.28 * n1;
             float gloss = 0.82 + 0.36 * n2;
-            float spec = (0.08 + 0.72 * pow(1.0 - NdV, 3.0)) * strength * gloss;
+            float spec = (0.24 + 0.6 * pow(1.0 - NdV, 3.0)) * strength * gloss;
 
             // the car in the floor: sharp where it touches, soft higher up
             vec2 uv = vUv.xy / vUv.w;
             vec2 hd = probe(uv);
-            float rPx = min(hd.x * 0.35, 1.5) * projScale.y / hd.y / texel.y;
-            vec4 car = reflection(uv, rPx);
+            // a near-mirror floor: the image stays legible, only softening a
+            // little with height, and dims as the reflected surface rises
+            float rPx = min(hd.x * 0.1, 0.3) * projScale.y / hd.y / texel.y;
+            vec4 car = reflection(uv, rPx) * (1.0 - 0.3 * clamp(hd.x / 1.5, 0.0, 1.0));
 
             // the studio around it: the HDRI's softboxes, and the area lights
             // as soft rectangles, hidden where the car is
@@ -473,7 +588,7 @@ const floorShader = {
             sh = smoothstep(0.0, 0.9, sh);
 
             float pool = exp(-d * d * 0.05);
-            vec3 base = color * tone * (0.35 + 0.65 * pool);
+            vec3 base = color * tone * (0.3 + 1.1 * pool);
             vec3 col = base * (1.0 - sh * 0.93) + (car.rgb + studio) * spec * (1.0 - sh * 0.6);
             col *= 1.0 - smoothstep(5.5, 12.5, d);
             gl_FragColor = vec4(col, 1.0);
@@ -559,7 +674,9 @@ function blurPyramid() {
         r.getClearColor(clearColor)
         sc.background = null
         r.setClearColor(0x000000, 0)
+        studio.visible = false
         reflect.call(this, r, sc, cam, ...rest)
+        studio.visible = true
         r.setClearColor(clearColor, alpha)
         sc.background = bg
         blurPyramid()
@@ -701,7 +818,7 @@ new RGBELoader().setDataType(THREE.FloatType).load(
         const u = floor.material.uniforms
         u.tEnv.value = blurredEquirect(tex)
         u.envRot.value.setFromMatrix4(new THREE.Matrix4().makeRotationFromEuler(scene.environmentRotation))
-        u.envStrength.value = 0.45
+        u.envStrength.value = 0.14
         envReady = true
         ready()
     },
@@ -960,6 +1077,7 @@ function frame(now) {
         return
     }
     if (!moved) dirty--
+    if (!reduceMotion && lastRender) stepDust(Math.min(0.1, (now - lastRender) / 1000), now)
     composer.render()
     fpsCount++
     if (!fpsT0) fpsT0 = now
