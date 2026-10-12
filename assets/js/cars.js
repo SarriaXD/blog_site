@@ -134,24 +134,24 @@ RectAreaLightUniformsLib.init()
 const areaLights = []
 // the key is a spot high overhead: a small source, so paint takes a tight
 // highlight rather than mirroring a softbox, and a round pool on the floor
-const key = new THREE.SpotLight(0xfff4e4, 70, 0, 0.42, 0.7, 2)
-key.position.set(0.2, 6.8, 0.3)
+const key = new THREE.SpotLight(0xfff4e4, 150, 0, 0.4, 0.35, 2)
+key.position.set(0.2, 9, 0.3)
 key.target.position.set(0.2, 0, 0.3)
 scene.add(key, key.target)
 // long thin strips either side: the highlight lines along the shoulder
 for (const sz of [1, -1]) {
-    const strip = new THREE.RectAreaLight(0xffffff, 1.6, 6.5, 0.35)
+    const strip = new THREE.RectAreaLight(0xffffff, 2.4, 6.5, 0.35)
     strip.position.set(0, 2.3, sz * 4.4)
     strip.lookAt(0, 0.9, 0)
     scene.add(strip)
     areaLights.push(strip)
 }
-const rim = new THREE.RectAreaLight(0xd9e6ff, 2.0, 1.2, 3.2)
+const rim = new THREE.RectAreaLight(0xd9e6ff, 2.4, 1.2, 3.2)
 rim.position.set(-4.6, 2.3, -3.6)
 rim.lookAt(0, 0.8, 0)
 scene.add(rim)
 areaLights.push(rim)
-const fill = new THREE.RectAreaLight(0xfff1e0, 1.2, 3, 2)
+const fill = new THREE.RectAreaLight(0xfff1e0, 2.6, 3, 2)
 fill.position.set(4.5, 1.6, 4.2)
 fill.lookAt(0, 0.8, 0)
 scene.add(fill)
@@ -480,7 +480,7 @@ const floorShader = {
         lightRight: { value: areaLights.map((l) => new THREE.Vector3(l.width / 2, 0, 0).applyQuaternion(l.quaternion)) },
         lightUp: { value: areaLights.map((l) => new THREE.Vector3(0, l.height / 2, 0).applyQuaternion(l.quaternion)) },
         lightNormal: { value: areaLights.map((l) => new THREE.Vector3(0, 0, -1).applyQuaternion(l.quaternion)) },
-        lightColor: { value: areaLights.map((l) => l.color.clone().multiplyScalar(l.intensity * 0.25)) },
+        lightColor: { value: areaLights.map((l) => l.color.clone().multiplyScalar(l.intensity * 0.18)) },
     },
     vertexShader: /* glsl */ `
         uniform mat4 textureMatrix;
@@ -602,7 +602,7 @@ const floorShader = {
             }
             sh = smoothstep(0.0, 0.9, sh);
 
-            float pool = 1.0 - smoothstep(2.2, 4.2, d);
+            float pool = 1.0 - smoothstep(2.8, 4.4, d);
             vec3 base = color * tone * (0.3 + 1.1 * pool);
             vec3 col = base * (1.0 - sh * 0.93) + (car.rgb + studio) * spec * (1.0 - sh * 0.6);
             col *= 1.0 - smoothstep(5.5, 12.5, d);
@@ -752,7 +752,7 @@ composer.addPass(smaa)
 // reads pale from the side and the floor glows. Pull the room down to the
 // black of a car studio and keep only the lights: paint and a polished
 // floor are meant to show the softboxes as shapes on dark.
-function darkenRoom(tex, floor = 0.05, lo = 1.6, hi = 4.5) {
+function darkenRoom(tex, floor = 0.1, lo = 1.6, hi = 4.5) {
     const d = tex.image.data
     for (let i = 0; i < d.length; i += 4) {
         const lum = 0.2126 * d[i] + 0.7152 * d[i + 1] + 0.0722 * d[i + 2]
@@ -902,6 +902,9 @@ function resize() {
     if (!w || !h) return
     camera.aspect = w / h
     camera.updateProjectionMatrix()
+    // presets back off on narrow stages; the orbit limits must follow or the
+    // first controls.update() after a fly-to snaps the camera back in
+    controls.maxDistance = 13 * distanceScale()
     renderer.setSize(w, h, false)
     composer.setSize(w, h)
     bloom.setSize(w / 2, h / 2) // the bloom is soft and weak; a quarter-res chain is plenty
@@ -942,7 +945,7 @@ let currentView = VIEWS[0]
 /** Presets are framed for landscape; back off as the stage gets narrower. */
 function distanceScale() {
     const aspect = camera.aspect || 1
-    return aspect < 1.35 ? Math.pow(1.35 / aspect, 0.8) : 1
+    return aspect < 1.35 ? Math.pow(1.35 / aspect, 0.65) : 1
 }
 
 function flyTo(view, instant = false) {
@@ -969,6 +972,11 @@ function flyTo(view, instant = false) {
     }
     controls.autoRotate = false
     controls.enabled = false
+    // drop whatever a drag or pinch was still easing out, or it replays as
+    // a jump when the controls come back at the end of the move
+    controls._sphericalDelta?.set(0, 0, 0)
+    controls._panOffset?.set(0, 0, 0)
+    controls._scale = 1
     invalidate()
 }
 
