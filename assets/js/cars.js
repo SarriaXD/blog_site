@@ -127,6 +127,15 @@ controls.autoRotateSpeed = 0.55
 controls.update()
 
 /* ------------------------------------------------------------------ */
+/* diagnostics: #no=bloom,smaa,studio,key,env turns a stage off       */
+
+// For telling apart an artefact seen only on a real device: each name
+// leaves out one piece of the picture (the bloom, the SMAA pass, the beam
+// and dust, the key light, the environment map), so a view link with
+// `&no=` added shows which stage draws the problem.
+const OFF = new Set((/[#&]no=([^&]+)/.exec(location.hash)?.[1] || '').split(',').filter(Boolean))
+
+/* ------------------------------------------------------------------ */
 /* lights                                                              */
 
 // the key is a spot high overhead: a small source, so paint takes a tight
@@ -134,6 +143,7 @@ controls.update()
 const key = new THREE.SpotLight(0xfff4e4, 150, 0, 0.4, 0.35, 2)
 key.position.set(0.2, 9, 0.3)
 key.target.position.set(0.2, 0, 0.3)
+key.visible = !OFF.has('key')
 scene.add(key, key.target)
 
 // A SpotLight is a point: its highlight on glossy paint is a lobe under a
@@ -303,6 +313,7 @@ const dust = new THREE.Points(
     })
 )
 studio.add(dust)
+studio.visible = !OFF.has('studio')
 scene.add(studio)
 
 /** Drift the motes down through the beam, swaying a little. */
@@ -739,7 +750,7 @@ function blurPyramid() {
         renderer.setClearColor(0x000000, 0)
         studio.visible = false
         reflect.call(floor, renderer, scene, camera)
-        studio.visible = true
+        studio.visible = !OFF.has('studio')
         renderer.setClearColor(clearColor, alpha)
         scene.background = bg
         blurPyramid()
@@ -780,12 +791,12 @@ const composer = new EffectComposer(renderer, composerTarget)
 composer.setPixelRatio(DPR)
 composer.addPass(new RenderPass(scene, camera))
 const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.14, 0.3, 1.5)
-composer.addPass(bloom)
+if (!OFF.has('bloom')) composer.addPass(bloom)
 composer.addPass(new OutputPass())
 // MSAA handles geometry edges; SMAA on the tone-mapped image cleans up the
 // specular shimmer on thin chrome and the lamp edges that MSAA leaves behind.
 const smaa = new SMAAPass(1, 1)
-composer.addPass(smaa)
+if (!OFF.has('smaa')) composer.addPass(smaa)
 
 /* ------------------------------------------------------------------ */
 /* environment                                                         */
@@ -924,6 +935,20 @@ function compressHighlights(tex, knee = 3, range = 4.5) {
     tex.needsUpdate = true
 }
 
+/** The equirect as half floats: 32-bit float textures cannot be filtered on Apple GPUs. */
+function toHalf(tex) {
+    const { width: W, height: H, data } = tex.image
+    const half = new Uint16Array(W * H * 4)
+    for (let i = 0; i < half.length; i++) half[i] = THREE.DataUtils.toHalfFloat(data[i])
+    const out = new THREE.DataTexture(half, W, H, THREE.RGBAFormat, THREE.HalfFloatType)
+    out.flipY = tex.flipY
+    out.minFilter = THREE.LinearFilter
+    out.magFilter = THREE.LinearFilter
+    out.colorSpace = tex.colorSpace
+    out.needsUpdate = true
+    return out
+}
+
 /** A small, heavily blurred copy of the HDRI for the floor's glossy reflection. */
 function blurredEquirect(tex, W = 128, H = 64) {
     const { width, height, data } = tex.image
@@ -1002,8 +1027,12 @@ new RGBELoader().setDataType(THREE.FloatType).load(
         softenLights(tex)
         paintLights(tex, areaLights, ENV_ROTATION)
         compressHighlights(tex)
-        tex.mapping = THREE.EquirectangularReflectionMapping
-        scene.environment = tex
+        // the environment goes in as half floats: the loader's 32-bit
+        // float texture cannot be linearly filtered on Apple GPUs, and
+        // three.js builds the reflection mips by sampling it
+        const env = toHalf(tex)
+        env.mapping = THREE.EquirectangularReflectionMapping
+        if (!OFF.has('env')) scene.environment = env
         scene.environmentIntensity = 1.0
         scene.environmentRotation = ENV_ROTATION
         const u = floor.material.uniforms
