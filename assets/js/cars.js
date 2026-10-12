@@ -136,6 +136,38 @@ key.position.set(0.2, 9, 0.3)
 key.target.position.set(0.2, 0, 0.3)
 scene.add(key, key.target)
 
+// A SpotLight is a point: its highlight on glossy paint is a lobe under a
+// degree wide, narrower than the normal varies across one of the glTF
+// body's 26k triangles, so a triangle whose normal lines up lights as a
+// whole and the hood shows a square that pops on and off as the view
+// turns. Give the key a size instead: Karis's sphere-light approximation
+// widens the GGX lobe by radius / (2 · distance) for direct light only and
+// scales it down to keep the energy, so the highlight spreads over several
+// triangles and dims rather than flashing. The environment reflections
+// are untouched. Applied to every car material (glass and trim take the
+// same highlight, tighter still), see sizeKeyFor().
+const KEY_RADIUS = 1.2
+const KEY_LOBE = KEY_RADIUS / (2 * key.position.y)
+function sizeKeyFor(material) {
+    if (material.userData.keySized) return
+    material.userData.keySized = true
+    const prev = material.onBeforeCompile
+    material.onBeforeCompile = (shader, renderer) => {
+        prev?.(shader, renderer)
+        shader.uniforms.keyLobe = { value: KEY_LOBE }
+        shader.fragmentShader = shader.fragmentShader
+            .replace(
+                /float alpha = pow2\( roughness \); \/\/ UE4's roughness/g,
+                'float alpha0 = pow2( roughness );\n\t\tfloat alpha = min( 1.0, alpha0 + keyLobe );',
+            )
+            .replace(/return F \* \( V \* D \);/g, 'return F * ( V * D ) * pow2( alpha0 / alpha );')
+        if (!/uniform float keyLobe;/.test(shader.fragmentShader)) {
+            shader.fragmentShader = 'uniform float keyLobe;\n' + shader.fragmentShader
+        }
+    }
+    material.customProgramCacheKey = () => 'keySized'
+}
+
 // The softboxes: long strips either side for the highlight lines along the
 // shoulder, a cool rim behind, a warm fill in front. They are not scene
 // lights. A RectAreaLight is a hard-edged rectangle, and from the angles a
@@ -728,6 +760,10 @@ let carReady = false
 loadCar().then(({ group, materials: m }) => {
     car = group
     materials = m
+    car.traverse((o) => {
+        if (!o.isMesh) return
+        for (const mat of Array.isArray(o.material) ? o.material : [o.material]) if (mat) sizeKeyFor(mat)
+    })
     scene.add(car)
     floor.material.uniforms.tShadow.value = bakeContactShadow()
     carReady = true
