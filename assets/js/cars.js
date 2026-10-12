@@ -141,12 +141,14 @@ scene.add(key, key.target)
 // body's 26k triangles, so a triangle whose normal lines up lights as a
 // whole and the hood shows a square that pops on and off as the view
 // turns. Give the key a size instead: Karis's sphere-light approximation
-// widens the GGX lobe by radius / (2 · distance) for direct light only and
-// scales it down to keep the energy, so the highlight spreads over several
-// triangles and dims rather than flashing. The environment reflections
-// are untouched. Applied to every car material (glass and trim take the
-// same highlight, tighter still), see sizeKeyFor().
-const KEY_RADIUS = 1.2
+// widens the GGX lobe by radius / (2 · distance) for direct light only. The
+// lobe stays normalised, so the same energy spreads over a wider patch and
+// the highlight dims and softens rather than flashing (Karis's extra
+// (α/α')² factor belongs to his representative-point step, which this does
+// not do; with it the glass lost its reflection of the key altogether).
+// The environment reflections are untouched. Applied to every car material
+// (glass and trim take the same highlight, tighter still), see sizeKeyFor().
+const KEY_RADIUS = 1.5
 const KEY_LOBE = KEY_RADIUS / (2 * key.position.y)
 function sizeKeyFor(material) {
     if (material.userData.keySized) return
@@ -156,11 +158,7 @@ function sizeKeyFor(material) {
         prev?.(shader, renderer)
         shader.uniforms.keyLobe = { value: KEY_LOBE }
         shader.fragmentShader = shader.fragmentShader
-            .replace(
-                /float alpha = pow2\( roughness \); \/\/ UE4's roughness/g,
-                'float alpha0 = pow2( roughness );\n\t\tfloat alpha = min( 1.0, alpha0 + keyLobe );',
-            )
-            .replace(/return F \* \( V \* D \);/g, 'return F * ( V * D ) * pow2( alpha0 / alpha );')
+            .replace(/float alpha = pow2\( roughness \); \/\/ UE4's roughness/g, 'float alpha = min( 1.0, pow2( roughness ) + keyLobe );')
         if (!/uniform float keyLobe;/.test(shader.fragmentShader)) {
             shader.fragmentShader = 'uniform float keyLobe;\n' + shader.fragmentShader
         }
@@ -816,6 +814,62 @@ function darkenRoom(tex, floor = 0.1, lo = 1.6, hi = 4.5, ceiling = 0.82) {
     }
 }
 
+// The lamps that survive darkenRoom are the studio's own: two octagonal
+// softboxes with honeycomb grids, a lattice of small bright squares with
+// dark bars between, and two small round lamps, all with the hard edges of
+// a photo. Near-mirror glass reflects the lattice as a field of little
+// squares that jump at every triangle edge as the view turns, and the
+// clearcoat shows them beside its highlight. Blur the darkened room before
+// the painted softboxes go in: a gaussian of about two degrees merges the
+// cells into one soft panel and rounds the lamps into blooms, with the
+// energy kept. Horizontal wraps around the seam; vertical clamps.
+function softenLights(tex, sigma = 6) {
+    const { width: W, height: H, data } = tex.image
+    const R = Math.ceil(sigma * 3)
+    const w = new Float32Array(2 * R + 1)
+    let sum = 0
+    for (let i = -R; i <= R; i++) sum += w[i + R] = Math.exp(-(i * i) / (2 * sigma * sigma))
+    for (let i = 0; i < w.length; i++) w[i] /= sum
+    const tmp = new Float32Array(W * H * 3)
+    for (let y = 0; y < H; y++) {
+        for (let x = 0; x < W; x++) {
+            let r = 0
+            let g = 0
+            let b = 0
+            for (let i = -R; i <= R; i++) {
+                const o = (y * W + ((x + i + W) % W)) * 4
+                const k = w[i + R]
+                r += data[o] * k
+                g += data[o + 1] * k
+                b += data[o + 2] * k
+            }
+            const o = (y * W + x) * 3
+            tmp[o] = r
+            tmp[o + 1] = g
+            tmp[o + 2] = b
+        }
+    }
+    for (let y = 0; y < H; y++) {
+        for (let x = 0; x < W; x++) {
+            let r = 0
+            let g = 0
+            let b = 0
+            for (let i = -R; i <= R; i++) {
+                const yy = Math.min(H - 1, Math.max(0, y + i))
+                const o = (yy * W + x) * 3
+                const k = w[i + R]
+                r += tmp[o] * k
+                g += tmp[o + 1] * k
+                b += tmp[o + 2] * k
+            }
+            const o = (y * W + x) * 4
+            data[o] = r
+            data[o + 1] = g
+            data[o + 2] = b
+        }
+    }
+}
+
 // Paint the softboxes into the equirect, seen from the middle of the car:
 // each is an ellipse with a soft edge, in radiance, at the direction its
 // panel is seen in. three.js samples the environment through the scene's
@@ -945,6 +999,7 @@ new RGBELoader().setDataType(THREE.FloatType).load(
     '/assets/hdr/studio.hdr',
     (tex) => {
         darkenRoom(tex)
+        softenLights(tex)
         paintLights(tex, areaLights, ENV_ROTATION)
         compressHighlights(tex)
         tex.mapping = THREE.EquirectangularReflectionMapping
