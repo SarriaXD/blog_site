@@ -445,7 +445,7 @@ const NLIGHTS = areaLights.length
 const floorShader = {
     name: 'StudioFloor',
     uniforms: {
-        color: { value: new THREE.Color(0x0a0a0c) },
+        color: { value: new THREE.Color(0x1a1b1e) },
         tDiffuse: { value: null },
         tBlur1: { value: null },
         tBlur2: { value: null },
@@ -468,7 +468,7 @@ const floorShader = {
         lightRight: { value: areaLights.map((l) => new THREE.Vector3(l.width / 2, 0, 0).applyQuaternion(l.quaternion)) },
         lightUp: { value: areaLights.map((l) => new THREE.Vector3(0, l.height / 2, 0).applyQuaternion(l.quaternion)) },
         lightNormal: { value: areaLights.map((l) => new THREE.Vector3(0, 0, -1).applyQuaternion(l.quaternion)) },
-        lightColor: { value: areaLights.map((l) => l.color.clone().multiplyScalar(l.intensity * 0.12)) },
+        lightColor: { value: areaLights.map((l) => l.color.clone().multiplyScalar(l.intensity * 0.25)) },
     },
     vertexShader: /* glsl */ `
         uniform mat4 textureMatrix;
@@ -558,10 +558,11 @@ const floorShader = {
             // the car in the floor: sharp where it touches, soft higher up
             vec2 uv = vUv.xy / vUv.w;
             vec2 hd = probe(uv);
-            // a near-mirror floor: the image stays legible, only softening a
-            // little with height, and dims as the reflected surface rises
-            float rPx = min(hd.x * 0.1, 0.3) * projScale.y / hd.y / texel.y;
-            vec4 car = reflection(uv, rPx) * (1.0 - 0.3 * clamp(hd.x / 1.5, 0.0, 1.0));
+            // a polished floor is close to a mirror: the blur grows with the
+            // height of what it reflects (1.5 cm per metre, a roof is still
+            // crisp) and the image only loses a little as the surface rises
+            float rPx = min(hd.x * 0.015, 0.05) * projScale.y / hd.y / texel.y;
+            vec4 car = reflection(uv, rPx) * (1.0 - 0.15 * clamp(hd.x / 1.5, 0.0, 1.0));
 
             // the studio around it: the HDRI's softboxes, and the area lights
             // as soft rectangles, hidden where the car is
@@ -602,6 +603,7 @@ const floorShader = {
 let renderReflection = () => {}
 const floorSize = 30
 const floor = new Reflector(new THREE.PlaneGeometry(floorSize, floorSize), {
+    color: 0x1a1b1e, // Reflector overwrites the shader's `color` uniform with its own (a mid grey) unless told
     clipBias: 0.002,
     textureWidth: 1024,
     textureHeight: 1024,
@@ -732,6 +734,24 @@ composer.addPass(smaa)
 /* ------------------------------------------------------------------ */
 /* environment                                                         */
 
+// The HDRI is a small photo studio: a white cyclorama fills half the
+// sphere at a luminance near 1, the softboxes a percent of it at 10–500.
+// Glossy paint mirrors that cyc as a flat grey-white sheet, so every colour
+// reads pale from the side and the floor glows. Pull the room down to the
+// black of a car studio and keep only the lights: paint and a polished
+// floor are meant to show the softboxes as shapes on dark.
+function darkenRoom(tex, floor = 0.05, lo = 1.6, hi = 4.5) {
+    const d = tex.image.data
+    for (let i = 0; i < d.length; i += 4) {
+        const lum = 0.2126 * d[i] + 0.7152 * d[i + 1] + 0.0722 * d[i + 2]
+        const t = Math.min(1, Math.max(0, (lum - lo) / (hi - lo)))
+        const k = floor + (1 - floor) * t * t * (3 - 2 * t)
+        d[i] *= k
+        d[i + 1] *= k
+        d[i + 2] *= k
+    }
+}
+
 // The softboxes in the HDRI peak above 500 — fine for paint, but on dark
 // glass and lamp lenses even a 4% Fresnel reflection of that blows out to
 // white. Compress the highlights above a knee so glossy blacks stay black.
@@ -819,6 +839,7 @@ function blurredEquirect(tex, W = 128, H = 64) {
 new RGBELoader().setDataType(THREE.FloatType).load(
     '/assets/hdr/studio.hdr',
     (tex) => {
+        darkenRoom(tex)
         compressHighlights(tex)
         tex.mapping = THREE.EquirectangularReflectionMapping
         scene.environment = tex
@@ -827,7 +848,7 @@ new RGBELoader().setDataType(THREE.FloatType).load(
         const u = floor.material.uniforms
         u.tEnv.value = blurredEquirect(tex)
         u.envRot.value.setFromMatrix4(new THREE.Matrix4().makeRotationFromEuler(scene.environmentRotation))
-        u.envStrength.value = 0.1
+        u.envStrength.value = 0.3
         envReady = true
         ready()
     },
