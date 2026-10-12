@@ -132,11 +132,12 @@ controls.update()
 
 RectAreaLightUniformsLib.init()
 const areaLights = []
-const key = new THREE.RectAreaLight(0xffffff, 3.2, 4.2, 1.0)
-key.position.set(0.2, 3.9, 0.3)
-key.lookAt(0.2, 0, 0.3)
-scene.add(key)
-areaLights.push(key)
+// the key is a spot high overhead: a small source, so paint takes a tight
+// highlight rather than mirroring a softbox, and a round pool on the floor
+const key = new THREE.SpotLight(0xfff4e4, 70, 0, 0.42, 0.7, 2)
+key.position.set(0.2, 6.8, 0.3)
+key.target.position.set(0.2, 0, 0.3)
+scene.add(key, key.target)
 // long thin strips either side: the highlight lines along the shoulder
 for (const sz of [1, -1]) {
     const strip = new THREE.RectAreaLight(0xffffff, 1.6, 6.5, 0.35)
@@ -158,14 +159,14 @@ areaLights.push(fill)
 for (const l of areaLights) l.updateMatrixWorld()
 
 /* ------------------------------------------------------------------ */
-/* the key light, visible: a soft beam from the softbox with dust in it */
+/* the key light, visible: a spot's cone with dust drifting through it   */
 
 const studio = new THREE.Group()
 studio.name = 'studio'
 const beam = new THREE.Mesh(
     new THREE.CylinderGeometry(1, 1, 1, 48, 1, true),
     new THREE.ShaderMaterial({
-        uniforms: { color: { value: new THREE.Color(0xfff4e4) }, strength: { value: 0.06 } },
+        uniforms: { color: { value: new THREE.Color(0xfff4e4) }, strength: { value: 0.07 } },
         vertexShader: /* glsl */ `
             varying float vY;
             varying vec3 vN;
@@ -184,9 +185,11 @@ const beam = new THREE.Mesh(
             varying vec3 vN;
             varying vec3 vV;
             void main() {
-                // soft at the silhouette, brightest facing us; brighter near the source
+                // soft at the silhouette, brightest facing us; the beam gathers
+                // toward the source but fades out before the apex, so there is
+                // no cut edge to see from any angle
                 float edge = pow(abs(dot(normalize(vN), normalize(vV))), 1.6);
-                float fall = mix(0.08, 1.0, vY * vY);
+                float fall = mix(0.1, 1.0, vY * vY) * (1.0 - smoothstep(0.7, 0.97, vY));
                 gl_FragColor = vec4(color * strength * edge * fall, 1.0);
             }`,
         transparent: true,
@@ -195,15 +198,16 @@ const beam = new THREE.Mesh(
         side: THREE.DoubleSide,
     })
 )
-// from the 4.2 × 1 m softbox at 3.9 m down to a wider pool on the floor
-beam.scale.set(2.6, key.position.y, 1.4)
+// a cone from the spot down to its pool on the floor
+const BEAM_R = Math.tan(key.angle) * key.position.y
+const BEAM_TOP = 0.08 / BEAM_R // radius at the apex, as a fraction of the floor's
+beam.scale.set(BEAM_R, key.position.y, BEAM_R)
 beam.position.set(key.position.x, key.position.y / 2, key.position.z)
 {
-    // taper: top matches the softbox, bottom spreads
     const pos = beam.geometry.attributes.position
     for (let i = 0; i < pos.count; i++) {
         const t = pos.getY(i) + 0.5 // 1 at the top
-        const k = THREE.MathUtils.lerp(1.0, 0.72, t)
+        const k = THREE.MathUtils.lerp(1.0, BEAM_TOP, t)
         pos.setX(i, pos.getX(i) * k)
         pos.setZ(i, pos.getZ(i) * k)
     }
@@ -211,6 +215,14 @@ beam.position.set(key.position.x, key.position.y / 2, key.position.z)
     beam.geometry.computeVertexNormals()
 }
 studio.add(beam)
+
+/** The beam is for looking at from the floor: let it go as the camera climbs toward the spot. */
+function fadeBeam() {
+    const k = 1 - THREE.MathUtils.smoothstep(camera.position.y, key.position.y - 3.5, key.position.y - 1.5)
+    beam.visible = k > 0.001
+    beam.material.uniforms.strength.value = 0.07 * k
+    dust.material.opacity = 0.55 * k
+}
 
 function dustSprite() {
     const c = document.createElement('canvas')
@@ -233,10 +245,10 @@ for (let i = 0; i < DUST; i++) {
     const a = Math.random() * Math.PI * 2
     const r = Math.sqrt(Math.random())
     const y = Math.random()
-    const k = THREE.MathUtils.lerp(1.0, 0.72, y)
-    dustPos[i * 3] = key.position.x + Math.cos(a) * r * 2.6 * k
+    const k = THREE.MathUtils.lerp(1.0, BEAM_TOP, y)
+    dustPos[i * 3] = key.position.x + Math.cos(a) * r * BEAM_R * k
     dustPos[i * 3 + 1] = y * key.position.y
-    dustPos[i * 3 + 2] = key.position.z + Math.sin(a) * r * 1.4 * k
+    dustPos[i * 3 + 2] = key.position.z + Math.sin(a) * r * BEAM_R * k
     dustSeed[i * 2] = Math.random() * Math.PI * 2
     dustSeed[i * 2 + 1] = 0.6 + Math.random() * 0.8
 }
@@ -590,7 +602,7 @@ const floorShader = {
             }
             sh = smoothstep(0.0, 0.9, sh);
 
-            float pool = exp(-d * d * 0.05);
+            float pool = 1.0 - smoothstep(2.2, 4.2, d);
             vec3 base = color * tone * (0.3 + 1.1 * pool);
             vec3 col = base * (1.0 - sh * 0.93) + (car.rgb + studio) * spec * (1.0 - sh * 0.6);
             col *= 1.0 - smoothstep(5.5, 12.5, d);
@@ -1108,6 +1120,7 @@ function frame(now) {
     }
     if (!moved) dirty--
     if (!reduceMotion && lastRender) stepDust(Math.min(0.1, (now - lastRender) / 1000), now)
+    fadeBeam()
     renderReflection()
     composer.render()
     fpsCount++
