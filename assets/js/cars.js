@@ -93,10 +93,12 @@ const renderer = new THREE.WebGLRenderer({
     powerPreference: 'high-performance',
 })
 // Quality levels, stepped down at runtime if frames come in slow.
+// `refl` scales the reflection target from the drawing-buffer size; phones
+// need more of it because their reflection covers few pixels to begin with.
 const QUALITY = [
-    { dpr: Math.min(window.devicePixelRatio || 1, isSmall ? 1.25 : 1.5), refl: 0.6, bloom: true },
-    { dpr: 1, refl: 0.5, bloom: true },
-    { dpr: 1, refl: 0.4, bloom: false },
+    { dpr: Math.min(window.devicePixelRatio || 1, isSmall ? 1.25 : 1.5), refl: isSmall ? 0.8 : 0.7, bloom: true },
+    { dpr: 1, refl: 0.7, bloom: true },
+    { dpr: 1, refl: 0.5, bloom: false },
 ]
 let qualityLevel = 0
 let DPR = QUALITY[0].dpr
@@ -466,7 +468,7 @@ const floorShader = {
         lightRight: { value: areaLights.map((l) => new THREE.Vector3(l.width / 2, 0, 0).applyQuaternion(l.quaternion)) },
         lightUp: { value: areaLights.map((l) => new THREE.Vector3(0, l.height / 2, 0).applyQuaternion(l.quaternion)) },
         lightNormal: { value: areaLights.map((l) => new THREE.Vector3(0, 0, -1).applyQuaternion(l.quaternion)) },
-        lightColor: { value: areaLights.map((l) => l.color.clone().multiplyScalar(l.intensity * 0.16)) },
+        lightColor: { value: areaLights.map((l) => l.color.clone().multiplyScalar(l.intensity * 0.12)) },
     },
     vertexShader: /* glsl */ `
         uniform mat4 textureMatrix;
@@ -578,7 +580,7 @@ const floorShader = {
                     }
                 }
             }
-            studio *= 1.0 - car.a;
+            studio *= (1.0 - car.a) * 0.6;
 
             vec2 suv = (vWorld.xz - shadowRect.xy) / (2.0 * shadowRect.zw) + 0.5;
             float sh = 0.0;
@@ -597,6 +599,7 @@ const floorShader = {
         }`,
 }
 
+let renderReflection = () => {}
 const floorSize = 30
 const floor = new Reflector(new THREE.PlaneGeometry(floorSize, floorSize), {
     clipBias: 0.002,
@@ -666,19 +669,25 @@ function blurPyramid() {
     blurLevels.forEach((l, i) => (u['tBlur' + (i + 1)].value = l.texture))
     const clearColor = new THREE.Color()
     const reflect = floor.onBeforeRender
-    floor.onBeforeRender = function (r, sc, cam, ...rest) {
-        // render the reflection over a transparent clear so its alpha says
-        // where the car is; the studio shows through everywhere else
-        const bg = sc.background
-        const alpha = r.getClearAlpha()
-        r.getClearColor(clearColor)
-        sc.background = null
-        r.setClearColor(0x000000, 0)
+    // The reflection is rendered up front, before the main pass, rather than
+    // from the floor's onBeforeRender: switching render targets in the middle
+    // of a multisampled pass makes tile-based (mobile) GPUs store and reload
+    // the whole MSAA buffer, which cost more than the reflection itself.
+    floor.onBeforeRender = () => {}
+    renderReflection = () => {
+        camera.updateMatrixWorld()
+        // render over a transparent clear so the alpha says where the car
+        // is; the studio shows through everywhere else
+        const bg = scene.background
+        const alpha = renderer.getClearAlpha()
+        renderer.getClearColor(clearColor)
+        scene.background = null
+        renderer.setClearColor(0x000000, 0)
         studio.visible = false
-        reflect.call(this, r, sc, cam, ...rest)
+        reflect.call(floor, renderer, scene, camera)
         studio.visible = true
-        r.setClearColor(clearColor, alpha)
-        sc.background = bg
+        renderer.setClearColor(clearColor, alpha)
+        scene.background = bg
         blurPyramid()
         // hand the floor the virtual camera so the shader can turn depth
         // back into height above the floor
@@ -818,7 +827,7 @@ new RGBELoader().setDataType(THREE.FloatType).load(
         const u = floor.material.uniforms
         u.tEnv.value = blurredEquirect(tex)
         u.envRot.value.setFromMatrix4(new THREE.Matrix4().makeRotationFromEuler(scene.environmentRotation))
-        u.envStrength.value = 0.14
+        u.envStrength.value = 0.1
         envReady = true
         ready()
     },
@@ -1078,6 +1087,7 @@ function frame(now) {
     }
     if (!moved) dirty--
     if (!reduceMotion && lastRender) stepDust(Math.min(0.1, (now - lastRender) / 1000), now)
+    renderReflection()
     composer.render()
     fpsCount++
     if (!fpsT0) fpsT0 = now
