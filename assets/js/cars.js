@@ -171,15 +171,25 @@ key.visible = !OFF.has('key')
 scene.add(key, key.target)
 
 /** Drop the direct specular (the key's highlight) from a car material; its diffuse and the environment stay. */
+// onBeforeCompile sees the shader with its #include lines unresolved, so a
+// line inside a chunk cannot be replaced in place: the include itself is
+// swapped for the chunk's text with the two lines changed. (An earlier
+// patch that looked for the GGX alpha line directly never matched.)
+const GGX_LINE = 'reflectedLight.directSpecular += irradiance * BRDF_GGX('
+const CLEARCOAT_LINE = 'clearcoatSpecularDirect += ccIrradiance * BRDF_GGX_Clearcoat('
+const softLightsChunk = THREE.ShaderChunk.lights_physical_pars_fragment
+    .replace(GGX_LINE, 'reflectedLight.directSpecular += 0.0 * irradiance * BRDF_GGX(')
+    .replace(CLEARCOAT_LINE, 'clearcoatSpecularDirect += 0.0 * ccIrradiance * BRDF_GGX_Clearcoat(')
+if (softLightsChunk.includes(GGX_LINE) || softLightsChunk.includes(CLEARCOAT_LINE)) {
+    console.warn('/cars: the direct-specular lines moved in this three.js; the key will show a highlight')
+}
 function softKeyFor(material) {
     if (material.userData.softKey) return
     material.userData.softKey = true
     const prev = material.onBeforeCompile
     material.onBeforeCompile = (shader, renderer) => {
         prev?.(shader, renderer)
-        shader.fragmentShader = shader.fragmentShader
-            .replace('reflectedLight.directSpecular += irradiance * BRDF_GGX(', 'reflectedLight.directSpecular += 0.0 * irradiance * BRDF_GGX(')
-            .replace('clearcoatSpecularDirect += ccIrradiance * BRDF_GGX_Clearcoat(', 'clearcoatSpecularDirect += 0.0 * ccIrradiance * BRDF_GGX_Clearcoat(')
+        shader.fragmentShader = shader.fragmentShader.replace('#include <lights_physical_pars_fragment>', softLightsChunk)
     }
     material.customProgramCacheKey = () => 'softKey'
 }
