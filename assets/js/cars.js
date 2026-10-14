@@ -69,6 +69,19 @@ const GLB = {
 }
 
 /* ------------------------------------------------------------------ */
+/* diagnostics: #no=bloom,smaa,studio,key,env,msaa; #dpr=2             */
+
+// For telling apart an artefact seen only on a real device: each name
+// leaves out one piece of the picture (the bloom, the SMAA pass, the beam
+// and dust, the key light, the environment map, the 4× multisampling of
+// the post chain), so a view link with `&no=` added shows which stage
+// draws the problem. `&dpr=2` pins the pixel ratio the page starts at
+// (phones are capped at 1.25 otherwise, see QUALITY); the frame-rate
+// governor still steps down from there.
+const OFF = new Set((/[#&]no=([^&]+)/.exec(location.hash)?.[1] || '').split(',').filter(Boolean))
+const DPR_PINNED = Number(/[#&]dpr=([\d.]+)/.exec(location.hash)?.[1]) || 0
+
+/* ------------------------------------------------------------------ */
 /* renderer                                                            */
 
 function supportsWebGL2() {
@@ -95,7 +108,7 @@ const renderer = new THREE.WebGLRenderer({
 // `refl` scales the reflection target from the drawing-buffer size; phones
 // need more of it because their reflection covers few pixels to begin with.
 const QUALITY = [
-    { dpr: Math.min(window.devicePixelRatio || 1, isSmall ? 1.25 : 1.5), refl: isSmall ? 0.8 : 0.7, bloom: true },
+    { dpr: DPR_PINNED || Math.min(window.devicePixelRatio || 1, isSmall ? 1.25 : 1.5), refl: isSmall ? 0.8 : 0.7, bloom: true },
     { dpr: 1, refl: 0.7, bloom: true },
     { dpr: 1, refl: 0.5, bloom: false },
 ]
@@ -125,15 +138,6 @@ controls.rotateSpeed = 0.6
 controls.zoomSpeed = 0.7
 controls.autoRotateSpeed = 0.55
 controls.update()
-
-/* ------------------------------------------------------------------ */
-/* diagnostics: #no=bloom,smaa,studio,key,env turns a stage off       */
-
-// For telling apart an artefact seen only on a real device: each name
-// leaves out one piece of the picture (the bloom, the SMAA pass, the beam
-// and dust, the key light, the environment map), so a view link with
-// `&no=` added shows which stage draws the problem.
-const OFF = new Set((/[#&]no=([^&]+)/.exec(location.hash)?.[1] || '').split(',').filter(Boolean))
 
 /* ------------------------------------------------------------------ */
 /* lights                                                              */
@@ -785,7 +789,7 @@ loadCar().then(({ group, materials: m }) => {
 const maxSamples = renderer.capabilities.maxSamples || 4
 const composerTarget = new THREE.WebGLRenderTarget(1, 1, {
     type: THREE.HalfFloatType,
-    samples: Math.min(4, maxSamples),
+    samples: OFF.has('msaa') ? 0 : Math.min(4, maxSamples),
 })
 const composer = new EffectComposer(renderer, composerTarget)
 composer.setPixelRatio(DPR)
