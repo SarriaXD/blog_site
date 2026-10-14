@@ -402,6 +402,9 @@ function fitImported(root) {
             if ('envMapIntensity' in m) m.envMapIntensity = 1.0
             // roughness 0 on big surfaces turns the HDRI into sparkle; keep a little
             if ('roughness' in m) m.roughness = Math.max(m.roughness, m.transparent ? 0.06 : 0.28)
+            // the cockpit's two displays come in at an emissive strength of 10,
+            // a white blob under the bloom from any angle; at 1 they are screens
+            if ('emissiveIntensity' in m) m.emissiveIntensity = Math.min(m.emissiveIntensity, 1)
         }
     })
     return { group, materials: mats }
