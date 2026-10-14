@@ -147,47 +147,37 @@ controls.update()
 /* ------------------------------------------------------------------ */
 /* lights                                                              */
 
-// the key is a spot high overhead: a small source, so paint takes a tight
-// highlight rather than mirroring a softbox, and a round pool on the floor
-const key = new THREE.SpotLight(0xfff4e4, 150, 0, 0.4, 0.35, 2)
+// The key is a spot high overhead. It lights the car diffusely only: the
+// interior, the seats, the trim and the tyres take its light from above,
+// and the beam and dust below make it visible. Its specular reflection is
+// cut (softKeyFor): a point's highlight on glossy paint is a spot, and
+// widening the lobe (Karis's sphere-light approximation, tried at 1.5 m
+// and 6 m) only spread it; seen from above, every part of the hood whose
+// normal points up sat inside the lobe and the peak still tone-mapped to a
+// white blob, and on a phone, where a drag turns the view by degrees
+// between frames, the body's facets flashed in it as squares. What the
+// paint reflects from above is the ceiling panel painted into the
+// environment instead (ceilingLight below): a broad, soft sheen that the
+// paint's roughness filters like the rest of the studio, with no point in
+// it for a facet to catch.
+const key = new THREE.SpotLight(0xfff4e4, 100, 0, 0.4, 0.35, 2)
 key.position.set(0.2, 9, 0.3)
 key.target.position.set(0.2, 0, 0.3)
 key.visible = !OFF.has('key')
 scene.add(key, key.target)
 
-// A SpotLight is a point: its highlight on glossy paint is a lobe under a
-// degree wide, narrower than the normal varies across one of the glTF
-// body's 26k triangles, so a triangle whose normal lines up lights as a
-// whole and the hood shows a square that pops on and off as the view
-// turns. Give the key a size instead: Karis's sphere-light approximation
-// widens the GGX lobe by radius / (2 · distance) for direct light only. The
-// lobe stays normalised, so the same energy spreads over a wider patch and
-// the highlight dims and softens rather than flashing (Karis's extra
-// (α/α')² factor belongs to his representative-point step, which this does
-// not do; with it the glass lost its reflection of the key altogether).
-// The environment reflections are untouched. Applied to every car material
-// (glass and trim take the same highlight, tighter still), see sizeKeyFor().
-// The radius is that of a big overhead softbox, not a lamp: at 1.5 m the
-// highlight was still a spot, and on a phone, where a drag turns the view
-// by degrees between frames, the body's facets flashed in it as squares.
-// At 6 m (a lobe a third wide, satin) the key reads as one broad sheen
-// over the hood and roof, with nothing for a facet to catch.
-const KEY_RADIUS = 6
-const KEY_LOBE = KEY_RADIUS / (2 * key.position.y)
-function sizeKeyFor(material) {
-    if (material.userData.keySized) return
-    material.userData.keySized = true
+/** Drop the direct specular (the key's highlight) from a car material; its diffuse and the environment stay. */
+function softKeyFor(material) {
+    if (material.userData.softKey) return
+    material.userData.softKey = true
     const prev = material.onBeforeCompile
     material.onBeforeCompile = (shader, renderer) => {
         prev?.(shader, renderer)
-        shader.uniforms.keyLobe = { value: KEY_LOBE }
         shader.fragmentShader = shader.fragmentShader
-            .replace(/float alpha = pow2\( roughness \); \/\/ UE4's roughness/g, 'float alpha = min( 1.0, pow2( roughness ) + keyLobe );')
-        if (!/uniform float keyLobe;/.test(shader.fragmentShader)) {
-            shader.fragmentShader = 'uniform float keyLobe;\n' + shader.fragmentShader
-        }
+            .replace('reflectedLight.directSpecular += irradiance * BRDF_GGX(', 'reflectedLight.directSpecular += 0.0 * irradiance * BRDF_GGX(')
+            .replace('clearcoatSpecularDirect += ccIrradiance * BRDF_GGX_Clearcoat(', 'clearcoatSpecularDirect += 0.0 * ccIrradiance * BRDF_GGX_Clearcoat(')
     }
-    material.customProgramCacheKey = () => 'keySized'
+    material.customProgramCacheKey = () => 'softKey'
 }
 
 // The softboxes: long strips either side for the highlight lines along the
@@ -218,6 +208,19 @@ const areaLights = [
     softbox(0xd9e6ff, 3.2, 1.2, 3.2, [-4.6, 2.3, -3.6], [0, 0.8, 0]),
     softbox(0xfff1e0, 3.4, 4.5, 1.2, [4.5, 1.6, 4.2], [0, 0.8, 0]),
 ]
+// The ceiling panel: a 7 m disc under the key, facing down, the only
+// thing the hood and roof reflect from above. It goes into the environment
+// with the softboxes but not into the floor's list: the floor shows the
+// spot's pool, not a second glow. Built by hand because softbox() frames
+// a panel from the world's up, which is this one's normal.
+const ceilingLight = {
+    color: new THREE.Color(0xfff4e4),
+    intensity: 2.0,
+    position: new THREE.Vector3(0.2, 6, 0.3),
+    right: new THREE.Vector3(3.5, 0, 0),
+    up: new THREE.Vector3(0, 0, 3.5),
+    normal: new THREE.Vector3(0, -1, 0),
+}
 
 /* ------------------------------------------------------------------ */
 /* the key light, visible: a spot's cone with dust drifting through it   */
@@ -785,7 +788,7 @@ loadCar().then(({ group, materials: m }) => {
     materials = m
     car.traverse((o) => {
         if (!o.isMesh) return
-        for (const mat of Array.isArray(o.material) ? o.material : [o.material]) if (mat) sizeKeyFor(mat)
+        for (const mat of Array.isArray(o.material) ? o.material : [o.material]) if (mat) softKeyFor(mat)
     })
     scene.add(car)
     floor.material.uniforms.tShadow.value = bakeContactShadow()
@@ -1041,7 +1044,7 @@ new RGBELoader().setDataType(THREE.FloatType).load(
         // the softboxes go in before the blur, so their edges get the same
         // two degrees of softness as the studio's own lamps: near-mirror
         // glass and clearcoat then reflect soft panels, not hard ellipses
-        paintLights(tex, areaLights, ENV_ROTATION)
+        paintLights(tex, [...areaLights, ceilingLight], ENV_ROTATION)
         softenLights(tex)
         compressHighlights(tex)
         // the environment goes in as half floats: the loader's 32-bit
