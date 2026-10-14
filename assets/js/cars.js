@@ -65,6 +65,10 @@ const GLB = {
     url: '/assets/models/model-3.glb',
     nose: '+x',
     paintName: /^Geohoodsub00021Mtl$|paint|carrosserie|exterior|lack/i,
+    // the rear screen between the front seats shows a white seat-heater
+    // page: at any emissive strength near 1 it is a white blob on the
+    // console from every angle, so it is dimmed to a glow
+    dimEmissive: /^Geocockpithrsub000332Mtl$/,
     notPaint: /glass|window|wind|tire|tyre|wheel|rim|interior|seat|light|lamp|lens|chrome|rubber|plastic|black|mirror|logo/i,
 }
 
@@ -403,8 +407,10 @@ function fitImported(root) {
             // roughness 0 on big surfaces turns the HDRI into sparkle; keep a little
             if ('roughness' in m) m.roughness = Math.max(m.roughness, m.transparent ? 0.06 : 0.28)
             // the cockpit's two displays come in at an emissive strength of 10,
-            // a white blob under the bloom from any angle; at 1 they are screens
-            if ('emissiveIntensity' in m) m.emissiveIntensity = Math.min(m.emissiveIntensity, 1)
+            // a white blob under the bloom from any angle; at 1 the dark map
+            // on the front screen is a screen, the white page on the rear one
+            // still a blob, so that one goes down to a glow
+            if ('emissiveIntensity' in m) m.emissiveIntensity = Math.min(m.emissiveIntensity, GLB.dimEmissive.test(m.name || '') ? 0.25 : 1)
         }
     })
     return { group, materials: mats }
