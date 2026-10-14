@@ -167,7 +167,12 @@ scene.add(key, key.target)
 // not do; with it the glass lost its reflection of the key altogether).
 // The environment reflections are untouched. Applied to every car material
 // (glass and trim take the same highlight, tighter still), see sizeKeyFor().
-const KEY_RADIUS = 1.5
+// The radius is that of a big overhead softbox, not a lamp: at 1.5 m the
+// highlight was still a spot, and on a phone, where a drag turns the view
+// by degrees between frames, the body's facets flashed in it as squares.
+// At 6 m (a lobe a third wide, satin) the key reads as one broad sheen
+// over the hood and roof, with nothing for a facet to catch.
+const KEY_RADIUS = 6
 const KEY_LOBE = KEY_RADIUS / (2 * key.position.y)
 function sizeKeyFor(material) {
     if (material.userData.keySized) return
@@ -921,7 +926,7 @@ function paintLights(tex, lights, rotation) {
                 const qy = P.dot(l.up) / l.uu
                 const r = Math.sqrt(qx * qx + qy * qy)
                 if (r >= 1) continue
-                const e = Math.min(1, (1 - r) / 0.3)
+                const e = Math.min(1, (1 - r) / 0.5) // the edge: half the radius
                 const m = e * e * (3 - 2 * e) * l.intensity
                 data[o] += l.color.r * m
                 data[o + 1] += l.color.g * m
@@ -1033,8 +1038,11 @@ new RGBELoader().setDataType(THREE.FloatType).load(
     '/assets/hdr/studio.hdr',
     (tex) => {
         darkenRoom(tex)
-        softenLights(tex)
+        // the softboxes go in before the blur, so their edges get the same
+        // two degrees of softness as the studio's own lamps: near-mirror
+        // glass and clearcoat then reflect soft panels, not hard ellipses
         paintLights(tex, areaLights, ENV_ROTATION)
+        softenLights(tex)
         compressHighlights(tex)
         // the environment goes in as half floats: the loader's 32-bit
         // float texture cannot be linearly filtered on Apple GPUs, and
