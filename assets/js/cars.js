@@ -215,7 +215,7 @@ const areaLights = [
 // a panel from the world's up, which is this one's normal.
 const ceilingLight = {
     color: new THREE.Color(0xfff4e4),
-    intensity: 2.0,
+    intensity: 1.4,
     position: new THREE.Vector3(0.2, 6, 0.3),
     right: new THREE.Vector3(3.5, 0, 0),
     up: new THREE.Vector3(0, 0, 3.5),
