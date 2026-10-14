@@ -69,6 +69,19 @@ const GLB = {
 }
 
 /* ------------------------------------------------------------------ */
+/* diagnostics: #no=bloom,smaa,studio,key,env,msaa; #dpr=2             */
+
+// For telling apart an artefact seen only on a real device: each name
+// leaves out one piece of the picture (the bloom, the SMAA pass, the beam
+// and dust, the key light, the environment map, the 4× multisampling of
+// the post chain), so a view link with `&no=` added shows which stage
+// draws the problem. `&dpr=2` pins the pixel ratio the page starts at
+// (phones start at 2 and desktops at 1.5 otherwise, see QUALITY); the
+// frame-rate governor still steps down from there.
+const OFF = new Set((/[#&]no=([^&]+)/.exec(location.hash)?.[1] || '').split(',').filter(Boolean))
+const DPR_PINNED = Number(/[#&]dpr=([\d.]+)/.exec(location.hash)?.[1]) || 0
+
+/* ------------------------------------------------------------------ */
 /* renderer                                                            */
 
 function supportsWebGL2() {
@@ -94,8 +107,13 @@ const renderer = new THREE.WebGLRenderer({
 // Quality levels, stepped down at runtime if frames come in slow.
 // `refl` scales the reflection target from the drawing-buffer size; phones
 // need more of it because their reflection covers few pixels to begin with.
+// Phones start at 2×: on a 3× screen a 1.25× canvas showed every pixel as
+// a 2.4-pixel block, and the specular shimmer of fine highlights as
+// flickering squares. A phone stage at 2× is still fewer pixels than a
+// desktop one at 1.5×.
 const QUALITY = [
-    { dpr: Math.min(window.devicePixelRatio || 1, isSmall ? 1.25 : 1.5), refl: isSmall ? 0.8 : 0.7, bloom: true },
+    { dpr: DPR_PINNED || Math.min(window.devicePixelRatio || 1, isSmall ? 2 : 1.5), refl: isSmall ? 0.8 : 0.7, bloom: true },
+    { dpr: isSmall ? 1.5 : 1.25, refl: 0.7, bloom: true },
     { dpr: 1, refl: 0.7, bloom: true },
     { dpr: 1, refl: 0.5, bloom: false },
 ]
@@ -125,15 +143,6 @@ controls.rotateSpeed = 0.6
 controls.zoomSpeed = 0.7
 controls.autoRotateSpeed = 0.55
 controls.update()
-
-/* ------------------------------------------------------------------ */
-/* diagnostics: #no=bloom,smaa,studio,key,env turns a stage off       */
-
-// For telling apart an artefact seen only on a real device: each name
-// leaves out one piece of the picture (the bloom, the SMAA pass, the beam
-// and dust, the key light, the environment map), so a view link with
-// `&no=` added shows which stage draws the problem.
-const OFF = new Set((/[#&]no=([^&]+)/.exec(location.hash)?.[1] || '').split(',').filter(Boolean))
 
 /* ------------------------------------------------------------------ */
 /* lights                                                              */
@@ -785,7 +794,7 @@ loadCar().then(({ group, materials: m }) => {
 const maxSamples = renderer.capabilities.maxSamples || 4
 const composerTarget = new THREE.WebGLRenderTarget(1, 1, {
     type: THREE.HalfFloatType,
-    samples: Math.min(4, maxSamples),
+    samples: OFF.has('msaa') ? 0 : Math.min(4, maxSamples),
 })
 const composer = new EffectComposer(renderer, composerTarget)
 composer.setPixelRatio(DPR)
