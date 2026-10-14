@@ -76,8 +76,8 @@ const GLB = {
 // and dust, the key light, the environment map, the 4× multisampling of
 // the post chain), so a view link with `&no=` added shows which stage
 // draws the problem. `&dpr=2` pins the pixel ratio the page starts at
-// (phones are capped at 1.25 otherwise, see QUALITY); the frame-rate
-// governor still steps down from there.
+// (phones start at 2 and desktops at 1.5 otherwise, see QUALITY); the
+// frame-rate governor still steps down from there.
 const OFF = new Set((/[#&]no=([^&]+)/.exec(location.hash)?.[1] || '').split(',').filter(Boolean))
 const DPR_PINNED = Number(/[#&]dpr=([\d.]+)/.exec(location.hash)?.[1]) || 0
 
@@ -107,8 +107,13 @@ const renderer = new THREE.WebGLRenderer({
 // Quality levels, stepped down at runtime if frames come in slow.
 // `refl` scales the reflection target from the drawing-buffer size; phones
 // need more of it because their reflection covers few pixels to begin with.
+// Phones start at 2×: on a 3× screen a 1.25× canvas showed every pixel as
+// a 2.4-pixel block, and the specular shimmer of fine highlights as
+// flickering squares. A phone stage at 2× is still fewer pixels than a
+// desktop one at 1.5×.
 const QUALITY = [
-    { dpr: DPR_PINNED || Math.min(window.devicePixelRatio || 1, isSmall ? 1.25 : 1.5), refl: isSmall ? 0.8 : 0.7, bloom: true },
+    { dpr: DPR_PINNED || Math.min(window.devicePixelRatio || 1, isSmall ? 2 : 1.5), refl: isSmall ? 0.8 : 0.7, bloom: true },
+    { dpr: isSmall ? 1.5 : 1.25, refl: 0.7, bloom: true },
     { dpr: 1, refl: 0.7, bloom: true },
     { dpr: 1, refl: 0.5, bloom: false },
 ]
