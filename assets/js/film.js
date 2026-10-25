@@ -297,32 +297,53 @@
     const navH = () =>
         parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) || 48
 
+    /* Phones grow and shrink the viewport as the address bar hides on
+       scroll, and fire `resize` each time. Sizing from innerHeight made
+       every scroll-direction change reallocate the canvas and move
+       everything placed by height (the horizon by two thirds of the bar).
+       So the canvas is sized to the large viewport (100lvh, CSS) and the
+       art area to the small one (100svh, like the caption pins); neither
+       moves with the bar, and a resize that changes neither is ignored. */
+    const probe = document.createElement('div')
+    probe.style.cssText =
+        'position:fixed;top:0;left:0;width:0;visibility:hidden;pointer-events:none'
+    probe.style.height = '100vh'
+    probe.style.height = '100svh'
+    document.body.appendChild(probe)
+
+    let sized = ''
+
     const resize = () => {
-        dpr = Math.min(window.devicePixelRatio || 1, 2)
-        const w = window.innerWidth
-        const h = window.innerHeight
+        const r = canvas.getBoundingClientRect()
+        const w = Math.round(r.width) || window.innerWidth
+        const h = Math.round(r.height) || window.innerHeight
+        const sh = Math.min(h, probe.offsetHeight || h)
+        const d = Math.min(window.devicePixelRatio || 1, 2)
+        const key = `${w}x${h}x${sh}@${d}`
+        if (key === sized) return false
+        sized = key
+        dpr = d
         canvas.width = Math.round(w * dpr)
         canvas.height = Math.round(h * dpr)
-        canvas.style.width = w + 'px'
-        canvas.style.height = h + 'px'
         glowCanvas.width = Math.ceil(canvas.width / GLOW_DIV)
         glowCanvas.height = Math.ceil(canvas.height / GLOW_DIV)
-        const u = Math.min(w, h) / 1000
+        const u = Math.min(w, sh) / 1000
         F.u = u
         F.px = 1 / u
         F.W = w / u
         F.H = h / u
         F.cx = F.W / 2
-        F.portrait = w < h
+        F.portrait = w < sh
         F.narrow = w < 735
         F.top = (navH() + 12) / u
-        const capH = F.portrait ? h * 0.4 : h * 0.3
-        F.bot = (h - capH) / u
+        const capH = F.portrait ? sh * 0.4 : sh * 0.3
+        F.bot = (sh - capH) / u
         F.ay = (F.top + F.bot) / 2
         F.ah = F.bot - F.top
         F.S = Math.min(F.ah, F.W * 0.92)
         F.scale = u * dpr
         if (!grainPattern) makeGrain()
+        return true
     }
 
     /* ---------- chapters from the DOM ---------- */
@@ -343,7 +364,7 @@
     }))
 
     const measure = () => {
-        const vh = window.innerHeight
+        const vh = probe.offsetHeight || window.innerHeight
         for (const ch of chapters) {
             const r = ch.el.getBoundingClientRect()
             ch.top = r.top + window.scrollY
@@ -1736,6 +1757,9 @@
         last = now
         /* ambient motion (twinkle, aurora drift) stops under reduced motion */
         const time = reduce ? 0 : now / 1000
+        /* checked every frame rather than on `resize`: viewport units
+           settle a frame after the event; unchanged, this returns at once */
+        if (resize()) measure()
         target = playhead()
         T = reduce ? target : T + (target - T) * (1 - Math.exp(-dt * 7.5))
         if (Math.abs(target - T) < 0.0005) T = target
@@ -1843,11 +1867,6 @@
         }
     })
 
-    const onResize = () => {
-        resize()
-        measure()
-    }
-    window.addEventListener('resize', onResize)
     window.addEventListener('load', measure)
     resize()
     measure()

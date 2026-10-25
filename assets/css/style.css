@@ -1294,9 +1294,13 @@ main {
 
 .film {
     position: fixed;
-    inset: 0;
+    top: 0;
+    left: 0;
     width: 100%;
-    height: 100%;
+    /* the large viewport, so the address bar hiding on scroll neither
+       resizes the canvas nor uncovers anything below it */
+    height: 100vh;
+    height: 100lvh;
     z-index: 0;
     pointer-events: none;
 }
