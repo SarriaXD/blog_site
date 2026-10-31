@@ -8,9 +8,11 @@ A hand-written static site: plain HTML, one CSS file, a few small JS files. No f
 
 ## Deployment
 
-- Hosted on **Vercel**, connected to this GitHub repo (`SarriaXD/blog_site`). Pushing to `master` deploys.
-- `vercel.json` sets `framework: null`, no build or install command, and serves the repo root. `cleanUrls` is on, so `/tools` serves `tools/index.html`. `404.html` at the root is the custom not-found page.
-- Nothing needs installing on Vercel. If the dashboard still shows a Next.js preset, `vercel.json` overrides it.
+- Hosted on **Cloudflare Workers** as a static-assets-only Worker, `sarria-site` (no Worker script, so requests are not metered). `wrangler.jsonc` serves the repo root with `html_handling: drop-trailing-slash`, so `/tools` serves `tools/index.html` and `/tools/` or `/tools.html` redirect to `/tools`. `404.html` at the root is the custom not-found page (`not_found_handling: 404-page`).
+- `.assetsignore` keeps repo files (this file, README, configs, `www-redirect/`) off the site. Add new non-site files to it.
+- `www-redirect/` is a separate tiny Worker, `sarria-www-redirect`, bound to `www.sarria.ca`; it 308-redirects to `https://sarria.ca` keeping path and query.
+- Deploy by hand: `npx wrangler@latest deploy` from the repo root (and from `www-redirect/` if that changed), with `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` set. Test URL: https://sarria-site.sarria.workers.dev.
+- `vercel.json` is left over from the previous Vercel hosting (moved 2026-10-31); delete it once the Vercel project is removed.
 
 ## Layout
 
