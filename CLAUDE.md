@@ -10,7 +10,7 @@ A hand-written static site: plain HTML, one CSS file, a few small JS files. No f
 
 - Hosted on **Cloudflare Workers** as a static-assets-only Worker, `sarria-site` (no Worker script, so requests are not metered). `wrangler.jsonc` serves the repo root with `html_handling: drop-trailing-slash`, so `/tools` serves `tools/index.html` and `/tools/` or `/tools.html` redirect to `/tools`. `404.html` at the root is the custom not-found page (`not_found_handling: 404-page`).
 - `.assetsignore` keeps repo files (this file, README, configs, `www-redirect/`) off the site. Add new non-site files to it.
-- `www-redirect/` is a separate tiny Worker, `sarria-www-redirect`, bound to `www.sarria.ca`; it 308-redirects to `https://sarria.ca` keeping path and query.
+- `www-redirect/` is a separate tiny Worker, `sarria-www-redirect`, bound to `www.sarria.ca` and `www.311trspa.com`; it strips `www.` and 308-redirects to the apex, keeping path and query.
 - Pushing to `master` deploys through Cloudflare Workers Builds: one trigger runs `npx wrangler deploy` at the repo root for `sarria-site`, another runs it in `www-redirect/` for `sarria-www-redirect`, only when files under `www-redirect/` change. Build logs are in the Cloudflare dashboard under each Worker's Deployments. Test URL: https://sarria-site.sarria.workers.dev.
 - To deploy by hand: `npx wrangler@latest deploy` with `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` set.
 - `vercel.json` is left over from the previous Vercel hosting (moved 2026-10-31); `git.deploymentEnabled: false` stops Vercel building on push. Delete it once the Vercel project is removed.
