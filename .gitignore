@@ -4,3 +4,5 @@
 .vscode/*
 !.vscode/extensions.json
 *.log
+.wrangler
+node_modules

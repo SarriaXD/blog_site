@@ -8,4 +8,4 @@ It is a static site: HTML, one stylesheet and a few small scripts. No framework,
 python3 -m http.server 8000
 ```
 
-Deployed on Vercel straight from the `master` branch.
+Deployed on Cloudflare Workers (static assets); see `CLAUDE.md` for how.

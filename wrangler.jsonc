@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "sarria-site",
+  "compatibility_date": "2026-10-31",
+  // Static only: no Worker script, so asset requests are free and unmetered.
+  "assets": {
+    "directory": ".",
+    // Matches vercel.json: cleanUrls on, trailingSlash off.
+    "html_handling": "drop-trailing-slash",
+    // Serves 404.html with a 404 status, like Vercel did.
+    "not_found_handling": "404-page"
+  },
+  "workers_dev": true
+}

@@ -1,0 +1,15 @@
+.git
+.gitignore
+.assetsignore
+.DS_Store
+.vercel
+.wrangler
+.idea
+.vscode
+node_modules
+wrangler.jsonc
+vercel.json
+CLAUDE.md
+README.md
+*.log
+www-redirect
